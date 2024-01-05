@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %} Mock Services {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container maincontent">
+    <div class="pcoded-wrapper">
+
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <div class="configuration">
+                            Mock Services
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card Services box-content-data">
+
+                                    <div class="col-xl-12 mockservice-primarybox">
+                                        <div class="col-xl-10 p_content para">
+                                            This will start all needed Mock Services and
+                                            components allowing the App Developers to communicate, simulate and test
+                                            publishing to Bus Service and RPC calls.
+                                            Please have your Emulator running.
+                                            Click on the "Start Mock Services" Button and wait for
+                                            the loading dialog to dismiss.
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <button class="btn btn-primary btn-sm float-right btn-class btn-content"
+                                                id="startAll" onclick="startAllMockServices()" type="button">
+                                                Start All Services
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row" id="apksdialog">
+                            <div class="col-xl-12 servicecontent">
+                                <div class="col-xl-4">
+                                    <div class="headerfont">COVESA Services</div>
+                                    <div>
+                                        <div class="floating-inputbox">
+                                            <div class="floating-label">
+                                                <input class="floating-input" id="searchmock" onkeyup="myFunctionmock()"
+                                                    type="text">
+                                                <label class="input-label">Search</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <ul id="tableMockService"></ul>
+                                    </div>
+                                </div>
+                                <div class="col-xl-8">
+                                    <div class="box-content-data">
+                                        <p class="text-start">Service Status</p>
+                                        <p id="box-content">Search or start service to begin</p>
+                                        <div class="serviceContainer">
+                                            <div class="servicedata" id="hiddenservicedata" hidden></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class='containerloader' hidden id="modalspinnerInstall">
+    <div class='loader'></div>
+    <div class='loader--text'></div>
+</div>
+
+<div class='containerloader' hidden id="modalspinner">
+    <div class='loader'></div>
+    <div class='loader--text'></div>
+</div>
+<!-- [ Main Content ] end -->
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script type="text/javascript">
+    setSocketInitialized(document.getElementById('pgname').innerText)
+
+
+</script>
+{% endblock javascripts %}

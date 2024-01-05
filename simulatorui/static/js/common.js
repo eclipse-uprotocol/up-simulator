@@ -92,10 +92,10 @@ function setupSocket() {
         }
 
 //        socket.emit('get-info', { "segment": segment })
-//
-//        if (segment.includes('mockservice')) {
-//            getMockServices()
-//        }
+
+        if (segment.includes('mockservice')) {
+            getMockServices()
+        }
 
 
     });

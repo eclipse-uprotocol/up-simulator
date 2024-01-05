@@ -89,6 +89,11 @@ def route_sendrpc():
     return render_template('home/send-rpc.html', segment=get_segment(request), services=services)
 
 
+@blueprint.route('/mockservice.html')
+def route_mockservices():
+    return render_template('home/mockservice.html', segment=get_segment(request))
+
+
 # Helper - Extract current page name from request
 def get_segment(request):
     try:
@@ -107,7 +112,7 @@ def getconfiguration():
         service = str(request.args.get('service').replace("123", "#"))
         json_data = json.loads(service)
         ui = json_data['ui']
-        layout=None
+        layout = None
         for i in ui:
             for key, value in i.items():
                 if resource == key:
@@ -118,3 +123,25 @@ def getconfiguration():
     except Exception as e:
         print(f'Exception:{e}')
         return None
+
+
+@blueprint.route('/getmockservices')
+def get_mock_services():
+    mockservice_pkgs = []
+    running_services = []
+    json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "pub-sub.json"
+    if 'simulatorui' in os.getcwd():
+        json_path = os.sep + "pub-sub.json"
+    f = open(json_path)
+    mockservices = json.load(f)
+    f.close()
+    for m in mockservices['Services']:
+        pkgs = {'entity': m['servicename'], 'name': m['display_name'], 'key': m['name']}
+        mockservice_pkgs.append(pkgs)
+
+    if os.path.isfile("service_status.txt"):
+        with open('service_status.txt', 'r+') as f:
+            lines = f.read()
+            running_services = json.loads(lines)
+
+    return {'result': True, 'pkgs_mock': mockservice_pkgs, 'running': running_services}

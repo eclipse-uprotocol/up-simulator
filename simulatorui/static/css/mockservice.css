@@ -1,0 +1,60 @@
+.mockservice-primarybox {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.mockservice-primarybox>div:nth-child(1) {
+  float: left;
+  margin: 20px 0px 0px 0px;
+}
+
+.mockservice-primarybox>div:nth-child(2) {
+  float: right;
+  margin: 20px 0px 0px 0px;
+}
+
+.servicecontent {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.servicecontent>div:nth-child(1) {
+  width: 100%;
+  float: left;
+}
+
+.servicecontent>div:nth-child(1)>div:nth-child(2) {
+  margin: 20px 0px 20px -20px;
+}
+
+.servicecontent>div:nth-child(1)>div:nth-child(3) {
+  height: 580px;
+  overflow: auto;
+}
+
+
+
+.servicecontent>div:nth-child(2) {
+  float: right;
+  margin: 0px -20px 0px -20px;
+  width: 100%;
+}
+
+.servicecontent>div:nth-child(2)>div {
+  height: 680px;
+}
+
+.servicecontent>div:nth-child(2)>div>p:nth-child(1) {
+  left: 20px;
+}
+
+.servicecontent>div:nth-child(2)>div>div>div {
+  overflow: auto;
+  overflow-x: hidden;
+  height: 580px;
+}
+
+#box-content {
+  display: block;
+  margin-top: 350px;
+}
