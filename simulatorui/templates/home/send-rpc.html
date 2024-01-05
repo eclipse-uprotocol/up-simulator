@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %} Send RPC {% endblock %}
+
+<!-- Specific CSS goes HER
+E -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container maincontent">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <div class="configuration">Send RPC</div>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card Services box-content-data">
+                                    <div class="col-xl-12 sendrpc-firstRow">
+                                        <div class="col-xl-10 p_content para">
+                                            Below options allows User to send rpc to
+                                            Vehicle Service. Select from below Services and then Select resources.
+                                            Use the controls to set values, then Click on SendRPC.<br />
+                                            If your App is subscribed to BusService Topic you would see the updates.
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row sendrpc-secondRow">
+                            <div class="col-xl-4">
+                                <div class="headerfont">COVESA  Services</div>
+                                <div>
+                                    <div class="floating-inputbox">
+                                        <div class="floating-label">
+                                            <input class="floating-input" id="searchpubsub" onkeyup="myFunctionpubsub()"
+                                                type="text">
+                                            <label class="input-label">Search</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul id="myULdata" class="sendrpc-ulList">
+                                    {% for service in services['Services'] %}
+                                    <li>
+                                        <a>
+                                            <label class="containercheck">{{service['display_name']}}
+                                                <input class="hello" id="cb{{service['name']}}"
+                                                    onchange="checkboxclicked({{service}}, 'resource')" type="checkbox">
+                                                <span class="checkmark"></span>
+                                                <h6 class="mb-0">
+                                                    {{service['servicename']}}
+                                                </h6>
+                                            </label>
+                                        </a>
+                                    </li>
+
+
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                            <div class="col-xl-8">
+                                <div class="box-content-data sendrpc-boxContent">
+                                    <p class="text-start">Service Configuration & Status</p>
+                                    <p id="box-content">Search or start service to begin</p>
+
+                                    {% for service in services['Services'] %}
+                                    {% if service['resource']|length >0 %}
+                                    <div id="div{{service['name']}}" class="sendrpc-services">
+                                        <label>{{service['name']}}</label>
+                                        {% for resource in service['resource']%}
+
+                                        <div class="flex">
+                                            <input id="cb{{service['name']}}{{resource}}" name="customRadio"
+                                                onclick="onRbChanged(this.labels[0].innerText,{{service}},'Send RPC')"
+                                                type="radio" />
+                                            <label for="cb{{service['name']}}{{resource}}">{{resource}}</label>
+                                        </div>
+
+
+                                        {% endfor %}
+                                    </div>
+
+                                    {% endif %}
+                                    {% endfor %}
+                                    <div class="col-xl-12 sendrpc-modal-lgss" id="modal-lgss">
+                                        <h4 id="pubrpcheader">Configuration</h4>
+                                        <div class="alerterror" hidden id="error"></div>
+                                        <div class="col-xl-12">
+                                            <div class="col-xl-7 sendrpc-uidesignbox" id="uidesignbox">
+                                                <div id="uidesign"></div>
+                                            </div>
+
+
+                                        <div class="col-xl-5 sendrpc-logbox" id="logbox">
+                                            <div>
+                                                <h4 class="modal-title">Logs</h4>
+                                                <button class="btn-delete" onclick="clearLog()" type="button">
+                                                    Delete
+                                                </button>
+                                            </div>
+                                            <div id="logsbox">
+                                                <p id="logsdesc"></p>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="bottomcontent" class="sendrpc-bottomcontent">
+                                        <button class="btn btn-default btn-content" data-dismiss="modal"
+                                            onclick="closebtnClicked()" type="button">
+                                            Cancel
+                                        </button>
+                                        <button class="btn btn-default btn-content" id="back_pub"
+                                            onclick="onbackClicked()" type="button">
+                                            Back
+                                        </button>
+
+                                        <div>
+                                              <button class="btn btn-primary sendrpc-executeBtn" id="execute"
+                                                onclick="execute()" type="button">
+                                                Execute
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="modal" data-backdrop="static" id="myModal2">
+                                        <div>
+                                            <div class="sendrpc-modal">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="second_modal"></h4>
+                                                    <button class="close" data-dismiss="modal" type="button">×
+                                                    </button>
+                                                </div>
+                                                <div class="container"></div>
+                                                <div class="modal-body">
+                                                    <div id="repeatedbox">
+
+                                                    </div>
+                                                    <div class="modal-footer sendrpc-modalFooter">
+                                                        <button class="btn btn-primary" id="repeated_add"
+                                                            onclick="add_repeated()" type="button">
+                                                            Add
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div aria-modal="true" class="dialog box-content-data sendrpc-dialog" data-backdrop="static"
+                            id="modal-mask">
+                            <h5>Add Mask Fields</h5>
+                            <ul id="maskul">
+                            </ul>
+
+                            <div class="modal-footer justify-content-between sendrpc-modalfooter">
+                                <button class="btn btn-default btn-content" id="cancel-button"
+                                    onclick="closeMaskDialog()">
+                                    Cancel
+                                </button>
+                                <button class="btn" id="ok-button" onclick="sendRpcFromMask()">
+                                    Send RPC
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class='containerloader' hidden id="modalspinner">
+    <div class='loader'></div>
+    <div class='loader--text'></div>
+</div>
+
+<!-- [ Main Content ] end -->
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script type="text/javascript">
+    setSocketInitialized(document.getElementById('pgname').innerText)
+    let mask = document.querySelector('#modal-mask')
+    console.log('mask', mask)
+    if (mask) {
+        if (localStorage.getItem('th') === 'light') {
+            mask.classList.add('modal-light')
+        } else if (localStorage.getItem('th') === 'dark') {
+            mask.classList.remove('modal-light')
+        }
+    }
+
+</script>
+{% endblock javascripts %}

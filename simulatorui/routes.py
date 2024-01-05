@@ -64,25 +64,6 @@ def route_configuration():
                            emu_status=emu_status)
 
 
-@blueprint.route('/getuiconfiguration')
-def getconfiguration():
-    try:
-        resource = str(request.args.get('resource'))
-        service = str(request.args.get('service').replace("123", "#"))
-        json_data = json.loads(service)
-        ui = json_data['ui']
-        for i in ui:
-            for key, value in i.items():
-                if resource == key:
-                    layout = value
-                    break
-
-        return layout
-    except Exception as e:
-        print(f'Exception:{e}')
-        return None
-
-
 @blueprint.route('/pub-sub.html')
 def route_pubsub():
     json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "pub-sub.json"
@@ -95,6 +76,19 @@ def route_pubsub():
     return render_template('home/pub-sub.html', segment=get_segment(request), services=services, json_proto={})
 
 
+@blueprint.route('/send-rpc.html')
+def route_sendrpc():
+    json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "rpc.json"
+    if 'simulatorui' in os.getcwd():
+        json_path = os.sep + "rpc.json"
+    f = open(json_path)
+
+    services = json.load(f)
+    f.close()
+
+    return render_template('home/send-rpc.html', segment=get_segment(request), services=services)
+
+
 # Helper - Extract current page name from request
 def get_segment(request):
     try:
@@ -103,4 +97,24 @@ def get_segment(request):
             segment = 'index'
         return segment
     except:
+        return None
+
+
+@blueprint.route('/getuiconfiguration')
+def getconfiguration():
+    try:
+        resource = str(request.args.get('resource'))
+        service = str(request.args.get('service').replace("123", "#"))
+        json_data = json.loads(service)
+        ui = json_data['ui']
+        layout=None
+        for i in ui:
+            for key, value in i.items():
+                if resource == key:
+                    layout = value
+                    break
+
+        return layout
+    except Exception as e:
+        print(f'Exception:{e}')
         return None

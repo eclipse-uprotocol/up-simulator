@@ -10,7 +10,6 @@ get_config_mode = 'Debug' if debug else 'Production'
 app_config = config_dict[get_config_mode.capitalize()]
 
 app = create_app(app_config)
-Migrate(app)
 
 # turn the flask apps into a socketio apps
 socketio = SocketIO(app)
@@ -40,7 +39,8 @@ def subscribe(json_subscribe):
 def sendrpc(json_sendrpc):
     print('received rpc json ' + json_sendrpc)
 
-@socketio.on('publish', namespace='/Portal')
+
+@socketio.on('publish', namespace='/simulator')
 def publish(json_publish):
     print('received publish json ' + json_publish)
 
