@@ -23,7 +23,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # -------------------------------------------------------------------------
-
+import json
 import os
 
 from flask import redirect, url_for, render_template, request
@@ -34,14 +34,14 @@ from simulatorui.utils import adb_commands
 
 @blueprint.route('/')
 def route_default():
-    return redirect(url_for('simulator_blueprint.route_setup'))
+    return redirect(url_for('simulator_blueprint.route_configuration'))
 
 
 @blueprint.route('/configuration.html')
-def route_setup():
+def route_configuration():
     global sdk_version, portal_version
     deviceInfo = {'Image': "", 'Build_date': "", 'Build_id': "", 'Model': ""}
-    emu_status='Emulator is not running'
+    emu_status = 'Emulator is not running'
     try:
         device = adb_commands.get_emulator_device()
         if device is not None:
@@ -64,14 +64,43 @@ def route_setup():
                            emu_status=emu_status)
 
 
+@blueprint.route('/getuiconfiguration')
+def getconfiguration():
+    try:
+        resource = str(request.args.get('resource'))
+        service = str(request.args.get('service').replace("123", "#"))
+        json_data = json.loads(service)
+        ui = json_data['ui']
+        for i in ui:
+            for key, value in i.items():
+                if resource == key:
+                    layout = value
+                    break
+
+        return layout
+    except Exception as e:
+        print(f'Exception:{e}')
+        return None
+
+
+@blueprint.route('/pub-sub.html')
+def route_pubsub():
+    json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "pub-sub.json"
+    if 'simulatorui' in os.getcwd():
+        json_path = os.sep + "pub-sub.json"
+    f = open(json_path)
+    services = json.load(f)
+    f.close()
+
+    return render_template('home/pub-sub.html', segment=get_segment(request), services=services, json_proto={})
+
+
 # Helper - Extract current page name from request
 def get_segment(request):
     try:
         segment = request.path.split('/')[-1]
         if segment == '':
             segment = 'index'
-
         return segment
-
     except:
         return None

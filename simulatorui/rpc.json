@@ -1,0 +1,6236 @@
+{
+  "Services": [
+    {
+      "name": "BodyAccessService",
+      "servicename": "body.access",
+      "display_name": "Body Access Service",
+      "resource": [
+        "ExecuteDoorCommand",
+        "ExecuteWindowCommand",
+        "ExecuteSunroofCommand",
+        "ExecuteBackGlassCommand"
+      ],
+      "ui": [
+        {
+          "ExecuteDoorCommand": {
+            "Configuration": [
+              {
+                "name": "door.front_left",
+                "display_name": "front_left",
+                "topic": "body.access/1/door.front_left123Door",
+                "rpcmethod": "ExecuteDoorCommand"
+              },
+              {
+                "name": "door.front_right",
+                "display_name": "front_right",
+                "topic": "body.access/1/door.front_right123Door",
+                "rpcmethod": "ExecuteDoorCommand"
+              },
+              {
+                "name": "door.rear_left",
+                "display_name": "rear_left",
+                "topic": "body.access/1/door.rear_left123Door",
+                "rpcmethod": "ExecuteDoorCommand"
+              },
+              {
+                "name": "door.rear_right",
+                "display_name": "rear_right",
+                "topic": "body.access/1/door.rear_right123Door",
+                "rpcmethod": "ExecuteDoorCommand"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "rpcproperty": "lock_command",
+                "property": "lock_command",
+                "propertyText": "lock_command",
+                "mode": [
+                  {
+                    "label": "LC_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LC_LOCK",
+                    "value": 1
+                  },
+                  {
+                    "label": "LC_DOUBLE_LOCK",
+                    "value": 2
+                  },
+                  {
+                    "label": "LC_UNLOCK",
+                    "value": 3
+                  },
+                  {
+                    "label": "LC_UN_DOUBLE_LOCK",
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Door"
+              },
+              {
+                "type": "int",
+                "property": "position",
+                "rpcproperty": "door.position",
+                "minrange": 0,
+                "maxrange": 100,
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "locked",
+                "rpcproperty": "door.locked"
+              },
+              {
+                "type": "bool",
+                "property": "child_lock",
+                "rpcproperty": "door.child_lock"
+              },
+              {
+                "type": "bool",
+                "property": "child_lock_mismatch",
+                "readonly": "True"
+              },
+              {
+                "type": "int",
+                "property": "shade_position",
+                "rpcproperty": "door.shade_position",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "bool",
+                "property": "ajar",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "invalid",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "shade_motion_allowed",
+                "readonly": "True"
+              }
+            ]
+          }
+        },
+        {
+          "ExecuteWindowCommand": {
+            "Configuration": [
+              {
+                "name": "window.front_left",
+                "display_name": "front_left",
+                "topic": "body.access/1/window.front_left123Window",
+                "rpcmethod": "ExecuteWindowCommand"
+              },
+              {
+                "name": "window.front_right",
+                "display_name": "front_right",
+                "topic": "body.access/1/window.front_right123Window",
+                "rpcmethod": "ExecuteWindowCommand"
+              },
+              {
+                "name": "window.rear_left",
+                "display_name": "rear_left",
+                "topic": "body.access/1/window.rear_left123Window",
+                "rpcmethod": "ExecuteWindowCommand"
+              },
+              {
+                "name": "window.rear_right",
+                "display_name": "rear_right",
+                "topic": "body.access/1/window.rear_right123Window",
+                "rpcmethod": "ExecuteWindowCommand"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "Window"
+              },
+              {
+                "type": "int",
+                "rpcproperty": "window.position",
+                "property": "position",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "bool",
+                "property": "rear_window_lockout",
+                "rpcproperty": "window.rear_window_lockout"
+              },
+              {
+                "type": "bool",
+                "property": "invalid",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "window_motion_allowed",
+                "readonly": "True"
+              }
+            ]
+          }
+        },
+        {
+          "ExecuteSunroofCommand": {
+            "Configuration": [
+              {
+                "name": "sunroof.front",
+                "display_name": "front",
+                "topic": "body.access/1/sunroof.front123Sunroof",
+                "rpcmethod": "ExecuteSunroofCommand"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "Sunroof"
+              },
+              {
+                "type": "int",
+                "property": "position",
+                "rpcproperty": "sunroof.position",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "int",
+                "property": "shade_position",
+                "rpcproperty": "sunroof.shade_position",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "bool",
+                "property": "invalid",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "vent",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "sunroof_motion_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "shade_motion_allowed",
+                "readonly": "True"
+              }
+            ]
+          }
+        },
+        {
+          "ExecuteBackGlassCommand": {
+            "Configuration": [
+              {
+                "name": "back_glass.backglass",
+                "name_key": "back_glass.name",
+                "display_name": "back_glass",
+                "topic": "body.access/1/backglass.backglass123BackGlass",
+                "rpcmethod": "ExecuteBackGlassCommand"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "back_glass",
+                "text": "BackGlass"
+              },
+              {
+                "type": "int",
+                "property": "position",
+                "rpcproperty": "back_glass.position",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "int",
+                "property": "shade_position",
+                "rpcproperty": "back_glass.shade_position",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "bool",
+                "property": "shade_motion_allowed",
+                "readonly": "True"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "BodyCabinclimateService",
+      "servicename": "body.cabin_climate",
+      "display_name": "Cabin Climate Service",
+      "resource": [
+        "Zone",
+        "SystemSettings"
+      ],
+      "ui": [
+        {
+          "Zone": {
+            "Configuration": [
+              {
+                "name": "zone.row1",
+                "display_name": "row1",
+                "topic": "body.cabin_climate/1/zone.row1123Zone",
+                "rpcmethod": "ExecuteClimateCommand"
+              },
+              {
+                "name": "zone.row2",
+                "display_name": "row2",
+                "topic": "body.cabin_climate/1/zone.row2123Zone",
+                "rpcmethod": "ExecuteClimateCommand"
+              },
+              {
+                "name": "zone.row3",
+                "display_name": "row3",
+                "topic": "body.cabin_climate/1/zone.row3123Zone",
+                "rpcmethod": "ExecuteClimateCommand"
+              },
+              {
+                "name": "zone.row1_left",
+                "display_name": "row1_left",
+                "topic": "body.cabin_climate/1/zone.row1_left123Zone",
+                "rpcmethod": "ExecuteClimateCommand"
+              },
+              {
+                "name": "zone.row1_right",
+                "display_name": "row1_right",
+                "topic": "body.cabin_climate/1/zone.row1_right123Zone",
+                "rpcmethod": "ExecuteClimateCommand"
+              },
+              {
+                "name": "zone.row2_left",
+                "display_name": "row2_left",
+                "topic": "body.cabin_climate/1/zone.row2_left123Zone",
+                "rpcmethod": "ExecuteClimateCommand"
+              },
+              {
+                "name": "zone.row2_right",
+                "display_name": "row2_right",
+                "topic": "body.cabin_climate/1/zone.row2_right123Zone",
+                "rpcmethod": "ExecuteClimateCommand"
+              },
+              {
+                "name": "zone.row3_left",
+                "display_name": "row3_left",
+                "topic": "body.cabin_climate/1/zone.row3_left123Zone",
+                "rpcmethod": "ExecuteClimateCommand"
+              },
+              {
+                "name": "zone.row3_right",
+                "display_name": "row3_right",
+                "topic": "body.cabin_climate/1/zone.row3_right123Zone",
+                "rpcmethod": "ExecuteClimateCommand"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "Zone"
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "zone.power_on",
+                "property": "power_on"
+              },
+              {
+                "type": "float",
+                "rpcproperty": "zone.temperature_setpoint",
+                "property": "temperature_setpoint",
+                "minrange": -40,
+                "maxrange": 87.5
+              },
+              {
+                "type": "dropdown",
+                "property": "blower_auto_state",
+                "rpcproperty": "zone.blower_auto_state",
+                "propertyText": "blower_auto_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "AM_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "AM_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "AM_AUTO",
+                    "value": 2
+                  },
+                  {
+                    "label": "AM_MANUAL",
+                    "value": 3
+                  },
+                  {
+                    "label": "AM_AUTO_LOW",
+                    "value": 4
+                  },
+                  {
+                    "label": "AM_AUTO_HIGH",
+                    "value": 5
+                  }
+                ]
+              },
+              {
+                "type": "int",
+                "rpcproperty": "zone.blower_level",
+                "property": "blower_level",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "rpcproperty": "zone.air_distribution",
+                "property": "air_distribution",
+                "propertyText": "air_distribution",
+                "mode": [
+                  {
+                    "label": "AD_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "AD_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "AD_AUTO",
+                    "value": 2
+                  },
+                  {
+                    "label": "AD_FLOOR",
+                    "value": 3
+                  },
+                  {
+                    "label": "AD_FLOOR_VENT",
+                    "value": 4
+                  },
+                  {
+                    "label": "AD_VENT",
+                    "value": 5
+                  },
+                  {
+                    "label": "AD_VENT_WINDSHIELD",
+                    "value": 6
+                  },
+                  {
+                    "label": "AD_WINDSHIELD",
+                    "value": 7
+                  },
+                  {
+                    "label": "AD_FLOOR_WINDSHIELD",
+                    "value": 8
+                  },
+                  {
+                    "label": "AD_FLOOR_VENT_WINDSHIELD",
+                    "value": 9
+                  },
+                  {
+                    "label": "AD_MAX_DEFROST",
+                    "value": 10
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "zone.auto_on",
+                "property": "auto_on"
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "zone.lock_zone",
+                "property": "lock_zone"
+              },
+              {
+                "type": "dropdown",
+                "property": "air_distribution_auto_state",
+                "rpcproperty": "zone.air_distribution_auto_state",
+                "propertyText": "air_distribution_auto_state",
+                "mode": [
+                  {
+                    "label": "AM_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "AM_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "AM_AUTO",
+                    "value": 2
+                  },
+                  {
+                    "label": "AM_MANUAL",
+                    "value": 3
+                  },
+                  {
+                    "label": "AM_AUTO_LOW",
+                    "value": 4
+                  },
+                  {
+                    "label": "AM_AUTO_HIGH",
+                    "value": 5
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "temperature_auto_state",
+                "rpcproperty": "zone.temperature_auto_state",
+                "propertyText": "temperature_auto_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "AM_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "AM_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "AM_AUTO",
+                    "value": 2
+                  },
+                  {
+                    "label": "AM_MANUAL",
+                    "value": 3
+                  },
+                  {
+                    "label": "AM_AUTO_LOW",
+                    "value": 4
+                  },
+                  {
+                    "label": "AM_AUTO_HIGH",
+                    "value": 5
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "SystemSettings": {
+            "Configuration": [
+              {
+                "name": "system_settings",
+                "display_name": "system_settings",
+                "topic": "body.cabin_climate/1/system_settings123SystemSettings",
+                "rpcmethod": "UpdateSystemSettings"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "System Settings"
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "settings.sync_all",
+                "property": "sync_all"
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "settings.sync_rear_to_driver",
+                "property": "sync_rear_to_driver"
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "settings.sync_3rdRow_to_driver",
+                "property": "sync_3rdRow_to_driver"
+              },
+              {
+                "type": "int",
+                "property": "estimated_cabin_temperature",
+                "minrange": 0,
+                "maxrange": 100,
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "settings.rear_zone_lockout",
+                "property": "rear_zone_lockout"
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "settings.air_recirc_mode",
+                "property": "air_recirc_mode"
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "settings.max_defrost",
+                "property": "max_defrost"
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "settings.rear_window_defog",
+                "property": "rear_window_defog"
+              },
+              {
+                "type": "bool",
+                "property": "cabin_conditioning_invalid",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "rpcproperty": "settings.third_row_zone_lockout",
+                "property": "third_row_zone_lockout",
+                "writeonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "rpcproperty": "settings.ac_compressor_setting",
+                "property": "ac_compressor_setting",
+                "propertyText": "ac_compressor_setting",
+                "mode": [
+                  {
+                    "label": "CS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "CS_ON",
+                    "value": 1
+                  },
+                  {
+                    "label": "CS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "CS_ECONOMY",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "heater_setting",
+                "rpcproperty": "settings.heater_setting",
+                "propertyText": "heater_setting",
+                "writeonly": "True",
+                "mode": [
+                  {
+                    "label": "HS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "HS_HEAT_ON",
+                    "value": 1
+                  },
+                  {
+                    "label": "HS_HEAT_OFF",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "temperature_units",
+                "propertyText": "temperature_units",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "TU_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "TU_CELSIUS",
+                    "value": 1
+                  },
+                  {
+                    "label": "TU_FAHRENHEIT",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "ionizer_status",
+                "propertyText": "ionizer_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "IS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "IS_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "IS_ON",
+                    "value": 2
+                  },
+                  {
+                    "label": "IS_LOW",
+                    "value": 3
+                  },
+                  {
+                    "label": "IS_HIGH",
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "user_controls_interaction",
+                "readonly": "True"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "BodyLightingInteriorService",
+      "servicename": "body.lighting.interior",
+      "display_name": "Lighting Interior Service",
+      "resource": [
+        "AmbientMoodLamp",
+        "CargoLamp",
+        "DomeLamp",
+        "InteriorLampDefeat"
+      ],
+      "ui": [
+        {
+          "AmbientMoodLamp": {
+            "Configuration": [
+              {
+                "name": "lamp.ambientmood_overhead",
+                "display_name": "ambientmood_overhead",
+                "topic": "body.lighting.interior/1/lamp.ambientmood_overhead123Lamp",
+                "rpcmethod": "SetAmbientMoodLighting"
+              },
+              {
+                "name": "lamp.ambientmood_front_footwell",
+                "display_name": "ambientmood_front_footwell",
+                "topic": "body.lighting.interior/1/lamp.ambientmood_front_footwell123Lamp",
+                "rpcmethod": "SetAmbientMoodLighting"
+              },
+              {
+                "name": "lamp.ambientmood_rear_footwell",
+                "display_name": "ambientmood_rear_footwell",
+                "topic": "body.lighting.interior/1/lamp.ambientmood_rear_footwell123Lamp",
+                "rpcmethod": "SetAmbientMoodLighting"
+              },
+              {
+                "name": "lamp.ambientmood_front_left_door_handle",
+                "display_name": "ambientmood_front_left_door_handle",
+                "topic": "body.lighting.interior/1/lamp.ambientmood_front_left_door_handle123Lamp",
+                "rpcmethod": "SetAmbientMoodLighting"
+              },
+              {
+                "name": "lamp.ambientmood_front_right_door_handle",
+                "display_name": "ambientmood_front_right_door_handle",
+                "topic": "body.lighting.interior/1/lamp.ambientmood_front_right_door_handle123Lamp",
+                "rpcmethod": "SetAmbientMoodLighting"
+              },
+              {
+                "name": "lamp.ambientmood_rear_left_door_handle",
+                "display_name": "ambientmood_rear_left_door_handle",
+                "topic": "body.lighting.interior/1/lamp.ambientmood_rear_left_door_handle123Lamp",
+                "rpcmethod": "SetAmbientMoodLighting"
+              },
+              {
+                "name": "lamp.ambientmood_rear_right_door_handle",
+                "display_name": "ambientmood_rear_right_door_handle",
+                "topic": "body.lighting.interior/1/lamp.ambientmood_rear_right_door_handle123Lamp",
+                "rpcmethod": "SetAmbientMoodLighting"
+              },
+              {
+                "name": "lamp.ambientmood_instrument_panel",
+                "display_name": "ambientmood_instrument_panel",
+                "topic": "body.lighting.interior/1/lamp.ambientmood_instrument_panel123Lamp",
+                "rpcmethod": "SetAmbientMoodLighting"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "AMC_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "AMC_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "AMC_DIM_TO_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "AMC_DIM_TO_DIMMER_SETTING",
+                    "value": 3
+                  },
+                  {
+                    "label": "AMC_BRIGHTEN",
+                    "value": 4
+                  },
+                  {
+                    "label": "AMC_FOLLOW_DIMMER_SETTING",
+                    "value": 5
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "CargoLamp": {
+            "Configuration": [
+              {
+                "name": "lamp.cargo_bed",
+                "display_name": "cargo_bed",
+                "topic": "body.lighting.interior/1/lamp.cargo_bed123Lamp",
+                "rpcmethod": "SetLamp"
+              },
+              {
+                "name": "lamp.cargo_hitch",
+                "display_name": "cargo_hitch",
+                "topic": "body.lighting.interior/1/lamp.cargo_hitch123Lamp",
+                "rpcmethod": "SetLamp"
+              },
+              {
+                "name": "lamp.cargo_mirror",
+                "display_name": "cargo_mirror",
+                "topic": "body.lighting.interior/1/lamp.cargo_mirror123Lamp",
+                "rpcmethod": "SetLamp"
+              },
+              {
+                "name": "lamp.cargo",
+                "display_name": "cargo",
+                "topic": "body.lighting.interior/1/lamp.cargo123Lamp",
+                "rpcmethod": "SetLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "DomeLamp": {
+            "Configuration": [
+              {
+                "name": "lamp.dome",
+                "display_name": "dome",
+                "topic": "body.lighting.interior/1/lamp.dome123Lamp",
+                "rpcmethod": "SetLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "InteriorLampDefeat": {
+            "Configuration": [
+              {
+                "name": "interior_lamp_defeat",
+                "display_name": "interior_lamp_defeat",
+                "topic": "body.lighting.interior/1/interior_lamp_defeat123InteriorLampDefeat",
+                "rpcmethod": "SetInteriorLampDefeat"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "bool",
+                "property": "command"
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "defeat",
+                "readonly": "True",
+                "propertyText": "defeat",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "BodyExteriorLightingService",
+      "servicename": "body.lighting.exterior",
+      "display_name": "Exterior Lighting Service",
+      "resource": [
+        "Fog",
+        "LowBeam",
+        "License",
+        "Park",
+        "ParkAux",
+        "Puddle",
+        "Reverse",
+        "SideMarker",
+        "SideMirror",
+        "Task",
+        "Turn"
+      ],
+      "ui": [
+        {
+          "Fog": {
+            "Configuration": [
+              {
+                "name": "lamp.front_fog",
+                "display_name": "front_fog",
+                "topic": "body.lighting.exterior/1/lamp.front_fog123Lamp",
+                "rpcmethod": "SetLamp"
+              },
+              {
+                "name": "lamp.rear_fog",
+                "display_name": "rear_fog",
+                "topic": "body.lighting.exterior/1/lamp.rear_fog123Lamp",
+                "rpcmethod": "SetLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        {
+          "LowBeam": {
+            "Configuration": [
+              {
+                "name": "lamp.lowbeam",
+                "display_name": "lowbeam",
+                "topic": "body.lighting.exterior/1/lamp.lowbeam123Lamp",
+                "rpcmethod": "SetLowBeamLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "LBLC_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LBLC_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "LBLC_ON",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "License": {
+            "Configuration": [
+              {
+                "name": "lamp.license",
+                "display_name": "license",
+                "topic": "body.lighting.exterior/1/lamp.license123Lamp",
+                "rpcmethod": "SetLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "rpcproperty": "command",
+                "property": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Park": {
+            "Configuration": [
+              {
+                "name": "lamp.front_left_park",
+                "display_name": "front_left_park",
+                "topic": "body.lighting.exterior/1/lamp.front_left_park123Lamp",
+                "rpcmethod": "SetParkLamp"
+              },
+              {
+                "name": "lamp.front_right_park",
+                "display_name": "front_right_park",
+                "topic": "body.lighting.exterior/1/lamp.front_right_park123Lamp",
+                "rpcmethod": "SetParkLamp"
+              },
+              {
+                "name": "lamp.rear_left_park",
+                "display_name": "rear_left_park",
+                "topic": "body.lighting.exterior/1/lamp.rear_left_park123Lamp",
+                "rpcmethod": "SetParkLamp"
+              },
+              {
+                "name": "lamp.rear_right_park",
+                "display_name": "rear_right_park",
+                "topic": "body.lighting.exterior/1/lamp.rear_right_park123Lamp",
+                "rpcmethod": "SetParkLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "PLC_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "PLC_ALL_RAMP_ON",
+                    "value": 1
+                  },
+                  {
+                    "label": "PLC_ALL_RAMP_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "PLC_ALL_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "PLC_ALL_OFF",
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "ParkAux": {
+            "Configuration": [
+              {
+                "name": "lamp.front_left_park_aux",
+                "display_name": "front_left_park_aux",
+                "topic": "body.lighting.exterior/1/lamp.front_left_park_aux123Lamp",
+                "rpcmethod": "SetParkLamp"
+              },
+              {
+                "name": "lamp.front_right_park_aux",
+                "display_name": "front_right_park_aux",
+                "topic": "body.lighting.exterior/1/lamp.front_right_park_aux123Lamp",
+                "rpcmethod": "SetParkLamp"
+              },
+              {
+                "name": "lamp.rear_left_park_aux",
+                "display_name": "rear_left_park_aux",
+                "topic": "body.lighting.exterior/1/lamp.rear_left_park_aux123Lamp",
+                "rpcmethod": "SetParkLamp"
+              },
+              {
+                "name": "lamp.rear_right_park_aux",
+                "display_name": "rear_right_park_aux",
+                "topic": "body.lighting.exterior/1/lamp.rear_right_park_aux123Lamp",
+                "rpcmethod": "SetParkLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "PLC_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "PLC_ALL_RAMP_ON",
+                    "value": 1
+                  },
+                  {
+                    "label": "PLC_ALL_RAMP_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "PLC_ALL_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "PLC_ALL_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "PLC_LEFT_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "PLC_RIGHT_ON",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Puddle": {
+            "Configuration": [
+              {
+                "name": "lamp.left_puddle",
+                "display_name": "left_puddle",
+                "topic": "body.lighting.exterior/1/lamp.left_puddle123Lamp",
+                "rpcmethod": "SetLamp"
+              },
+              {
+                "name": "lamp.right_puddle",
+                "display_name": "right_puddle",
+                "topic": "body.lighting.exterior/1/lamp.right_puddle123Lamp",
+                "rpcmethod": "SetLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Reverse": {
+            "Configuration": [
+              {
+                "name": "lamp.reverse",
+                "display_name": "reverse",
+                "topic": "body.lighting.exterior/1/lamp.reverse123Lamp",
+                "rpcmethod": "SetLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "SideMarker": {
+            "Configuration": [
+              {
+                "name": "lamp.left_side_marker",
+                "display_name": "left_side_marker",
+                "topic": "body.lighting.exterior/1/lamp.left_sidemarker123Lamp",
+                "rpcmethod": "SetLamp"
+              },
+              {
+                "name": "lamp.right_side_marker",
+                "display_name": "right_side_marker",
+                "topic": "body.lighting.exterior/1/lamp.right_sidemarker123Lamp",
+                "rpcmethod": "SetLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "SideMirror": {
+            "Configuration": [
+              {
+                "name": "lamp.left_side_mirror_turn_repeater",
+                "display_name": "left_side_mirror_turn_repeater",
+                "topic": "body.lighting.exterior/1/lamp.left_side_mirror_turn_repeater123Lamp",
+                "rpcmethod": "SetLamp"
+              },
+              {
+                "name": "lamp.right_side_mirror_turn_repeater",
+                "display_name": "right_side_mirror_turn_repeater",
+                "topic": "body.lighting.exterior/1/lamp.right_side_mirror_turn_repeater123Lamp",
+                "rpcmethod": "SetLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Task": {
+            "Configuration": [
+              {
+                "name": "lamp.left_task",
+                "display_name": "left_task",
+                "topic": "body.lighting.exterior/1/lamp.left_task123Lamp",
+                "rpcmethod": "SetLamp"
+              },
+              {
+                "name": "lamp.right_task",
+                "display_name": "right_task",
+                "topic": "body.lighting.exterior/1/lamp.right_task123Lamp",
+                "rpcmethod": "SetLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "Turn": {
+            "Configuration": [
+              {
+                "name": "lamp.front_left_turn",
+                "display_name": "front_left_turn",
+                "topic": "body.lighting.exterior/1/lamp.front_left_turn123Lamp",
+                "rpcmethod": "SetTurnLamp"
+              },
+              {
+                "name": "lamp.front_right_turn",
+                "display_name": "front_right_turn",
+                "topic": "body.lighting.exterior/1/lamp.front_right_turn123Lamp",
+                "rpcmethod": "SetTurnLamp"
+              },
+              {
+                "name": "lamp.rear_left_turn",
+                "display_name": "rear_left_turn",
+                "topic": "body.lighting.exterior/1/lamp.rear_left_turn123Lamp",
+                "rpcmethod": "SetTurnLamp"
+              },
+              {
+                "name": "lamp.rear_right_turn",
+                "display_name": "rear_right_turn",
+                "topic": "body.lighting.exterior/1/lamp.rear_right_turn123Lamp",
+                "rpcmethod": "SetTurnLamp"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "rpcproperty": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "TLC_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "TLC_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "TLC_VISUAL_FEEDBACK",
+                    "value": 5
+                  },
+                  {
+                    "label": "TLC_VISUAL_REJECT_FEEDBACK",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "int",
+                "property": "flashes",
+                "rpcproperty": "flashes",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "flash_mode",
+                "rpcproperty": "flash_mode",
+                "propertyText": "flash_mode",
+                "mode": [
+                  {
+                    "label": "FM_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "FM_SOLID_ON",
+                    "value": 1
+                  },
+                  {
+                    "label": "FM_SOLID_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "FM_FLASHING",
+                    "value": 3
+                  },
+                  {
+                    "label": "FM_CONTINUOUS",
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Lamp"
+              },
+              {
+                "type": "dropdown",
+                "property": "outage_status",
+                "propertyText": "outage_status",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "OS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "OS_OUTAGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "OS_HEALTHY",
+                    "value": 2
+                  },
+                  {
+                    "label": "OS_UNSUPPORTED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_operation_allowed",
+                "readonly": "True"
+              },
+              {
+                "type": "bool",
+                "property": "is_blinking",
+                "readonly": "True"
+              },
+              {
+                "type": "dropdown",
+                "property": "lamp_state",
+                "propertyText": "lamp_state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "LS_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "LS_UNKNOWN",
+                    "value": 1
+                  },
+                  {
+                    "label": "LS_OFF",
+                    "value": 2
+                  },
+                  {
+                    "label": "LS_ON",
+                    "value": 3
+                  },
+                  {
+                    "label": "LS_RAMP_OFF",
+                    "value": 4
+                  },
+                  {
+                    "label": "LS_RAMP_ON",
+                    "value": 5
+                  },
+                  {
+                    "label": "LS_NO_REQUEST",
+                    "value": 6
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "BEVService",
+      "servicename": "app.iv_bev",
+      "display_name": "BEV Service",
+      "resource": [
+        "UpdateLocation",
+        "DeleteLocation",
+        "CreateLocation",
+        "CreateSchedule",
+        "SetChargeMode",
+        "StartBatteryPreconditioning",
+        "StopBatteryPreconditioning"
+      ],
+      "ui": [
+        {
+          "UpdateLocation": {
+            "Configuration": [
+              {
+                "name": "charging_location",
+                "display_name": "charging_location",
+                "topic": "",
+                "rpcmethod": "UpdateLocation"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "zone_id"
+              },
+              {
+                "type": "string",
+                "property": "name"
+              },
+              {
+                "type": "label",
+                "text": "Circular Boundary"
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.radius",
+                "propertyText": "radius",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.latitude",
+                "propertyText": "latitude",
+                "minrange": -90,
+                "maxrange": 90
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.longitude",
+                "propertyText": "longitude",
+                "minrange": -180,
+                "maxrange": 180
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.altitude",
+                "propertyText": "altitude",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "label",
+                "text": "Customer Settings"
+              },
+              {
+                "type": "int",
+                "property": "customer_settings.target_soc",
+                "propertyText": "target_soc",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "int",
+                "property": "customer_settings.minimum_soc_for_discharge",
+                "propertyText": "minimum_soc_for_discharge",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "customer_settings.cord_limit",
+                "propertyText": "cord_limit",
+                "mode": [
+                  {
+                    "label": "CL_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "CL_REDUCED",
+                    "value": 1
+                  },
+                  {
+                    "label": "CL_MAXIMUM",
+                    "value": 2
+                  },
+                  {
+                    "label": "CL_8A",
+                    "value": 3
+                  },
+                  {
+                    "label": "CL_12A",
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_activated"
+              },
+              {
+                "type": "bool",
+                "property": "is_vehicle_at_this_zone"
+              },
+              {
+                "type": "bool",
+                "property": "is_expired"
+              },
+              {
+                "type": "label",
+                "text": "Plan Settings"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.is_plan_activated",
+                "propertyText": "is_plan_activated"
+              },
+              {
+                "type": "label",
+                "text": "Time Settings - ready_by_override"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.ready_by_override.is_activated",
+                "propertyText": "is_activated"
+              },
+              {
+                "type": "dropdown",
+                "property": "plan_settings.ready_by_override.time.day",
+                "propertyText": "day",
+                "mode": [
+                  {
+                    "label": "DOW_UNKNOWN",
+                    "value": 0
+                  },
+                  {
+                    "label": "DOW_MONDAY",
+                    "value": 1
+                  },
+                  {
+                    "label": "DOW_TUESDAY",
+                    "value": 2
+                  },
+                  {
+                    "label": "DOW_WEDNESDAY",
+                    "value": 3
+                  },
+                  {
+                    "label": "DOW_THURSDAY",
+                    "value": 4
+                  },
+                  {
+                    "label": "DOW_FRIDAY",
+                    "value": 5
+                  },
+                  {
+                    "label": "DOW_SATURDAY",
+                    "value": 6
+                  },
+                  {
+                    "label": "DOW_SUNDAY",
+                    "value": 7
+                  }
+                ]
+              },
+              {
+                "type": "time",
+                "property": "plan_settings.ready_by_override.time.time_of_day",
+                "propertyText": "time_of_day"
+              },
+              {
+                "type": "repeated",
+                "class": "TimeSetting",
+                "key": "plan_settings.ready_by",
+                "value": [
+                  {
+                    "type": "bool",
+                    "property": "is_activated",
+                    "propertyText": "is_activated"
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "time.day",
+                    "propertyText": "day",
+                    "mode": [
+                      {
+                        "label": "DOW_UNKNOWN",
+                        "value": 0
+                      },
+                      {
+                        "label": "DOW_MONDAY",
+                        "value": 1
+                      },
+                      {
+                        "label": "DOW_TUESDAY",
+                        "value": 2
+                      },
+                      {
+                        "label": "DOW_WEDNESDAY",
+                        "value": 3
+                      },
+                      {
+                        "label": "DOW_THURSDAY",
+                        "value": 4
+                      },
+                      {
+                        "label": "DOW_FRIDAY",
+                        "value": 5
+                      },
+                      {
+                        "label": "DOW_SATURDAY",
+                        "value": 6
+                      },
+                      {
+                        "label": "DOW_SUNDAY",
+                        "value": 7
+                      }
+                    ]
+                  },
+                  {
+                    "type": "time",
+                    "property": "time.time_of_day",
+                    "propertyText": "time_of_day"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Temp Setting"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.cabin_prep_setting.is_activated",
+                "propertyText": "is_activated"
+              },
+              {
+                "type": "int",
+                "propertyText": "temperature",
+                "property": "plan_settings.cabin_prep_setting.temperature",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "label",
+                "text": "Weekdays Slot"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.preferred_weekdays_slot.starting_time.is_activated",
+                "propertyText": "starting_time.is_activated"
+              },
+              {
+                "type": "int",
+                "propertyText": "duration",
+                "property": "plan_settings.preferred_weekdays_slot.duration",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "plan_settings.preferred_weekdays_slot.starting_time.time.day",
+                "propertyText": "starting_time.time.day",
+                "mode": [
+                  {
+                    "label": "DOW_UNKNOWN",
+                    "value": 0
+                  },
+                  {
+                    "label": "DOW_MONDAY",
+                    "value": 1
+                  },
+                  {
+                    "label": "DOW_TUESDAY",
+                    "value": 2
+                  },
+                  {
+                    "label": "DOW_WEDNESDAY",
+                    "value": 3
+                  },
+                  {
+                    "label": "DOW_THURSDAY",
+                    "value": 4
+                  },
+                  {
+                    "label": "DOW_FRIDAY",
+                    "value": 5
+                  },
+                  {
+                    "label": "DOW_SATURDAY",
+                    "value": 6
+                  },
+                  {
+                    "label": "DOW_SUNDAY",
+                    "value": 7
+                  }
+                ]
+              },
+              {
+                "type": "time",
+                "property": "plan_settings.preferred_weekdays_slot.starting_time.time.time_of_day",
+                "propertyText": "starting_time.time_of_day"
+              },
+              {
+                "type": "label",
+                "text": "Weekend Slot"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.preferred_weekend_slot.starting_time.is_activated",
+                "propertyText": "starting_time.is_activated"
+              },
+              {
+                "type": "int",
+                "propertyText": "duration",
+                "property": "plan_settings.preferred_weekend_slot.duration",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "plan_settings.preferred_weekend_slot.starting_time.time.day",
+                "propertyText": "starting_time.time.day",
+                "mode": [
+                  {
+                    "label": "DOW_UNKNOWN",
+                    "value": 0
+                  },
+                  {
+                    "label": "DOW_MONDAY",
+                    "value": 1
+                  },
+                  {
+                    "label": "DOW_TUESDAY",
+                    "value": 2
+                  },
+                  {
+                    "label": "DOW_WEDNESDAY",
+                    "value": 3
+                  },
+                  {
+                    "label": "DOW_THURSDAY",
+                    "value": 4
+                  },
+                  {
+                    "label": "DOW_FRIDAY",
+                    "value": 5
+                  },
+                  {
+                    "label": "DOW_SATURDAY",
+                    "value": 6
+                  },
+                  {
+                    "label": "DOW_SUNDAY",
+                    "value": 7
+                  }
+                ]
+              },
+              {
+                "type": "time",
+                "property": "plan_settings.preferred_weekend_slot.starting_time.time.time_of_day",
+                "propertyText": "starting_time.time_of_day"
+              },
+              {
+                "type": "string",
+                "property": "plan_settings.managed_charging_program_name",
+                "propertyText": "managed_charging_program_name"
+              },
+              {
+                "type": "string",
+                "property": "plan_settings.managed_charging_program_description",
+                "propertyText": "managed_charging_program_description"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.is_managed_charging_activated",
+                "propertyText": "is_managed_charging_activated"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.is_charge_optimized_to_cost",
+                "propertyText": "is_charge_optimized_to_cost"
+              }
+            ]
+          }
+        },
+        {
+          "DeleteLocation": {
+            "Configuration": [
+              {
+                "name": "charging_location",
+                "display_name": "charging_location",
+                "topic": "",
+                "rpcmethod": "DeleteLocation"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "zone_id"
+              },
+              {
+                "type": "string",
+                "property": "name"
+              },
+              {
+                "type": "label",
+                "text": "Circular Boundary"
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.radius",
+                "propertyText": "radius",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.latitude",
+                "propertyText": "latitude",
+                "minrange": -90,
+                "maxrange": 90
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.longitude",
+                "propertyText": "longitude",
+                "minrange": -180,
+                "maxrange": 180
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.altitude",
+                "propertyText": "altitude",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "label",
+                "text": "Customer Settings"
+              },
+              {
+                "type": "int",
+                "property": "customer_settings.target_soc",
+                "propertyText": "target_soc",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "int",
+                "property": "customer_settings.minimum_soc_for_discharge",
+                "propertyText": "minimum_soc_for_discharge",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "customer_settings.cord_limit",
+                "propertyText": "cord_limit",
+                "mode": [
+                  {
+                    "label": "CL_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "CL_REDUCED",
+                    "value": 1
+                  },
+                  {
+                    "label": "CL_MAXIMUM",
+                    "value": 2
+                  },
+                  {
+                    "label": "CL_8A",
+                    "value": 3
+                  },
+                  {
+                    "label": "CL_12A",
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_activated"
+              },
+              {
+                "type": "bool",
+                "property": "is_vehicle_at_this_zone"
+              },
+              {
+                "type": "bool",
+                "property": "is_expired"
+              },
+              {
+                "type": "label",
+                "text": "Plan Settings"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.is_plan_activated",
+                "propertyText": "is_plan_activated"
+              },
+              {
+                "type": "label",
+                "text": "Time Settings - ready_by_override"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.ready_by_override.is_activated",
+                "propertyText": "is_activated"
+              },
+              {
+                "type": "dropdown",
+                "property": "plan_settings.ready_by_override.time.day",
+                "propertyText": "day",
+                "mode": [
+                  {
+                    "label": "DOW_UNKNOWN",
+                    "value": 0
+                  },
+                  {
+                    "label": "DOW_MONDAY",
+                    "value": 1
+                  },
+                  {
+                    "label": "DOW_TUESDAY",
+                    "value": 2
+                  },
+                  {
+                    "label": "DOW_WEDNESDAY",
+                    "value": 3
+                  },
+                  {
+                    "label": "DOW_THURSDAY",
+                    "value": 4
+                  },
+                  {
+                    "label": "DOW_FRIDAY",
+                    "value": 5
+                  },
+                  {
+                    "label": "DOW_SATURDAY",
+                    "value": 6
+                  },
+                  {
+                    "label": "DOW_SUNDAY",
+                    "value": 7
+                  }
+                ]
+              },
+              {
+                "type": "time",
+                "property": "plan_settings.ready_by_override.time.time_of_day",
+                "propertyText": "time_of_day"
+              },
+              {
+                "type": "repeated",
+                "class": "TimeSetting",
+                "key": "plan_settings.ready_by",
+                "value": [
+                  {
+                    "type": "bool",
+                    "property": "is_activated",
+                    "propertyText": "is_activated"
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "time.day",
+                    "propertyText": "day",
+                    "mode": [
+                      {
+                        "label": "DOW_UNKNOWN",
+                        "value": 0
+                      },
+                      {
+                        "label": "DOW_MONDAY",
+                        "value": 1
+                      },
+                      {
+                        "label": "DOW_TUESDAY",
+                        "value": 2
+                      },
+                      {
+                        "label": "DOW_WEDNESDAY",
+                        "value": 3
+                      },
+                      {
+                        "label": "DOW_THURSDAY",
+                        "value": 4
+                      },
+                      {
+                        "label": "DOW_FRIDAY",
+                        "value": 5
+                      },
+                      {
+                        "label": "DOW_SATURDAY",
+                        "value": 6
+                      },
+                      {
+                        "label": "DOW_SUNDAY",
+                        "value": 7
+                      }
+                    ]
+                  },
+                  {
+                    "type": "time",
+                    "property": "time.time_of_day",
+                    "propertyText": "time_of_day"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Temp Setting"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.cabin_prep_setting.is_activated",
+                "propertyText": "is_activated"
+              },
+              {
+                "type": "int",
+                "propertyText": "temperature",
+                "property": "plan_settings.cabin_prep_setting.temperature",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "label",
+                "text": "Weekdays Slot"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.preferred_weekdays_slot.starting_time.is_activated",
+                "propertyText": "starting_time.is_activated"
+              },
+              {
+                "type": "int",
+                "propertyText": "duration",
+                "property": "plan_settings.preferred_weekdays_slot.duration",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "plan_settings.preferred_weekdays_slot.starting_time.time.day",
+                "propertyText": "starting_time.time.day",
+                "mode": [
+                  {
+                    "label": "DOW_UNKNOWN",
+                    "value": 0
+                  },
+                  {
+                    "label": "DOW_MONDAY",
+                    "value": 1
+                  },
+                  {
+                    "label": "DOW_TUESDAY",
+                    "value": 2
+                  },
+                  {
+                    "label": "DOW_WEDNESDAY",
+                    "value": 3
+                  },
+                  {
+                    "label": "DOW_THURSDAY",
+                    "value": 4
+                  },
+                  {
+                    "label": "DOW_FRIDAY",
+                    "value": 5
+                  },
+                  {
+                    "label": "DOW_SATURDAY",
+                    "value": 6
+                  },
+                  {
+                    "label": "DOW_SUNDAY",
+                    "value": 7
+                  }
+                ]
+              },
+              {
+                "type": "time",
+                "property": "plan_settings.preferred_weekdays_slot.starting_time.time.time_of_day",
+                "propertyText": "starting_time.time_of_day"
+              },
+              {
+                "type": "label",
+                "text": "Weekend Slot"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.preferred_weekend_slot.starting_time.is_activated",
+                "propertyText": "starting_time.is_activated"
+              },
+              {
+                "type": "int",
+                "propertyText": "duration",
+                "property": "plan_settings.preferred_weekend_slot.duration",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "plan_settings.preferred_weekend_slot.starting_time.time.day",
+                "propertyText": "starting_time.time.day",
+                "mode": [
+                  {
+                    "label": "DOW_UNKNOWN",
+                    "value": 0
+                  },
+                  {
+                    "label": "DOW_MONDAY",
+                    "value": 1
+                  },
+                  {
+                    "label": "DOW_TUESDAY",
+                    "value": 2
+                  },
+                  {
+                    "label": "DOW_WEDNESDAY",
+                    "value": 3
+                  },
+                  {
+                    "label": "DOW_THURSDAY",
+                    "value": 4
+                  },
+                  {
+                    "label": "DOW_FRIDAY",
+                    "value": 5
+                  },
+                  {
+                    "label": "DOW_SATURDAY",
+                    "value": 6
+                  },
+                  {
+                    "label": "DOW_SUNDAY",
+                    "value": 7
+                  }
+                ]
+              },
+              {
+                "type": "time",
+                "property": "plan_settings.preferred_weekend_slot.starting_time.time.time_of_day",
+                "propertyText": "starting_time.time_of_day"
+              },
+              {
+                "type": "string",
+                "property": "plan_settings.managed_charging_program_name",
+                "propertyText": "managed_charging_program_name"
+              },
+              {
+                "type": "string",
+                "property": "plan_settings.managed_charging_program_description",
+                "propertyText": "managed_charging_program_description"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.is_managed_charging_activated",
+                "propertyText": "is_managed_charging_activated"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.is_charge_optimized_to_cost",
+                "propertyText": "is_charge_optimized_to_cost"
+              }
+            ]
+          }
+        },
+        {
+          "CreateLocation": {
+            "Configuration": [
+              {
+                "name": "charging_location",
+                "display_name": "charging_location",
+                "topic": "",
+                "rpcmethod": "CreateLocation"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "zone_id"
+              },
+              {
+                "type": "string",
+                "property": "name"
+              },
+              {
+                "type": "label",
+                "text": "Circular Boundary"
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.radius",
+                "propertyText": "radius",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.latitude",
+                "propertyText": "latitude",
+                "minrange": -90,
+                "maxrange": 90
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.longitude",
+                "propertyText": "longitude",
+                "minrange": -180,
+                "maxrange": 180
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.altitude",
+                "propertyText": "altitude",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "label",
+                "text": "Customer Settings"
+              },
+              {
+                "type": "int",
+                "property": "customer_settings.target_soc",
+                "propertyText": "target_soc",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "int",
+                "property": "customer_settings.minimum_soc_for_discharge",
+                "propertyText": "minimum_soc_for_discharge",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "customer_settings.cord_limit",
+                "propertyText": "cord_limit",
+                "mode": [
+                  {
+                    "label": "CL_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "CL_REDUCED",
+                    "value": 1
+                  },
+                  {
+                    "label": "CL_MAXIMUM",
+                    "value": 2
+                  },
+                  {
+                    "label": "CL_8A",
+                    "value": 3
+                  },
+                  {
+                    "label": "CL_12A",
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_activated"
+              },
+              {
+                "type": "bool",
+                "property": "is_vehicle_at_this_zone"
+              },
+              {
+                "type": "bool",
+                "property": "is_expired"
+              },
+              {
+                "type": "label",
+                "text": "Plan Settings"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.is_plan_activated",
+                "propertyText": "is_plan_activated"
+              },
+              {
+                "type": "label",
+                "text": "Time Settings - ready_by_override"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.ready_by_override.is_activated",
+                "propertyText": "is_activated"
+              },
+              {
+                "type": "dropdown",
+                "property": "plan_settings.ready_by_override.time.day",
+                "propertyText": "day",
+                "mode": [
+                  {
+                    "label": "DOW_UNKNOWN",
+                    "value": 0
+                  },
+                  {
+                    "label": "DOW_MONDAY",
+                    "value": 1
+                  },
+                  {
+                    "label": "DOW_TUESDAY",
+                    "value": 2
+                  },
+                  {
+                    "label": "DOW_WEDNESDAY",
+                    "value": 3
+                  },
+                  {
+                    "label": "DOW_THURSDAY",
+                    "value": 4
+                  },
+                  {
+                    "label": "DOW_FRIDAY",
+                    "value": 5
+                  },
+                  {
+                    "label": "DOW_SATURDAY",
+                    "value": 6
+                  },
+                  {
+                    "label": "DOW_SUNDAY",
+                    "value": 7
+                  }
+                ]
+              },
+              {
+                "type": "time",
+                "property": "plan_settings.ready_by_override.time.time_of_day",
+                "propertyText": "time_of_day"
+              },
+              {
+                "type": "repeated",
+                "class": "TimeSetting",
+                "key": "plan_settings.ready_by",
+                "value": [
+                  {
+                    "type": "bool",
+                    "property": "is_activated",
+                    "propertyText": "is_activated"
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "time.day",
+                    "propertyText": "day",
+                    "mode": [
+                      {
+                        "label": "DOW_UNKNOWN",
+                        "value": 0
+                      },
+                      {
+                        "label": "DOW_MONDAY",
+                        "value": 1
+                      },
+                      {
+                        "label": "DOW_TUESDAY",
+                        "value": 2
+                      },
+                      {
+                        "label": "DOW_WEDNESDAY",
+                        "value": 3
+                      },
+                      {
+                        "label": "DOW_THURSDAY",
+                        "value": 4
+                      },
+                      {
+                        "label": "DOW_FRIDAY",
+                        "value": 5
+                      },
+                      {
+                        "label": "DOW_SATURDAY",
+                        "value": 6
+                      },
+                      {
+                        "label": "DOW_SUNDAY",
+                        "value": 7
+                      }
+                    ]
+                  },
+                  {
+                    "type": "time",
+                    "property": "time.time_of_day",
+                    "propertyText": "time_of_day"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Temp Setting"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.cabin_prep_setting.is_activated",
+                "propertyText": "is_activated"
+              },
+              {
+                "type": "int",
+                "propertyText": "temperature",
+                "property": "plan_settings.cabin_prep_setting.temperature",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "label",
+                "text": "Weekdays Slot"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.preferred_weekdays_slot.starting_time.is_activated",
+                "propertyText": "starting_time.is_activated"
+              },
+              {
+                "type": "int",
+                "propertyText": "duration",
+                "property": "plan_settings.preferred_weekdays_slot.duration",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "plan_settings.preferred_weekdays_slot.starting_time.time.day",
+                "propertyText": "starting_time.time.day",
+                "mode": [
+                  {
+                    "label": "DOW_UNKNOWN",
+                    "value": 0
+                  },
+                  {
+                    "label": "DOW_MONDAY",
+                    "value": 1
+                  },
+                  {
+                    "label": "DOW_TUESDAY",
+                    "value": 2
+                  },
+                  {
+                    "label": "DOW_WEDNESDAY",
+                    "value": 3
+                  },
+                  {
+                    "label": "DOW_THURSDAY",
+                    "value": 4
+                  },
+                  {
+                    "label": "DOW_FRIDAY",
+                    "value": 5
+                  },
+                  {
+                    "label": "DOW_SATURDAY",
+                    "value": 6
+                  },
+                  {
+                    "label": "DOW_SUNDAY",
+                    "value": 7
+                  }
+                ]
+              },
+              {
+                "type": "time",
+                "property": "plan_settings.preferred_weekdays_slot.starting_time.time.time_of_day",
+                "propertyText": "starting_time.time_of_day"
+              },
+              {
+                "type": "label",
+                "text": "Weekend Slot"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.preferred_weekend_slot.starting_time.is_activated",
+                "propertyText": "starting_time.is_activated"
+              },
+              {
+                "type": "int",
+                "propertyText": "duration",
+                "property": "plan_settings.preferred_weekend_slot.duration",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "plan_settings.preferred_weekend_slot.starting_time.time.day",
+                "propertyText": "starting_time.time.day",
+                "mode": [
+                  {
+                    "label": "DOW_UNKNOWN",
+                    "value": 0
+                  },
+                  {
+                    "label": "DOW_MONDAY",
+                    "value": 1
+                  },
+                  {
+                    "label": "DOW_TUESDAY",
+                    "value": 2
+                  },
+                  {
+                    "label": "DOW_WEDNESDAY",
+                    "value": 3
+                  },
+                  {
+                    "label": "DOW_THURSDAY",
+                    "value": 4
+                  },
+                  {
+                    "label": "DOW_FRIDAY",
+                    "value": 5
+                  },
+                  {
+                    "label": "DOW_SATURDAY",
+                    "value": 6
+                  },
+                  {
+                    "label": "DOW_SUNDAY",
+                    "value": 7
+                  }
+                ]
+              },
+              {
+                "type": "time",
+                "property": "plan_settings.preferred_weekend_slot.starting_time.time.time_of_day",
+                "propertyText": "starting_time.time_of_day"
+              },
+              {
+                "type": "string",
+                "property": "plan_settings.managed_charging_program_name",
+                "propertyText": "managed_charging_program_name"
+              },
+              {
+                "type": "string",
+                "property": "plan_settings.managed_charging_program_description",
+                "propertyText": "managed_charging_program_description"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.is_managed_charging_activated",
+                "propertyText": "is_managed_charging_activated"
+              },
+              {
+                "type": "bool",
+                "property": "plan_settings.is_charge_optimized_to_cost",
+                "propertyText": "is_charge_optimized_to_cost"
+              }
+            ]
+          }
+        },
+        {
+          "CreateSchedule": {
+            "Configuration": [
+              {
+                "name": "charger",
+                "display_name": "CreateSchedule",
+                "topic": "",
+                "rpcmethod": "CreateSchedule"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "int",
+                "property": "target_soc_max_value",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "repeated",
+                "class": "LocationSetting",
+                "key": "locations_settings",
+                "value": [
+                  {
+                    "type": "string",
+                    "property": "zone_id"
+                  },
+                  {
+                    "type": "string",
+                    "property": "name"
+                  },
+                  {
+                    "type": "label",
+                    "text": "Circular Boundary"
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.radius",
+                    "propertyText": "radius",
+                    "minrange": 0,
+                    "maxrange": 1000
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.center.latitude",
+                    "propertyText": "latitude",
+                    "minrange": -90,
+                    "maxrange": 90
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.center.longitude",
+                    "propertyText": "longitude",
+                    "minrange": -180,
+                    "maxrange": 180
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.center.altitude",
+                    "propertyText": "altitude",
+                    "minrange": 0,
+                    "maxrange": 1000
+                  },
+                  {
+                    "type": "label",
+                    "text": "Customer Settings"
+                  },
+                  {
+                    "type": "int",
+                    "property": "customer_settings.target_soc",
+                    "propertyText": "target_soc",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "int",
+                    "property": "customer_settings.minimum_soc_for_discharge",
+                    "propertyText": "minimum_soc_for_discharge",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "customer_settings.cord_limit",
+                    "propertyText": "cord_limit",
+                    "mode": [
+                      {
+                        "label": "CL_UNSPECIFIED",
+                        "value": 0
+                      },
+                      {
+                        "label": "CL_REDUCED",
+                        "value": 1
+                      },
+                      {
+                        "label": "CL_MAXIMUM",
+                        "value": 2
+                      },
+                      {
+                        "label": "CL_8A",
+                        "value": 3
+                      },
+                      {
+                        "label": "CL_12A",
+                        "value": 4
+                      }
+                    ]
+                  },
+                  {
+                    "type": "bool",
+                    "property": "is_activated"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "is_vehicle_at_this_zone"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "is_expired"
+                  },
+                  {
+                    "type": "label",
+                    "text": "Plan Settings"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "plan_settings.is_plan_activated",
+                    "propertyText": "is_plan_activated"
+                  },
+                  {
+                    "type": "label",
+                    "text": "Time Settings - ready_by_override"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "plan_settings.ready_by_override.is_activated",
+                    "propertyText": "is_activated"
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "plan_settings.ready_by_override.time.day",
+                    "propertyText": "day",
+                    "mode": [
+                      {
+                        "label": "DOW_UNKNOWN",
+                        "value": 0
+                      },
+                      {
+                        "label": "DOW_MONDAY",
+                        "value": 1
+                      },
+                      {
+                        "label": "DOW_TUESDAY",
+                        "value": 2
+                      },
+                      {
+                        "label": "DOW_WEDNESDAY",
+                        "value": 3
+                      },
+                      {
+                        "label": "DOW_THURSDAY",
+                        "value": 4
+                      },
+                      {
+                        "label": "DOW_FRIDAY",
+                        "value": 5
+                      },
+                      {
+                        "label": "DOW_SATURDAY",
+                        "value": 6
+                      },
+                      {
+                        "label": "DOW_SUNDAY",
+                        "value": 7
+                      }
+                    ]
+                  },
+                  {
+                    "type": "time",
+                    "property": "plan_settings.ready_by_override.time.time_of_day",
+                    "propertyText": "time_of_day"
+                  },
+                  {
+                    "type": "repeated",
+                    "class": "TimeSetting",
+                    "key": "plan_settings.ready_by",
+                    "value": [
+                      {
+                        "type": "bool",
+                        "property": "is_activated",
+                        "propertyText": "is_activated"
+                      },
+                      {
+                        "type": "dropdown",
+                        "property": "time.day",
+                        "propertyText": "day",
+                        "mode": [
+                          {
+                            "label": "DOW_UNKNOWN",
+                            "value": 0
+                          },
+                          {
+                            "label": "DOW_MONDAY",
+                            "value": 1
+                          },
+                          {
+                            "label": "DOW_TUESDAY",
+                            "value": 2
+                          },
+                          {
+                            "label": "DOW_WEDNESDAY",
+                            "value": 3
+                          },
+                          {
+                            "label": "DOW_THURSDAY",
+                            "value": 4
+                          },
+                          {
+                            "label": "DOW_FRIDAY",
+                            "value": 5
+                          },
+                          {
+                            "label": "DOW_SATURDAY",
+                            "value": 6
+                          },
+                          {
+                            "label": "DOW_SUNDAY",
+                            "value": 7
+                          }
+                        ]
+                      },
+                      {
+                        "type": "time",
+                        "property": "time.time_of_day",
+                        "propertyText": "time_of_day"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "label",
+                    "text": "Temp Setting"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "plan_settings.cabin_prep_setting.is_activated",
+                    "propertyText": "is_activated"
+                  },
+                  {
+                    "type": "int",
+                    "propertyText": "temperature",
+                    "property": "plan_settings.cabin_prep_setting.temperature",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "label",
+                    "text": "Weekdays Slot"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "plan_settings.preferred_weekdays_slot.starting_time.is_activated",
+                    "propertyText": "starting_time.is_activated"
+                  },
+                  {
+                    "type": "int",
+                    "propertyText": "duration",
+                    "property": "plan_settings.preferred_weekdays_slot.duration",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "plan_settings.preferred_weekdays_slot.starting_time.time.day",
+                    "propertyText": "starting_time.time.day",
+                    "mode": [
+                      {
+                        "label": "DOW_UNKNOWN",
+                        "value": 0
+                      },
+                      {
+                        "label": "DOW_MONDAY",
+                        "value": 1
+                      },
+                      {
+                        "label": "DOW_TUESDAY",
+                        "value": 2
+                      },
+                      {
+                        "label": "DOW_WEDNESDAY",
+                        "value": 3
+                      },
+                      {
+                        "label": "DOW_THURSDAY",
+                        "value": 4
+                      },
+                      {
+                        "label": "DOW_FRIDAY",
+                        "value": 5
+                      },
+                      {
+                        "label": "DOW_SATURDAY",
+                        "value": 6
+                      },
+                      {
+                        "label": "DOW_SUNDAY",
+                        "value": 7
+                      }
+                    ]
+                  },
+                  {
+                    "type": "time",
+                    "property": "plan_settings.preferred_weekdays_slot.starting_time.time.time_of_day",
+                    "propertyText": "starting_time.time_of_day"
+                  },
+                  {
+                    "type": "label",
+                    "text": "Weekend Slot"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "plan_settings.preferred_weekend_slot.starting_time.is_activated",
+                    "propertyText": "starting_time.is_activated"
+                  },
+                  {
+                    "type": "int",
+                    "propertyText": "duration",
+                    "property": "plan_settings.preferred_weekend_slot.duration",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "plan_settings.preferred_weekend_slot.starting_time.time.day",
+                    "propertyText": "starting_time.time.day",
+                    "mode": [
+                      {
+                        "label": "DOW_UNKNOWN",
+                        "value": 0
+                      },
+                      {
+                        "label": "DOW_MONDAY",
+                        "value": 1
+                      },
+                      {
+                        "label": "DOW_TUESDAY",
+                        "value": 2
+                      },
+                      {
+                        "label": "DOW_WEDNESDAY",
+                        "value": 3
+                      },
+                      {
+                        "label": "DOW_THURSDAY",
+                        "value": 4
+                      },
+                      {
+                        "label": "DOW_FRIDAY",
+                        "value": 5
+                      },
+                      {
+                        "label": "DOW_SATURDAY",
+                        "value": 6
+                      },
+                      {
+                        "label": "DOW_SUNDAY",
+                        "value": 7
+                      }
+                    ]
+                  },
+                  {
+                    "type": "time",
+                    "property": "plan_settings.preferred_weekend_slot.starting_time.time.time_of_day",
+                    "propertyText": "starting_time.time_of_day"
+                  },
+                  {
+                    "type": "string",
+                    "property": "plan_settings.managed_charging_program_name",
+                    "propertyText": "managed_charging_program_name"
+                  },
+                  {
+                    "type": "string",
+                    "property": "plan_settings.managed_charging_program_description",
+                    "propertyText": "managed_charging_program_description"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "plan_settings.is_managed_charging_activated",
+                    "propertyText": "is_managed_charging_activated"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "plan_settings.is_charge_optimized_to_cost",
+                    "propertyText": "is_charge_optimized_to_cost"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "SetChargeMode": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "Set Charge Mode",
+                "topic": "",
+                "rpcmethod": "SetChargeMode"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "request",
+                "mode": [
+                  {
+                    "label": "CR_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "CR_IMMEDIATE_CHARGE",
+                    "value": 1
+                  },
+                  {
+                    "label": "CR_PAUSE_CHARGE",
+                    "value": 2
+                  },
+                  {
+                    "label": "CR_START_CHARGE",
+                    "value": 3
+                  },
+                  {
+                    "label": "CR_STOP_CHARGE",
+                    "value": 4
+                  },
+                  {
+                    "label": "CR_BATT_PRECOND",
+                    "value": 5
+                  },
+                  {
+                    "label": "CR_BATT_PRECOND_STOP",
+                    "value": 6
+                  },
+                  {
+                    "label": "CR_SKIP_PLAN",
+                    "value": 7
+                  },
+                  {
+                    "label": "CR_RESTORE_PLAN",
+                    "value": 8
+                  },
+                  {
+                    "label": "CR_RESUME_CHARGE",
+                    "value": 9
+                  },
+                  {
+                    "label": "CR_CHARGE_READY_BY",
+                    "value": 10
+                  },
+                  {
+                    "label": "CR_UNLOCK",
+                    "value": 11
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "StartBatteryPreconditioning": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "Start Battery Preconditioning",
+                "topic": "",
+                "rpcmethod": "StartBatteryPreconditioning"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "Type of RPC request is google.protobuf.Empty"
+              }
+            ]
+          }
+        },
+        {
+          "StopBatteryPreconditioning": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "Stop Battery Preconditioning",
+                "topic": "",
+                "rpcmethod": "StopBatteryPreconditioning"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "Type of RPC request is google.protobuf.Empty"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "UDiscoveryService",
+      "servicename": "core.udiscovery",
+      "display_name": "UDiscovery Service",
+      "resource": [
+        "LookupUri",
+        "UpdateNode",
+        "FindNodes",
+        "FindNodeProperties",
+        "DeleteNodes"
+      ],
+      "ui": [
+        {
+          "LookupUri": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "LookupUri",
+                "topic": "",
+                "rpcmethod": "LookupUri"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "uri"
+              },
+              {
+                "type": "int",
+                "property": "limit",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "int",
+                "property": "offset",
+                "minrange": 0,
+                "maxrange": 100
+              }
+            ]
+          }
+        },
+        {
+          "FindNodes": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "FindNodes",
+                "topic": "",
+                "rpcmethod": "FindNodes"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "uri",
+                "style": "medium"
+              },
+              {
+                "type": "int",
+                "property": "depth",
+                "minrange": -1,
+                "maxrange": 3
+              }
+            ]
+          }
+        },
+        {
+          "FindNodeProperties": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "FindNodeProperties",
+                "topic": "",
+                "rpcmethod": "FindNodeProperties"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "uri"
+              },
+              {
+                "type": "repeated",
+                "class": "string",
+                "key": "properties",
+                "value": [
+                  {
+                    "type": "string",
+                    "property": "properties"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "DeleteNodes": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "DeleteNodes",
+                "topic": "",
+                "rpcmethod": "DeleteNodes"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "repeated",
+                "class": "string",
+                "key": "uris",
+                "value": [
+                  {
+                    "type": "string",
+                    "property": "uris"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "UpdateNode": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "UpdateNode",
+                "topic": "",
+                "rpcmethod": "UpdateNode"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "node",
+                "propertyText": "json data",
+                "style": "large"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "PowerManagementService",
+      "servicename": "energy.power_management",
+      "display_name": "Power Management Service",
+      "resource": [
+        "SetUsageProfile",
+        "VehicleMode",
+        "VehicleSubsystem"
+      ],
+      "ui": [
+        {
+          "SetUsageProfile": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "SetUsageProfile",
+                "topic": "",
+                "rpcmethod": "SetUsageProfile"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "int",
+                "property": "duration",
+                "minrange": 0,
+                "maxrange": 14400
+              },
+              {
+                "type": "dropdown",
+                "property": "priority",
+                "propertyText": "priority",
+                "mode": [
+                  {
+                    "label": "P_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "P_LOW",
+                    "value": 1
+                  },
+                  {
+                    "label": "P_NORMAL",
+                    "value": 2
+                  },
+                  {
+                    "label": "P_HIGH",
+                    "value": 3
+                  },
+                  {
+                    "label": "P_CRITICAL",
+                    "value": 4
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Profile Segment"
+              },
+              {
+                "type": "int",
+                "propertyText": "duration",
+                "rpcproperty": "profile.segments.duration",
+                "minrange": 0,
+                "maxrange": 14400
+              },
+              {
+                "type": "bool",
+                "property": "is_active",
+                "rpcproperty": "profile.segments.is_active"
+              },
+              {
+                "type": "string",
+                "property": "vehicle_subsystems",
+                "rpcproperty": "profile.segments.vehicle_subsystems"
+              }
+            ]
+          }
+        },
+        {
+          "VehicleMode": {
+            "Configuration": [
+              {
+                "name": "vehicle_mode",
+                "display_name": "vehicle_mode",
+                "topic": "energy.power_management/1/vehicle_mode123VehicleMode",
+                "rpcmethod": "UpdateVehicleMode"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "mode",
+                "rpcproperty": "command.mode",
+                "propertyText": "mode",
+                "mode": [
+                  {
+                    "label": "M_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "M_STANDBY",
+                    "value": 1
+                  },
+                  {
+                    "label": "M_READY",
+                    "value": 2
+                  },
+                  {
+                    "label": "M_DRIVE",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_invalid",
+                "rpcproperty": "command.is_invalid"
+              },
+              {
+                "type": "bool",
+                "property": "drive_to_standby_transition_timer.is_enabled",
+                "rpcproperty": "command.drive_to_standby_transition_timer.is_enabled"
+              },
+              {
+                "type": "int",
+                "property": "drive_to_standby_transition_timer.time_remaining",
+                "rpcproperty": "command.drive_to_standby_transition_timer.time_remaining",
+                "minrange": 0,
+                "maxrange": 100,
+                "readonly": "True"
+              }
+            ]
+          }
+        },
+        {
+          "VehicleSubsystem": {
+            "Configuration": [
+              {
+                "name": "vehicle_subsystem.propulsion",
+                "display_name": "propulsion",
+                "topic": "energy.power_management/1/vehicle_subsystem.propulsion123VehicleSubsystem",
+                "rpcmethod": "ActivateVehicleSubsystem"
+              },
+              {
+                "name": "vehicle_subsystem.vehicle_access",
+                "display_name": "vehicle_access",
+                "topic": "energy.power_management/1/vehicle_subsystem.vehicle_access123VehicleSubsystem",
+                "rpcmethod": "ActivateVehicleSubsystem"
+              },
+              {
+                "name": "vehicle_subsystem.electrification",
+                "display_name": "electrification",
+                "topic": "energy.power_management/1/vehicle_subsystem.electrification123VehicleSubsystem",
+                "rpcmethod": "ActivateVehicleSubsystem"
+              },
+              {
+                "name": "vehicle_subsystem.low_voltage_power",
+                "display_name": "low_voltage_power",
+                "topic": "energy.power_management/1/vehicle_subsystem.low_voltage_power123VehicleSubsystem",
+                "rpcmethod": "ActivateVehicleSubsystem"
+              },
+              {
+                "name": "vehicle_subsystem.camera",
+                "display_name": "camera",
+                "topic": "energy.power_management/1/vehicle_subsystem.camera123VehicleSubsystem",
+                "rpcmethod": "ActivateVehicleSubsystem"
+              },
+              {
+                "name": "vehicle_subsystem.connectivity",
+                "display_name": "connectivity",
+                "topic": "energy.power_management/1/vehicle_subsystem.connectivity123VehicleSubsystem",
+                "rpcmethod": "ActivateVehicleSubsystem"
+              },
+              {
+                "name": "vehicle_subsystem.infotainment",
+                "display_name": "infotainment",
+                "topic": "energy.power_management/1/vehicle_subsystem.infotainment123VehicleSubsystem",
+                "rpcmethod": "ActivateVehicleSubsystem"
+              },
+              {
+                "name": "vehicle_subsystem.charging",
+                "display_name": "charging",
+                "topic": "energy.power_management/1/vehicle_subsystem.charging123VehicleSubsystem",
+                "rpcmethod": "ActivateVehicleSubsystem"
+              },
+              {
+                "name": "vehicle_subsystem.interior_lighting",
+                "display_name": "interior_lighting",
+                "topic": "energy.power_management/1/vehicle_subsystem.interior_lighting123VehicleSubsystem",
+                "rpcmethod": "ActivateVehicleSubsystem"
+              },
+              {
+                "name": "vehicle_subsystem.exterior_lighting",
+                "display_name": "exterior_lighting",
+                "topic": "energy.power_management/1/vehicle_subsystem.exterior_lighting123VehicleSubsystem",
+                "rpcmethod": "ActivateVehicleSubsystem"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "bool",
+                "property": "is_active",
+                "rpcproperty": "vehicle_subsystem.is_active"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+
+    {
+      "name": "ChargingService",
+      "servicename": "energy.high_voltage.charging",
+      "display_name": "Charging Service",
+      "resource": [
+        "StartCharging",
+        "StopCharging",
+        "StartBatteryPreconditioning",
+        "StopBatteryPreconditioning"
+      ],
+      "ui": [
+        {
+          "StartCharging": {
+            "Configuration": [
+              {
+                "name": "battery",
+                "display_name": "battery",
+                "topic": "energy.high_voltage.charging/1/battery123ChargingServiceProfile",
+                "rpcmethod": "StartCharging"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "id"
+              },
+              {
+                "type": "bool",
+                "property": "is_immediate_charging"
+              },
+              {
+                "type": "label",
+                "text": "Time Slots"
+              },
+              {
+                "type": "repeated",
+                "class": "ChargingTimeslot",
+                "key": "timeslots",
+                "value": [
+                  {
+                    "type": "int",
+                    "property": "duration",
+                    "propertyText": "duration",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "bool",
+                    "property": "is_preferred",
+                    "propertyText": "is_preferred"
+                  },
+                  {
+                    "type": "int",
+                    "property": "cabin_temp",
+                    "propertyText": "cabin_temp",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "label",
+                    "text": "Power Settings"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "power_settings.is_power_limited",
+                    "propertyText": "is_power_limited"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "power_settings.is_discharging",
+                    "propertyText": "is_discharging"
+                  },
+                  {
+                    "type": "int",
+                    "property": "power_settings.min_power",
+                    "propertyText": "min_power",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "int",
+                    "property": "power_settings.max_power",
+                    "propertyText": "max_power",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "label",
+                    "text": "Charging Settings"
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "charging_settings.cord_limit",
+                    "propertyText": "cord_limit",
+                    "mode": [
+                      {
+                        "label": "CL_UNSPECIFIED",
+                        "value": 0
+                      },
+                      {
+                        "label": "CL_REDUCED",
+                        "value": 1
+                      },
+                      {
+                        "label": "CL_MAXIMUM",
+                        "value": 2
+                      },
+                      {
+                        "label": "CL_8A",
+                        "value": 3
+                      },
+                      {
+                        "label": "CL_12A",
+                        "value": 4
+                      }
+                    ]
+                  },
+                  {
+                    "type": "int",
+                    "property": "charging_settings.target_soc",
+                    "propertyText": "target_soc",
+                    "minrange": 5,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "int",
+                    "property": "charging_settings.minimum_soc_for_discharge",
+                    "propertyText": "minimum_soc_for_discharge",
+                    "minrange": 20,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "label",
+                    "text": "Starting Time"
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "starting_time.day",
+                    "propertyText": "day",
+                    "mode": [
+                      {
+                        "label": "DOW_UNKNOWN",
+                        "value": 0
+                      },
+                      {
+                        "label": "DOW_MONDAY",
+                        "value": 1
+                      },
+                      {
+                        "label": "DOW_TUESDAY",
+                        "value": 2
+                      },
+                      {
+                        "label": "DOW_WEDNESDAY",
+                        "value": 3
+                      },
+                      {
+                        "label": "DOW_THURSDAY",
+                        "value": 4
+                      },
+                      {
+                        "label": "DOW_FRIDAY",
+                        "value": 5
+                      },
+                      {
+                        "label": "DOW_SATURDAY",
+                        "value": 6
+                      },
+                      {
+                        "label": "DOW_SUNDAY",
+                        "value": 7
+                      }
+                    ]
+                  },
+                  {
+                    "type": "time",
+                    "property": "starting_time.time_of_day",
+                    "propertyText": "time_of_day"
+                  },
+                  {
+                    "type": "label",
+                    "text": "Departure Time"
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "departure_time.day",
+                    "propertyText": "day",
+                    "mode": [
+                      {
+                        "label": "DOW_UNKNOWN",
+                        "value": 0
+                      },
+                      {
+                        "label": "DOW_MONDAY",
+                        "value": 1
+                      },
+                      {
+                        "label": "DOW_TUESDAY",
+                        "value": 2
+                      },
+                      {
+                        "label": "DOW_WEDNESDAY",
+                        "value": 3
+                      },
+                      {
+                        "label": "DOW_THURSDAY",
+                        "value": 4
+                      },
+                      {
+                        "label": "DOW_FRIDAY",
+                        "value": 5
+                      },
+                      {
+                        "label": "DOW_SATURDAY",
+                        "value": 6
+                      },
+                      {
+                        "label": "DOW_SUNDAY",
+                        "value": 7
+                      }
+                    ]
+                  },
+                  {
+                    "type": "time",
+                    "property": "departure_time.time_of_day",
+                    "propertyText": "time_of_day"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
+        {
+          "StopCharging": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "Stop Charging",
+                "topic": "",
+                "rpcmethod": "StopCharging"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "Type of RPC request is google.protobuf.Empty"
+              }
+            ]
+          }
+        },
+        {
+          "StartBatteryPreconditioning": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "Start Battery Preconditioning",
+                "topic": "",
+                "rpcmethod": "StartBatteryPreconditioning"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "Destination Details"
+              },
+              {
+                "type": "int",
+                "property": "destination_details.distance_to_destination",
+                "propertyText": "distance_to_destination",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "int",
+                "property": "destination_details.duration_to_arrival",
+                "propertyText": "duration_to_arrival",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "float",
+                "property": "destination_details.power_level",
+                "propertyText": "power_level",
+                "minrange": 0,
+                "maxrange": 100
+              }
+            ]
+          }
+        },
+        {
+          "StopBatteryPreconditioning": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "Stop Battery Preconditioning",
+                "topic": "",
+                "rpcmethod": "StopBatteryPreconditioning"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "Type of RPC request is google.protobuf.Empty"
+              }
+            ]
+          }
+        }
+
+      ]
+    },
+    {
+      "name": "BrakingService",
+      "servicename": "chassis.braking",
+      "display_name": "Braking Service",
+      "resource": [
+        "ResetHealth",
+        "ManageHealthMonitoring"
+      ],
+      "ui": [
+        {
+          "ResetHealth": {
+            "Configuration": [
+              {
+                "name": "brake_pads.front",
+                "display_name": "front",
+                "topic": "chassis.braking/1/brake_pads.front123BrakePads",
+                "rpcmethod": "ResetHealth"
+              },
+              {
+                "name": "brake_pads.rear",
+                "display_name": "rear",
+                "topic": "chassis.braking/1/brake_pads.rear123BrakePads",
+                "rpcmethod": "ResetHealth"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "Health"
+              },
+              {
+                "type": "dropdown",
+                "property": "health.state",
+                "propertyText": "state",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "S_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "S_OK",
+                    "value": 1
+                  },
+                  {
+                    "label": "S_SERVICE_SOON",
+                    "value": 2
+                  },
+                  {
+                    "label": "S_SERVICE_NOW",
+                    "value": 3
+                  },
+                  {
+                    "label": "S_DISABLED",
+                    "value": 4
+                  },
+                  {
+                    "label": "S_FAULT_PRESENT",
+                    "value": 5
+                  },
+                  {
+                    "label": "S_UNSUPPORTED",
+                    "value": 6
+                  }
+                ]
+              },
+              {
+                "type": "int",
+                "property": "health.remaining_life",
+                "propertyText": "remaining_life",
+                "readonly": "True",
+                "minrange": 0,
+                "maxrange": 100
+              }
+            ]
+          }
+        },
+        {
+          "ManageHealthMonitoring": {
+            "Configuration": [
+              {
+                "name": "brake_pads.front",
+                "display_name": "front",
+                "topic": "chassis.braking/1/brake_pads.front123BrakePads",
+                "rpcmethod": "ManageHealthMonitoring"
+              },
+              {
+                "name": "brake_pads.rear",
+                "display_name": "rear",
+                "topic": "chassis.braking/1/brake_pads.rear123BrakePads",
+                "rpcmethod": "ManageHealthMonitoring"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "bool",
+                "property": "is_enabled"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "VehicleService",
+      "servicename": "vehicle",
+      "display_name": "Vehicle Service",
+      "resource": [
+        "ResetTripMeter",
+        "SetTransportMode"
+      ],
+      "ui": [
+        {
+          "ResetTripMeter": {
+            "Configuration": [
+              {
+                "name": "trip_1",
+                "display_name": "trip_1",
+                "topic": "vehicle/1/trip_meter.trip_1123TripMeter",
+                "rpcmethod": "ResetTripMeter"
+              },
+              {
+                "name": "trip_2",
+                "display_name": "trip_2",
+                "topic": "vehicle/1/trip_meter.trip_2123TripMeter",
+                "rpcmethod": "ResetTripMeter"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "bool",
+                "property": "is_invalid",
+                "readonly": "True"
+              },
+              {
+                "type": "float",
+                "property": "value",
+                "minrange": 0,
+                "maxrange": 1253.2,
+                "readonly": "True"
+              }
+            ]
+          }
+        },
+        {
+          "SetTransportMode": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "SetTransportMode",
+                "topic": "",
+                "rpcmethod": "SetTransportMode"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "bool",
+                "property": "is_active"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "SuspensionService",
+      "servicename": "chassis.suspension",
+      "display_name": "Suspension Service",
+      "resource": [
+        "RideHeight"
+      ],
+      "ui": [
+        {
+          "RideHeight": {
+            "Configuration": [
+              {
+                "name": "ride_height",
+                "display_name": "ride_height",
+                "topic": "chassis.suspension/1/ride_height123RideHeight",
+                "rpcmethod": "SetRideHeight"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "dropdown",
+                "property": "command",
+                "propertyText": "command",
+                "mode": [
+                  {
+                    "label": "RHL_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "RHL_USER_ENTRY_EXIT",
+                    "value": 1
+                  },
+                  {
+                    "label": "RHL_ABSOLUTE_LOWEST",
+                    "value": 2
+                  },
+                  {
+                    "label": "RHL_LOWEST",
+                    "value": 3
+                  },
+                  {
+                    "label": "RHL_LOWER",
+                    "value": 4
+                  },
+                  {
+                    "label": "RHL_LOW",
+                    "value": 5
+                  },
+                  {
+                    "label": "RHL_NORMAL",
+                    "value": 6
+                  },
+                  {
+                    "label": "RHL_HIGH",
+                    "value": 7
+                  },
+                  {
+                    "label": "RHL_HIGHER",
+                    "value": 8
+                  },
+                  {
+                    "label": "RHL_HIGHEST",
+                    "value": 9
+                  },
+                  {
+                    "label": "RHL_FRONT_TO_REAR_MAX_TILT",
+                    "value": 10
+                  },
+                  {
+                    "label": "RHL_REAR_LOW",
+                    "value": 11
+                  },
+                  {
+                    "label": "RHL_REAR_HIGH",
+                    "value": 12
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "motion_speed",
+                "propertyText": "motion_speed",
+                "mode": [
+                  {
+                    "label": "MSC_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "MSC_SLOW",
+                    "value": 1
+                  },
+                  {
+                    "label": "MSC_FAST",
+                    "value": 2
+                  },
+                  {
+                    "label": "MSC_MED",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "motion_type",
+                "propertyText": "motion_type",
+                "mode": [
+                  {
+                    "label": "MTC_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "MTC_CONCURRENT",
+                    "value": 1
+                  },
+                  {
+                    "label": "MTC_RATCHET",
+                    "value": 2
+                  },
+                  {
+                    "label": "MTC_CAMEL",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Ride Height"
+              },
+              {
+                "type": "dropdown",
+                "property": "current_height",
+                "propertyText": "current_height",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "RHL_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "RHL_USER_ENTRY_EXIT",
+                    "value": 1
+                  },
+                  {
+                    "label": "RHL_ABSOLUTE_LOWEST",
+                    "value": 2
+                  },
+                  {
+                    "label": "RHL_LOWEST",
+                    "value": 3
+                  },
+                  {
+                    "label": "RHL_LOWER",
+                    "value": 4
+                  },
+                  {
+                    "label": "RHL_LOW",
+                    "value": 5
+                  },
+                  {
+                    "label": "RHL_NORMAL",
+                    "value": 6
+                  },
+                  {
+                    "label": "RHL_HIGH",
+                    "value": 7
+                  },
+                  {
+                    "label": "RHL_HIGHER",
+                    "value": 8
+                  },
+                  {
+                    "label": "RHL_HIGHEST",
+                    "value": 9
+                  },
+                  {
+                    "label": "RHL_FRONT_TO_REAR_MAX_TILT",
+                    "value": 10
+                  },
+                  {
+                    "label": "RHL_REAR_LOW",
+                    "value": 11
+                  },
+                  {
+                    "label": "RHL_REAR_HIGH",
+                    "value": 12
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "target_height",
+                "propertyText": "target_height",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "RHL_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "RHL_USER_ENTRY_EXIT",
+                    "value": 1
+                  },
+                  {
+                    "label": "RHL_ABSOLUTE_LOWEST",
+                    "value": 2
+                  },
+                  {
+                    "label": "RHL_LOWEST",
+                    "value": 3
+                  },
+                  {
+                    "label": "RHL_LOWER",
+                    "value": 4
+                  },
+                  {
+                    "label": "RHL_LOW",
+                    "value": 5
+                  },
+                  {
+                    "label": "RHL_NORMAL",
+                    "value": 6
+                  },
+                  {
+                    "label": "RHL_HIGH",
+                    "value": 7
+                  },
+                  {
+                    "label": "RHL_HIGHER",
+                    "value": 8
+                  },
+                  {
+                    "label": "RHL_HIGHEST",
+                    "value": 9
+                  },
+                  {
+                    "label": "RHL_FRONT_TO_REAR_MAX_TILT",
+                    "value": 10
+                  },
+                  {
+                    "label": "RHL_REAR_LOW",
+                    "value": 11
+                  },
+                  {
+                    "label": "RHL_REAR_HIGH",
+                    "value": 12
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "supported_heights",
+                "propertyText": "supported_heights",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "RHL_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "RHL_USER_ENTRY_EXIT",
+                    "value": 1
+                  },
+                  {
+                    "label": "RHL_ABSOLUTE_LOWEST",
+                    "value": 2
+                  },
+                  {
+                    "label": "RHL_LOWEST",
+                    "value": 3
+                  },
+                  {
+                    "label": "RHL_LOWER",
+                    "value": 4
+                  },
+                  {
+                    "label": "RHL_LOW",
+                    "value": 5
+                  },
+                  {
+                    "label": "RHL_NORMAL",
+                    "value": 6
+                  },
+                  {
+                    "label": "RHL_HIGH",
+                    "value": 7
+                  },
+                  {
+                    "label": "RHL_HIGHER",
+                    "value": 8
+                  },
+                  {
+                    "label": "RHL_HIGHEST",
+                    "value": 9
+                  },
+                  {
+                    "label": "RHL_FRONT_TO_REAR_MAX_TILT",
+                    "value": 10
+                  },
+                  {
+                    "label": "RHL_REAR_LOW",
+                    "value": 11
+                  },
+                  {
+                    "label": "RHL_REAR_HIGH",
+                    "value": 12
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "available_heights",
+                "propertyText": "available_heights",
+                "readonly": "True",
+                "mode": [
+                  {
+                    "label": "RHL_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "RHL_USER_ENTRY_EXIT",
+                    "value": 1
+                  },
+                  {
+                    "label": "RHL_ABSOLUTE_LOWEST",
+                    "value": 2
+                  },
+                  {
+                    "label": "RHL_LOWEST",
+                    "value": 3
+                  },
+                  {
+                    "label": "RHL_LOWER",
+                    "value": 4
+                  },
+                  {
+                    "label": "RHL_LOW",
+                    "value": 5
+                  },
+                  {
+                    "label": "RHL_NORMAL",
+                    "value": 6
+                  },
+                  {
+                    "label": "RHL_HIGH",
+                    "value": 7
+                  },
+                  {
+                    "label": "RHL_HIGHER",
+                    "value": 8
+                  },
+                  {
+                    "label": "RHL_HIGHEST",
+                    "value": 9
+                  },
+                  {
+                    "label": "RHL_FRONT_TO_REAR_MAX_TILT",
+                    "value": 10
+                  },
+                  {
+                    "label": "RHL_REAR_LOW",
+                    "value": 11
+                  },
+                  {
+                    "label": "RHL_REAR_HIGH",
+                    "value": 12
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TraileringProfile",
+      "servicename": "vehicle.trailering.profile",
+      "display_name": "Trailering Profile Service",
+      "resource": [
+        "SetActiveTrailerProfile"
+      ],
+      "ui": [
+        {
+          "SetActiveTrailerProfile": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "SetActiveTrailerProfile",
+                "topic": "",
+                "rpcmethod": "SetActiveTrailerProfile"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "int",
+                "propertyText": "profile_id",
+                "property": "trailer_profile.profile_id",
+                "minrange": 1,
+                "maxrange": 100
+              },
+              {
+                "type": "bool",
+                "propertyText": "is_guest_trailer",
+                "property": "trailer_profile.is_guest_trailer"
+              },
+              {
+                "type": "bool",
+                "propertyText": "is_accessory",
+                "property": "trailer_profile.is_accessory"
+              },
+              {
+                "type": "dropdown",
+                "property": "trailer_profile.trailer_type",
+                "propertyText": "trailer_type",
+                "mode": [
+                  {
+                    "label": "TT_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "TT_BOX",
+                    "value": 1
+                  },
+                  {
+                    "label": "TT_OTHER",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "trailer_profile.hitch_type",
+                "propertyText": "hitch_type",
+                "mode": [
+                  {
+                    "label": "HT_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "HT_CONVENTIONAL",
+                    "value": 1
+                  },
+                  {
+                    "label": "HT_FIFTHWHEEL",
+                    "value": 2
+                  },
+                  {
+                    "label": "HT_GOOSENECK",
+                    "value": 3
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "text": "Conventional Hitch Dimension"
+              },
+              {
+                "type": "float",
+                "property": "trailer_profile.conventional_hitch_dimensions.trailer_height",
+                "propertyText": "trailer_height",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "trailer_profile.conventional_hitch_dimensions.trailer_length",
+                "propertyText": "trailer_length",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "trailer_profile.conventional_hitch_dimensions.trailer_width",
+                "propertyText": "trailer_width",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "trailer_profile.conventional_hitch_dimensions.box_width",
+                "propertyText": "box_width",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "trailer_profile.conventional_hitch_dimensions.hitch_height",
+                "propertyText": "hitch_height",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "trailer_profile.conventional_hitch_dimensions.hitch_length",
+                "propertyText": "hitch_length",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "trailer_profile.conventional_hitch_dimensions.hitching_point_length",
+                "propertyText": "hitching_point_length",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "trailer_profile.conventional_hitch_dimensions.tongue_length",
+                "propertyText": "tongue_length",
+                "minrange": 0,
+                "maxrange": 1000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "GeofencingService",
+      "servicename": "vehicle.geofencing",
+      "display_name": "Geofencing Service",
+      "resource": [
+        "CreateGeofenceGroup",
+        "DeleteGeofenceGroup",
+        "GetGeofenceGroups",
+        "IsVehicleInGeofenceGroup",
+        "IsVehicleInGeofence"
+      ],
+      "ui": [
+        {
+          "CreateGeofenceGroup": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "CreateGeofenceGroup",
+                "topic": "",
+                "rpcmethod": "CreateGeofenceGroup"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "name"
+              },
+              {
+                "type": "bool",
+                "property": "enter_trigger"
+              },
+              {
+                "type": "bool",
+                "property": "exit_trigger"
+              },
+              {
+                "type": "bool",
+                "property": "dwelling_trigger"
+              },
+              {
+                "type": "int",
+                "property": "dwelling_transition_delay",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "dropdown",
+                "property": "scope",
+                "propertyText": "scope",
+                "mode": [
+                  {
+                    "label": "UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "USER",
+                    "value": 1
+                  },
+                  {
+                    "label": "VEHICLE",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "repeated",
+                "class": "Geofence",
+                "key": "geofences",
+                "value": [
+                  {
+                    "type": "string",
+                    "property": "name",
+                    "propertyText": "name"
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "scope",
+                    "propertyText": "scope",
+                    "mode": [
+                      {
+                        "label": "UNSPECIFIED",
+                        "value": 0
+                      },
+                      {
+                        "label": "USER",
+                        "value": 1
+                      },
+                      {
+                        "label": "VEHICLE",
+                        "value": 2
+                      }
+                    ]
+                  },
+                  {
+                    "type": "int",
+                    "property": "expiration_duration",
+                    "minrange": -1,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "bool",
+                    "property": "enter_trigger"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "exit_trigger"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "dwelling_trigger"
+                  },
+                  {
+                    "type": "int",
+                    "property": "dwelling_transition_delay",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "label",
+                    "text": "Circular Boundary"
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.radius",
+                    "propertyText": "radius",
+                    "minrange": 0,
+                    "maxrange": 1000
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.center.latitude",
+                    "propertyText": "latitude",
+                    "minrange": -90,
+                    "maxrange": 90
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.center.longitude",
+                    "propertyText": "longitude",
+                    "minrange": -180,
+                    "maxrange": 180
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.center.altitude",
+                    "propertyText": "altitude",
+                    "minrange": 0,
+                    "maxrange": 1000
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "DeleteGeofenceGroup": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "DeleteGeofenceGroup",
+                "topic": "",
+                "rpcmethod": "DeleteGeofenceGroup"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "value"
+              }
+            ]
+          }
+        },
+        {
+          "GetGeofenceGroups": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "GetGeofenceGroups",
+                "topic": "",
+                "rpcmethod": "GetGeofenceGroups"
+              }
+            ],
+            "uidetails": [
+            ]
+          }
+        },
+        {
+          "IsVehicleInGeofenceGroup": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "IsVehicleInGeofenceGroup",
+                "topic": "",
+                "rpcmethod": "IsVehicleInGeofenceGroup"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "name"
+              },
+              {
+                "type": "bool",
+                "property": "enter_trigger"
+              },
+              {
+                "type": "bool",
+                "property": "exit_trigger"
+              },
+              {
+                "type": "bool",
+                "property": "dwelling_trigger"
+              },
+              {
+                "type": "int",
+                "property": "dwelling_transition_delay",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "dropdown",
+                "property": "scope",
+                "propertyText": "scope",
+                "mode": [
+                  {
+                    "label": "UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "USER",
+                    "value": 1
+                  },
+                  {
+                    "label": "VEHICLE",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "repeated",
+                "class": "Geofence",
+                "key": "geofences",
+                "value": [
+                  {
+                    "type": "string",
+                    "property": "name",
+                    "propertyText": "name"
+                  },
+                  {
+                    "type": "dropdown",
+                    "property": "scope",
+                    "propertyText": "scope",
+                    "mode": [
+                      {
+                        "label": "UNSPECIFIED",
+                        "value": 0
+                      },
+                      {
+                        "label": "USER",
+                        "value": 1
+                      },
+                      {
+                        "label": "VEHICLE",
+                        "value": 2
+                      }
+                    ]
+                  },
+                  {
+                    "type": "int",
+                    "property": "expiration_duration",
+                    "minrange": -1,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "bool",
+                    "property": "enter_trigger"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "exit_trigger"
+                  },
+                  {
+                    "type": "bool",
+                    "property": "dwelling_trigger"
+                  },
+                  {
+                    "type": "int",
+                    "property": "dwelling_transition_delay",
+                    "minrange": 0,
+                    "maxrange": 100
+                  },
+                  {
+                    "type": "label",
+                    "text": "Circular Boundary"
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.radius",
+                    "propertyText": "radius",
+                    "minrange": 0,
+                    "maxrange": 1000
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.center.latitude",
+                    "propertyText": "latitude",
+                    "minrange": -90,
+                    "maxrange": 90
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.center.longitude",
+                    "propertyText": "longitude",
+                    "minrange": -180,
+                    "maxrange": 180
+                  },
+                  {
+                    "type": "float",
+                    "property": "circular_boundary.center.altitude",
+                    "propertyText": "altitude",
+                    "minrange": 0,
+                    "maxrange": 1000
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "IsVehicleInGeofence": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "IsVehicleInGeofence",
+                "topic": "",
+                "rpcmethod": "IsVehicleInGeofence"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "name",
+                "propertyText": "name"
+              },
+              {
+                "type": "dropdown",
+                "property": "scope",
+                "propertyText": "scope",
+                "mode": [
+                  {
+                    "label": "UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "USER",
+                    "value": 1
+                  },
+                  {
+                    "label": "VEHICLE",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "int",
+                "property": "expiration_duration",
+                "minrange": -1,
+                "maxrange": 100
+              },
+              {
+                "type": "bool",
+                "property": "enter_trigger"
+              },
+              {
+                "type": "bool",
+                "property": "exit_trigger"
+              },
+              {
+                "type": "bool",
+                "property": "dwelling_trigger"
+              },
+              {
+                "type": "int",
+                "property": "dwelling_transition_delay",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "label",
+                "text": "Circular Boundary"
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.radius",
+                "propertyText": "radius",
+                "minrange": 0,
+                "maxrange": 1000
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.latitude",
+                "propertyText": "latitude",
+                "minrange": -90,
+                "maxrange": 90
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.longitude",
+                "propertyText": "longitude",
+                "minrange": -180,
+                "maxrange": 180
+              },
+              {
+                "type": "float",
+                "property": "circular_boundary.center.altitude",
+                "propertyText": "altitude",
+                "minrange": 0,
+                "maxrange": 1000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "SoundChimeProducer",
+      "servicename": "sound.chime_producer",
+      "display_name": "Chime Producer Service",
+      "resource": [
+        "ActivateChime",
+        "CancelChime"
+      ],
+      "ui": [
+        {
+          "ActivateChime": {
+            "Configuration": [
+              {
+                "name": "sound.chime_producer",
+                "display_name": "sound.chime_producer",
+                "topic": "",
+                "rpcmethod": "ActivateChime"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "int",
+                "property": "chime_event_id",
+                "rpcproperty": "chime_event_id",
+                "minrange": 0,
+                "maxrange": 1000
+              }
+            ]
+          }
+        },
+        {
+          "CancelChime": {
+            "Configuration": [
+              {
+                "name": "sound.chime_producer",
+                "display_name": "sound.chime_producer",
+                "topic": "",
+                "rpcmethod": "CancelChime"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "int",
+                "property": "chime_id",
+                "rpcproperty": "chime_id",
+                "minrange": 0,
+                "maxrange": 1000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ThreatAlertService",
+      "servicename": "insights.threat_alert",
+      "display_name": "Threat Alert Service",
+      "resource": [
+        "ActivateThreatAlert",
+        "GetStatus"
+      ],
+      "ui": [
+        {
+          "ActivateThreatAlert": {
+            "Configuration": [
+              {
+                "name": "insights.threat_alert",
+                "display_name": "insights.threat_alert",
+                "topic": "",
+                "rpcmethod": "ActivateThreatAlert"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "bool",
+                "property": "activation"
+              }
+            ]
+          }
+        },
+        {
+          "GetStatus": {
+            "Configuration": [
+              {
+                "name": "insights.threat_alert",
+                "display_name": "insights.threat_alert",
+                "topic": "insights.threat_alert/1/vehicle123ThreatAlertStatus",
+                "rpcmethod": "GetStatus"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "label",
+                "text": "Type of RPC request is google.protobuf.Empty"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "HelloWorldService",
+      "servicename": "example.hello_world",
+      "display_name": "Hello World Service",
+      "resource": [
+        "SayHello"
+      ],
+      "ui": [
+        {
+          "SayHello": {
+            "Configuration": [
+              {
+                "name": "N",
+                "display_name": "SayHello",
+                "topic": "",
+                "rpcmethod": "SayHello"
+              }
+            ],
+            "uidetails": [
+              {
+                "type": "string",
+                "property": "name"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

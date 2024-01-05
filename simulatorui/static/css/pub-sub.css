@@ -1,0 +1,182 @@
+.pubsub-mainContainer>button:nth-child(2) {
+  margin-top: 20px;
+  float: right;
+}
+
+.pubsub-primaryRow {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.pubsub-primaryRow>div {
+  float: left;
+  margin: 20px 0px 0px 0px;
+}
+
+.pubsub-SecondRow {
+  margin: 30px 0px 0px 0px;
+}
+
+.pubsub-SecondRow>div:nth-child(1) {
+  width: 100%;
+}
+
+.pubsub-SecondRow>div:nth-child(1)>div:nth-child(2) {
+  margin: 20px 10px 20px -20px;
+}
+
+.pubsub-SecondRow>div:nth-child(1)>ul:nth-child(3) {
+  height: 580px;
+  overflow: auto;
+}
+
+.pubsub-SecondRow>div:nth-child(1)>ul:nth-child(3) li {
+  display: flex;
+  margin: 10px 0px 10px -40px;
+}
+
+.pubsub-SecondRow>div:nth-child(2) {
+  width: 100%;
+}
+
+.pubsub-SecondRow>div:nth-child(2)>div:nth-child(1) {
+  height: 680px;
+}
+
+.pubsub-SecondRow>div:nth-child(2)>div:nth-child(1)>p:nth-child(1) {
+  left: 20px;
+}
+
+.pubsub-SecondRow>div:nth-child(2)>div:nth-child(1)>p:nth-child(2) {
+  display: block;
+  margin-top: 350px;
+}
+
+.pubsub-SecondRow>div:nth-child(2)>div:nth-child(1)>div {
+  display: none;
+}
+
+.pubsub-SecondRow>div:nth-child(2)>div:nth-child(1)>div>label {
+  margin: 90px 0px 20px 22px;
+  color: #FFF;
+  font-size: 24px;
+  line-height: 21px;
+  text-align: center;
+}
+
+.pubsub-SecondRow>div:nth-child(2)>div:nth-child(1)>div>div.flex {
+  margin: 20px 20px;
+}
+
+.pubsub-SecondRow>div:nth-child(2)>div:nth-child(1)>div>div>label {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: center;
+  color: #FFFFFF;
+  margin: 2px 0px 0px 15px
+}
+
+.pubsub-modalLgss {
+  color: #fff;
+  display: block;
+  margin-bottom: 20px
+}
+
+.pubsub-modalLgss>h4 {
+  color: #fff;
+  display: none;
+  margin: 90px 0px 20px 10px;
+}
+
+.pubsub-uidesignbox {
+  width: 100%;
+  float: left;
+  height: 450px;
+  overflow: auto;
+  overflow-x: hidden;
+  margin-left: -20px;
+}
+
+.pubsub-logbox {
+  height: 450px;
+}
+
+.pubsub-logbox>div:nth-child(1) {
+  padding: 1rem;
+}
+
+.pubsub-logbox>div:nth-child(1)>h4 {
+  color: #fff;
+  float: left;
+}
+
+.pubsub-logbox>div:nth-child(1)>button {
+  float: right;
+  border: none;
+  background: none !important;
+  color: #8CC7F7;
+}
+
+#logbox #logsbox {
+  overflow-y: auto;
+  width: 100%;
+  overflow-x: hidden;
+  margin: 30px 0px 30px 10px;
+  height: 370px;
+}
+
+.pubsub-bottomcontent>button:nth-child(1) {
+  margin-left: 10px;
+}
+
+.pubsub-bottomcontent>button:nth-child(2) {
+  margin-left: 20px;
+}
+
+.pubsub-bottomcontent>div:nth-child(3) {
+  float: right;
+  margin-right: 20px;
+}
+
+.pubsub-bottomcontent>div:nth-child(3)>button {
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+  border-radius: 2px;
+  margin-left: 10px;
+}
+
+.pubsub-modal {
+  background-color: #151617;
+  color: #ffff;
+  overflow-y: auto;
+  max-height: 85%;
+  width: 40%;
+  border: 0.865466px solid #3D3935;
+  box-shadow: 0px 0px 3px 1px #5EB1F3;
+  border-radius: 22.5021px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.pubsub-modal>div.modal-header>h4 {
+  color: #fff;
+}
+
+.pubsub-modal>div.modal-header>button {
+  color: #fff;
+}
+
+.pubsub-SecondRow>div:nth-child(2)>div:nth-child(2) {
+  display: none;
+  margin-top: -60px;
+}
+
+.pubsub-servConfig {
+  display: flex;
+}

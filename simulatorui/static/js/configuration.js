@@ -27,7 +27,7 @@ function saveConfig() {
             localStorage.setItem("ip_local", document.getElementById("localip").value)
             localStorage.setItem("ip_multicast", document.getElementById("multicastip").value)
             console.log('before mci config set')
-            socket.emit("set_mcu_config", document.getElementById("localip").value, document.getElementById("multicastip").value)
+            socket.emit("set_someip_config", document.getElementById("localip").value, document.getElementById("multicastip").value)
         } else if (document.querySelector('#utransportConfig').value == "ZENOH") {
             localStorage.setItem("zenoh_router_ip", document.getElementById("zenohrouterip").value)
             console.log('before zenoh router ip')

@@ -123,13 +123,13 @@
                     </li>
 
                     <li class="nav-item {% if 'configuration' in segment %} active {% endif %}">
-                        <a class="nav-link " href="/configuration.html">
+                        <a class="nav-link " href="{{ url_for('simulator_blueprint.route_configuration')}}">
                             Configuration
                         </a>
                     </li>
 
                     <li class="nav-item {% if 'mockservice' in segment %} active {% endif %}">
-                        <a class="nav-link " href="/mockservice.html">
+                        <a class="nav-link " href="{{ url_for('simulator_blueprint.route_pubsub')}}">
                             Mock Service
                         </a>
                     </li>
@@ -139,7 +139,7 @@
                         <label class="sidebarHeading"> <u>Features</u></label>
                     </li>
                     <li class="nav-item {% if 'pub-sub' in segment %} active {% endif %}">
-                        <a class="nav-link" href="/pub-sub.html"> Publish-Subscribe</a>
+                        <a class="nav-link" href="{{ url_for('simulator_blueprint.route_pubsub')}}"> Publish-Subscribe</a>
                     </li>
 
                     <li class="nav-item {% if 'send-rpc' in segment %} active {% endif %}">
