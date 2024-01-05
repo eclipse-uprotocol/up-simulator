@@ -1,0 +1,171 @@
+.config-firstRow {
+  height: 280px;
+}
+
+.config-mOne {
+  margin: 20px;
+}
+
+.config-table {
+  margin: 10px 0px 20px 20px;
+  color: #FFFF;
+  font-size: 18px;
+  line-height: 40px;
+}
+
+.config-td {
+  width: 50%;
+}
+
+.config-rOnecTwo {
+  height: 280px;
+}
+
+.config-rOnecTwoHeading {
+  margin: 20px 0px 0px 20px;
+}
+
+.ins-dOne {
+  margin: 0px 10px 39px 20px;
+}
+
+.ins-dtwo {
+  display: flex;
+}
+
+.inst-dThree {
+  position: relative;
+  text-align: center;
+}
+
+.instl-lOne {
+  position: absolute;
+}
+
+.inst-dFour {
+  width: 20%;
+  margin: 0px 20px 0px 0px;
+}
+
+.inst-setBtn {
+  margin-right: 30px;
+}
+
+.inst-dFive {
+  display: flex;
+}
+
+.inst-dSix {
+  width: 80%;
+  margin-top: 30px
+}
+
+.inst-dSeven {
+  width: 20%;
+  margin: 30px 20px 0px 0px;
+}
+
+.inst-setBtn {
+  margin-right: 30px;
+}
+
+.inst-divSeven {
+  margin: 10px 0px 0px 0px
+}
+
+.inst-divEight {
+  margin: 20px 0px 10px 10px;
+}
+
+.inst-azureAnchor {
+  margin: 15px;
+  color: #FFFF;
+}
+
+.inst-imgOne {
+  float: right;
+  margin: 10px;
+}
+
+.inst-divAzure {
+  border-top: 0.865466px solid #5EB1F3;
+}
+
+.inst-browseInput {
+  width: 75%;
+  margin-right: 0;
+  display: inline;
+}
+
+.inst-divNine {
+  margin: 10px 0px 0px 0px;
+}
+
+.inst-divTen {
+  margin: 20px 0px 10px 10px;
+}
+
+.inst-platformAnchor {
+  color: #FFFF;
+  margin: 15px;
+}
+
+.inst-imgThree {
+  float: right;
+  margin: 10px;
+}
+
+.inst-platformDiv {
+  border-top: 0.865466px solid #5EB1F3;
+}
+
+.inst-ElevenDiv {
+  width: 50%;
+}
+
+.inst-uninstallBtn {
+  margin-left: 30px;
+}
+
+.inst-tableMock {
+  width: 50%;
+}
+
+.inst-divTwelve {
+  margin: 20px 0px 10px 10px;
+}
+
+.inst-AnchorTwo {
+  color: #FFF;
+  margin: 15px;
+}
+
+.inst-imgFour {
+  float: right;
+  margin: 10px;
+}
+
+.inst-testDiv {
+  border-top: 0.865466px solid #5EB1F3;
+}
+
+.inst-thirteenDiv {
+  width: 73%;
+}
+
+.inst-tableTestDiv {
+  width: 68%;
+}
+
+.inst-fifteenDiv {
+  padding-bottom: 25px;
+  width: 100%;
+}
+
+.inst-insBtn {
+  margin-right: 30px;
+}
+
+a:hover {
+  color: orange;
+}

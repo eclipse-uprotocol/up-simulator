@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        {% block title %}{% endblock %}
+    </title>
+
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" name="viewport">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+
+
+    <link href="{{ config.ASSETS_ROOT }}/fonts/fontawesome/css/all.css" rel="stylesheet">
+
+    <link href="{{ config.ASSETS_ROOT }}/css/style.css" rel="stylesheet">
+
+    <link href="{{ config.ASSETS_ROOT }}/css/common.css" rel="stylesheet">
+    <link href="{{ config.ASSETS_ROOT }}/css/configuration.css" rel="stylesheet">
+
+
+
+    <!-- dark mode css -->
+    <link href="{{ config.ASSETS_ROOT }}/css/dark.css" rel="stylesheet">
+
+    <!-- Specific CSS goes HERE -->
+    {% block stylesheets %}{% endblock stylesheets %}
+
+</head>
+
+<body>
+
+    <!-- [ Pre-loader ] start -->
+
+    <p hidden id="pgname">{{segment}}</p>
+
+    <!-- [ Pre-loader ] End -->
+
+
+    {% include 'includes/sidebar.html' %}
+
+    {% block content %}{% endblock content %}
+
+    {% include 'includes/scripts.html' %}
+
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}{% endblock javascripts %}
+
+</body>
+
+</html>

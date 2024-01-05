@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %} Configuration {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container maincontent">
+    <div class="pcoded-wrapper">
+
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <!--                [ Main Content ] start-->
+                        <div class="configuration">Configuration</div>
+
+                        <div class="row">
+                            <div class="col-xl-8" id="space_div">
+                                <div class="card Services box-content-data config-firstRow"></div>
+                            </div>
+                            <div class="col-xl-8" hidden id="device_config_div">
+                                <div class="card Services box-content-data config-firstRow">
+                                    <div class="config-mOne">
+                                        <span class="headerfont">Device</span>
+                                        <div class="underline"></div>
+                                        <span id="emulator_status"
+                                              style="color:#ffff;background:#0F3307;border-radius:22px;border:1px solid #4B9E38">{{emu_status}}</span>
+
+                                    </div>
+
+                                    <div>
+                                        <table class="config-table">
+                                            {% for key, value in deviceInfo.items() %}
+                                            <tr>
+                                                <td class="config-td">{{ key }}</td>
+                                                <td class="config-td">{{value}}</td>
+                                            </tr>
+
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-8" hidden id="someip_config_div">
+                                <div class="card Services box-content-data config-firstRow">
+                                    <div class="config-mOne">
+                                        <span class="headerfont">SOME/IP</span>
+                                        <div class="underline"></div>
+
+                                    </div>
+                                    <div class="httpProxy" style="display:flex;width:100%;margin:40px 0px 20px 10px;">
+
+                                        <div class="floating-inputbox" style="width:42%" id="inputunicastip">
+                                            <div class="floating-label">
+                                                <input class="floating-input" id="localip" type="text">
+                                                <label class="input-label">Unicast IP</label>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="floating-inputbox" style="width:42%" id="inputmulticastip">
+                                            <div class="floating-label">
+                                                <input class="floating-input" id="multicastip" type="text">
+                                                <label class="input-label" style="left:30px;">Multicast IP</label>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-default btn-content" onclick="saveConfig()"
+                                                style="vertical-align:top;background: #3B3B39;border: 1px solid #5EB1F3;border-radius: 2px;color: #5EB1F3;font-size: 16px;"
+                                                type="button">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-8" hidden id="zenoh_config_div">
+                                <div class="card Services box-content-data config-firstRow">
+                                    <div class="config-mOne">
+                                        <span class="headerfont">ZENOH</span>
+                                        <div class="underline"></div>
+
+                                    </div>
+                                    <div class="httpProxy" style="display:flex;width:100%;margin:40px 0px 20px 10px;">
+
+                                        <div class="floating-inputbox" style="width:42%" id="inputrouterip">
+                                            <div class="floating-label">
+                                                <input class="floating-input" id="zenohrouterip" type="text">
+                                                <label class="input-label">Router IP</label>
+                                            </div>
+                                        </div>
+
+
+                                        <button class="btn btn-default btn-content" onclick="saveConfig()"
+                                                style="vertical-align:top;background: #3B3B39;border: 1px solid #5EB1F3;border-radius: 2px;color: #5EB1F3;font-size: 16px;"
+                                                type="button">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-8" hidden id="mqtt_config_div">
+                                <div class="card Services box-content-data config-firstRow">
+                                    <div class="config-mOne">
+                                        <span class="headerfont">MQTT</span>
+                                        <div class="underline"></div>
+
+                                    </div>
+                                    <div class="httpProxy" style="display:flex;width:100%;margin:40px 0px 20px 10px;">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-8" hidden id="vehicle_config_div">
+                                <div class="card Services box-content-data config-firstRow">
+                                    <div class="config-mOne">
+                                        <span class="headerfont">Virtual Vehicle</span>
+                                        <div class="underline"></div>
+
+                                    </div>
+                                    <div class="httpProxy" style="display:flex;width:100%;margin:40px 0px 20px 10px;">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="card Services box-content-data config-rOnecTwo">
+                                    <h5 class="headerfont config-rOnecTwoHeading">Registry & Vin</h5>
+                                    <div class="underline ins-dOne"></div>
+                                    <div class="ins-dtwo">
+                                        <div class="configuration-label inst-dThree">
+                                            <select class="floating" id="registry">
+                                                <option selected value="L233">L233</option>
+                                                <option value="2D">2 Door Vehicle</option>
+                                                <option value="4D">4 Door Vehicle</option>
+                                                <option value="singlezone">Single Zone</option>
+                                                <option value="dualzone">Dual Zone</option>
+                                                <option value="trizone">Tri Zone</option>
+                                                <option value="quadzone">Quad Zone</option>
+                                                <option value="pentazone">Penta Zone</option>
+                                            </select>
+                                            <label class="installlabel instl-lOne">Vehicle Type</label>
+                                        </div>
+                                        <div class="inst-dFour">
+                                            <button class="btn btn-default btn-content inst-setBtn"
+                                                    onclick="register_config()" type="button">
+                                                Set
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="inst-dFive">
+                                        <div class="floating-inputbox inst-dSix">
+                                            <div class="floating-label">
+                                                <input class="floating-input" id="vin" type="text">
+                                                <label class="input-label">Vin</label>
+                                            </div>
+                                        </div>
+                                        <div class="inst-dSeven">
+                                            <button class="btn btn-default btn-content inst-setBtn" type="button">
+                                                Set
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p id="updatenode_status" style="width:80%;margin:10px 0px 0px 20px"></p>
+                                    <p id="vinError" style="width:80%;margin:10px 0px 0px 20px"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class='containerloader' hidden id="modalspinner">
+    <div class='loader'></div>
+    <div class='loader--text'></div>
+</div>
+<!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script type="text/javascript">
+    setSocketInitialized(document.getElementById('pgname').innerText)
+</script>
+
+{% endblock javascripts %}
