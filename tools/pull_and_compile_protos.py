@@ -48,24 +48,33 @@ def clone_or_pull(repo_url, repo_dir):
 
 def generate_protobuf(repo_dir, output_dir):
     print(f"Generating protobuf files in {repo_dir} to {output_dir}")
-    protoc_path = r'C:\Users\gzx0lk\Desktop\Neelam\SOFTWARES\protoc-24.4-win64\bin\protoc.exe'  # Replace with the
-    # actual path
-
     # Get a list of all .proto files in the directory and its subdirectories
-    proto_files = find_proto_files(repo_dir)
+    proto_files, root_dirs = find_proto_files(repo_dir)
+    import_options_str = ' '.join(['-I {}'.format(root_dir + os.sep) for root_dir in root_dirs])
+    import_options_list = import_options_str.split()
+
+    # Construct the protoc command as a list of strings
+    protoc_command = [
+        'protoc',
+        *import_options_list,
+        f'--python_out={output_dir}',
+        *proto_files
+    ]
 
     # Run protoc command to generate Python files for all .proto files
-    subprocess.run([protoc_path, f"--python_out={output_dir}", *proto_files])
+    subprocess.run(protoc_command)
 
 
 def find_proto_files(directory):
     # Get a list of all .proto files in the directory and its subdirectories
     proto_files = []
+    root_dirs = set()
     for root, dirs, files in os.walk(directory):
         for file in files:
             if file.endswith(".proto"):
                 proto_files.append(os.path.join(root, file))
-    return proto_files
+                root_dirs.add(root)
+    return proto_files, root_dirs
 
 
 def delete_protos_folder(repo_dir):
@@ -79,10 +88,11 @@ if __name__ == "__main__":
     repo_dir = "protos"
 
     # Output directory for protobuf files
-    output_dir = "../"
-    if os.path.exists(output_dir + "protos"):
-        print(f"Deleting existing protofiles in {output_dir}protos")
-        shutil.rmtree(output_dir + "protos")
+    output_dir = "../protos"
+    if os.path.exists(output_dir):
+        print(f"Deleting existing protofiles in {output_dir}")
+        shutil.rmtree(output_dir)
+    os.makedirs(output_dir)
 
     # Clone repository
     clone_or_pull(repo_url, repo_dir)

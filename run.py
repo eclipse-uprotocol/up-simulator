@@ -1,7 +1,5 @@
 from flask_socketio import SocketIO
 
-from flask_migrate import Migrate
-
 from simulatorui import create_app
 from simulatorui.config import config_dict
 
@@ -44,9 +42,11 @@ def sendrpc(json_sendrpc):
 def publish(json_publish):
     print('received publish json ' + str(json_publish))
 
+
 @socketio.on('start-service', namespace='/simulator')
 def start_mock_services(jsonapks):
     print('start mock services json ' + str(jsonapks))
+
 
 @socketio.on("stop_all_mockservices", namespace="/simulator")
 def stop_all_mockservices():
