@@ -51,18 +51,6 @@ def clone_or_pull(repo_url, repo_dir):
             print(f"Error during Git pull: {pull_error}")
 
 
-def generate_protobuf(repo_dir, output_dir):
-    print(f"Generating protobuf files in {repo_dir} to {output_dir}")
-    proto_files, root_dirs = find_proto_files(repo_dir)
-    import_options_str = ' '.join(['-I {}'.format(root_dir + os.sep) for root_dir in root_dirs])
-    import_options_list = import_options_str.split()
-    protoc_command = ['protoc', *import_options_list, f'--python_out={output_dir}', *proto_files]
-
-    try:
-        subprocess.run(protoc_command)
-    except subprocess.CalledProcessError as protoc_error:
-        print(f"Error during protoc execution: {protoc_error}")
-
 
 def execute_maven_command(project_dir, command):
     try:
