@@ -1,0 +1,116 @@
+[
+  {
+    "name": "example.hello_world",
+    "display_name": "Hello World Service",
+    "rpc": [
+      "SayHello"
+    ],
+    "message": [
+      "Timer"
+    ]
+  },
+  {
+    "name": "body.cabin_climate",
+    "display_name": "Cabin Climate Service",
+    "rpc": [
+      "ExecuteClimateCommand",
+      "UpdateSystemSettings"
+    ],
+    "message": [
+      "Zone",
+      "SystemSettings"
+    ]
+  },
+  {
+    "name": "body.horn",
+    "display_name": "Horn Service",
+    "rpc": [
+      "ActivateHorn",
+      "DeactivateHorn"
+    ],
+    "message": [
+      "HornStatus"
+    ]
+  },
+  {
+    "name": "chassis.braking",
+    "display_name": "Braking Service",
+    "rpc": [
+      "ResetHealth",
+      "ManageHealthMonitoring"
+    ],
+    "message": [
+      "BrakePads",
+      "BrakePedal"
+    ]
+  },
+  {
+    "name": "chassis.suspension",
+    "display_name": "Suspension Service",
+    "rpc": [
+      "SetRideHeight"
+    ],
+    "message": [
+      "RideHeight",
+      "RideHeightSystemStatus"
+    ]
+  },
+  {
+    "name": "chassis",
+    "display_name": "Chassis Service",
+    "rpc": [
+      "UpdateTire"
+    ],
+    "message": [
+      "Tire",
+      "TractionControlSystem",
+      "ElectronicStabilityControlSystem"
+    ]
+  },
+  {
+    "name": "vehicle.exterior",
+    "display_name": "Exterior Service",
+    "message": [
+      "SolarInformation",
+      "Temperature",
+      "AmbientLight"
+    ]
+  },
+  {
+    "name": "propulsion.engine",
+    "display_name": "Engine Service",
+    "rpc": [
+      "ResetHealth"
+    ],
+    "message": [
+      "AirFilter",
+      "Oil",
+      "Coolant",
+      "EngineState"
+    ]
+  },
+  {
+    "name": "propulsion.transmission",
+    "display_name": "Transmission Service",
+    "message": [
+      "VehicleGearState",
+      "Gearbox"
+    ]
+  },
+  {
+    "name": "vehicle",
+    "display_name": "Vehicle Service",
+    "rpc": [
+      "ResetTripMeter",
+      "SetTransportMode"
+    ],
+    "message": [
+      "TraveledDistance",
+      "VehicleSpeed",
+      "CollisionAlert",
+      "TheftAlert",
+      "TripMeter",
+      "VehicleUsage"
+    ]
+  }
+]

@@ -45,15 +45,15 @@ E -->
                                     </div>
                                 </div>
                                 <ul id="myULdata" class="sendrpc-ulList">
-                                    {% for service in services['Services'] %}
+                                    {% for service in services %}
                                     <li>
                                         <a>
                                             <label class="containercheck">{{service['display_name']}}
                                                 <input class="hello" id="cb{{service['name']}}"
-                                                    onchange="checkboxclicked({{service}}, 'resource')" type="checkbox">
+                                                    onchange="checkboxclicked({{service}}, 'rpc')" type="checkbox">
                                                 <span class="checkmark"></span>
                                                 <h6 class="mb-0">
-                                                    {{service['servicename']}}
+                                                    {{service['name']}}
                                                 </h6>
                                             </label>
                                         </a>
@@ -69,15 +69,15 @@ E -->
                                     <p class="text-start">Service Configuration & Status</p>
                                     <p id="box-content">Search or start service to begin</p>
 
-                                    {% for service in services['Services'] %}
-                                    {% if service['resource']|length >0 %}
+                                    {% for service in services %}
+                                    {% if 'rpc' in service and service['rpc']|length >0 %}
                                     <div id="div{{service['name']}}" class="sendrpc-services">
-                                        <label>{{service['name']}}</label>
-                                        {% for resource in service['resource']%}
+                                        <label>{{service['display_name']}}</label>
+                                        {% for resource in service['rpc']%}
 
                                         <div class="flex">
                                             <input id="cb{{service['name']}}{{resource}}" name="customRadio"
-                                                onclick="onRbChanged(this.labels[0].innerText,{{service}},'Send RPC')"
+                                                onclick="onRbChanged(this.labels[0].innerText,{{ rpcs [service['name']]}}, '{{service['name']}}','Send RPC')"
                                                 type="radio" />
                                             <label for="cb{{service['name']}}{{resource}}">{{resource}}</label>
                                         </div>

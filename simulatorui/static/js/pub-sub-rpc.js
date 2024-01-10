@@ -14,7 +14,7 @@ function myFunctionpubsub() {
         }
     }
 }
-function checkboxclicked(service, pubsub_or_resource) {
+function checkboxclicked(service, pubsub_or_rpc) {
     var checkboxpub = document.getElementById("cb" + service.name);
     var sevice_status = document.getElementById('box-content');
 
@@ -23,16 +23,16 @@ function checkboxclicked(service, pubsub_or_resource) {
     if (checkboxpub.checked) {
         sevice_status.style.display = "none";
         div_content.style.display = 'block'
-        if (pubsub_or_resource == "pubsub") {
-            for (var i = 0; i < service.pubsub.length; i++) {
-                var idName = "cb" + service.name + service.pubsub[i];
+        if (pubsub_or_rpc == "pubsub") {
+            for (var i = 0; i < service.message.length; i++) {
+                var idName = "cb" + service.name + service.message[i];
                 var pubsubRadioBtn = document.getElementById(idName);
                 pubsubRadioBtn.checked = false;
             }
         }
-        if (pubsub_or_resource == "resource") {
-            for (var i = 0; i < service.resource.length; i++) {
-                var idName = "cb" + service.name + service.resource[i];
+        if (pubsub_or_rpc == "rpc") {
+            for (var i = 0; i < service.rpc.length; i++) {
+                var idName = "cb" + service.name + service.rpc[i];
                 var resourceRadioBtn = document.getElementById(idName);
                 resourceRadioBtn.checked = false;
             }
@@ -180,7 +180,7 @@ function onbackClicked() {
     showConfigDialog(false, servicename)
 
 }
-function onRbChanged(label, service, typeTab) {
+function onRbChanged(label, data, entity,typeTab) {
 
     if (typeTab == "Publish") {
         if (localStorage.getItem("utransportConfig") == "SOME/IP" || localStorage.getItem("utransportConfig") == "ZENOH") {
@@ -195,24 +195,20 @@ function onRbChanged(label, service, typeTab) {
     setvalues({}, 'true')
     if (typeTab != "AddRPC") {
         var backBtn = document.getElementById('back_pub')
-        back_pub.setAttribute("servicename", service['name'])
+        back_pub.setAttribute("servicename", entity)
         removeAllChildNodes(document.getElementById("logsdesc"))
     }
 
     var executebtn = document.getElementById('execute')
     executebtn.innerText = typeTab
     executebtn.setAttribute("class", "btn btn-primary")
-    fetch("/getuiconfiguration?resource=" + label + "&service=" + JSON.stringify(service))
+    fetch("/getuiconfiguration?resource=" + label + "&service=" + JSON.stringify(data))
         .then((res) => res.json())
         .then((data) => {
             if (JSON.stringify(data).length > 2) {
-                var servicename = '';
-                if (service.hasOwnProperty('servicename'))
-                    servicename = service.servicename
-                design_layout(data, label, servicename)
+                design_layout(data, label, entity)
                 if (typeTab != "AddRPC") {
-
-                    showConfigDialog(true, service.name)
+                    showConfigDialog(true, entity)
                 } else {
 
                     $('#modal-lg').modal().show();

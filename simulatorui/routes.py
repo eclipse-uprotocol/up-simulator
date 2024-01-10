@@ -67,27 +67,40 @@ def route_configuration():
 
 @blueprint.route('/pub-sub.html')
 def route_pubsub():
-    json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "pub-sub.json"
+    services_json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "services.json"
+    pubsub_json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "pub-sub.json"
+
     if 'simulatorui' in os.getcwd():
-        json_path = os.sep + "pub-sub.json"
-    f = open(json_path)
+        pubsub_json_path = os.sep + "pub-sub.json"
+        services_json_path = os.sep + "services.json"
+    f = open(pubsub_json_path)
+    pubsub = json.load(f)
+    f.close()
+    f = open(services_json_path)
     services = json.load(f)
     f.close()
 
-    return render_template('home/pub-sub.html', segment=get_segment(request), services=services, json_proto={})
+    return render_template('home/pub-sub.html', segment=get_segment(request), services=services, pubsub=pubsub,
+                           json_proto={})
 
 
 @blueprint.route('/send-rpc.html')
 def route_sendrpc():
-    json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "rpc.json"
-    if 'simulatorui' in os.getcwd():
-        json_path = os.sep + "rpc.json"
-    f = open(json_path)
+    rpc_json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "rpc.json"
+    services_json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "services.json"
 
+    if 'simulatorui' in os.getcwd():
+        rpc_json_path = os.sep + "rpc.json"
+        services_json_path = os.sep + "services.json"
+
+    f = open(rpc_json_path)
+    rpcs = json.load(f)
+    f.close()
+    f = open(services_json_path)
     services = json.load(f)
     f.close()
 
-    return render_template('home/send-rpc.html', segment=get_segment(request), services=services)
+    return render_template('home/send-rpc.html', segment=get_segment(request), services=services,rpcs=rpcs)
 
 
 @blueprint.route('/mockservice.html')
@@ -111,8 +124,8 @@ def getconfiguration():
     try:
         resource = str(request.args.get('resource'))
         service = str(request.args.get('service').replace("123", "#"))
-        json_data = json.loads(service)
-        ui = json_data['ui']
+        ui = json.loads(service)
+        # ui = json_data['ui']
         layout = None
         for i in ui:
             for key, value in i.items():
@@ -132,7 +145,7 @@ def get_mock_services():
     running_services = []
     json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "pub-sub.json"
     if 'simulatorui' in os.getcwd():
-        json_path = os.sep + "pub-sub.json"
+        json_path = os.sep + "services.json"
     f = open(json_path)
     mockservices = json.load(f)
     f.close()

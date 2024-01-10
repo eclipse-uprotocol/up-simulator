@@ -124,10 +124,7 @@ let toggleTheme = function (elem) {
             }
         }
         lightLogo.style.display = "block"
-        logoImgElement.src = '/static/icons/lightThemeLogo-fotor-bg-remove.png'
-        logoImgElement.style.height = '50px'
-        logoImgElement.style.width = '150px'
-        logoImgElement.style.display = 'none';
+
 
         navbarElement.classList.add('navbarBrand-light')
 

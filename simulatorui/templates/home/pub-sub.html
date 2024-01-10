@@ -38,6 +38,7 @@ E -->
                         <div class="row pubsub-SecondRow">
                             <div class="col-xl-4">
                                 <div class="headerfont">COVESA  Services</div>
+
                                 <div>
                                     <div class="floating-inputbox">
                                         <div class="floating-label" style="width:100%;">
@@ -51,8 +52,8 @@ E -->
                                 </div>
 
                                 <ul id="myULdata">
-                                    {% for service in services['Services'] %}
-                                    {% if service['pubsub']|length >0 %}
+                                    {% for service in services %}
+                                    {% if service['message']|length >0 %}
 
                                     <li>
                                         <a>
@@ -63,7 +64,7 @@ E -->
                                                 <span class="checkmark"></span>
                                                 <h6 class="mb-0"
                                                     style="margin-top:.50rem!important;color:#FFFF;font-size:14px">
-                                                    {{service['servicename']}}</h6>
+                                                    {{service['name']}}</h6>
                                             </label>
                                         </a>
                                     </li>
@@ -78,17 +79,18 @@ E -->
                                 <div class="box-content-data">
                                     <p class="text-start">Service Configuration & Status</p>
                                     <p id="box-content">Search or start service to begin</p>
+                                    {% for service in services %}
 
-                                    {% for service in services['Services'] %}
-                                    {% if service['pubsub']|length >0 %}
+
+                                    {% if 'message' in service and service['message']|length >0 %}
                                     <div id="div{{service['name']}}">
-                                        <label style="">{{service['name']}}</label>
-                                        {% for pub_sub in service['pubsub']%}
+                                        <label style="">{{service['display_name']}}</label>
+                                        {% for pub_sub in service['message']%}
 
 
                                         <div class="flex">
                                             <input id="cb{{service['name']}}{{pub_sub}}" name="customRadio"
-                                                onclick="onRbChanged(this.labels[0].innerText,{{service}},'Publish')"
+                                                onclick="onRbChanged(this.labels[0].innerText,{{ pubsub [service['name']]}}, '{{service['name']}}','Publish')"
                                                 type="radio" />
                                             <label for="cb{{service['name']}}{{pub_sub}}">{{pub_sub}}</label>
                                         </div>
