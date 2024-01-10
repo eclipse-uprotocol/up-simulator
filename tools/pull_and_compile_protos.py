@@ -51,7 +51,6 @@ def clone_or_pull(repo_url, repo_dir):
             print(f"Error during Git pull: {pull_error}")
 
 
-
 def execute_maven_command(project_dir, command):
     try:
         with subprocess.Popen(command, cwd=os.path.join(os.getcwd(), project_dir), shell=True, stdout=subprocess.PIPE,
@@ -68,22 +67,6 @@ def execute_maven_command(project_dir, command):
                 shutil.copytree(src_directory, OUTPUT_DIR, dirs_exist_ok=True)
     except Exception as e:
         print(f"Error executing Maven command: {e}")
-
-
-def find_proto_files(directory):
-    proto_files = []
-    root_dirs = set()
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".proto"):
-                proto_files.append(os.path.join(root, file))
-                root_dirs.add(root)
-    return proto_files, root_dirs
-
-
-def delete_protos_folder(repo_dir):
-    print(f"Deleting entire protofiles folder: {repo_dir}")
-    shutil.rmtree(repo_dir, ignore_errors=True)
 
 
 if __name__ == "__main__":
