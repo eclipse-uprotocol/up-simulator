@@ -67,7 +67,7 @@ function createUIApksMock(pkgs, i) {
         sevice_status.style.display = "none";
         if (document.getElementById("cb" + pkgs[i].entity).checked) {
             design_service_status_layout(pkgs[i].name, pkgs[i].entity, "Loading")
-            let json = { "entity": pkgs[i].entity, "key": pkgs[i].key }
+            let json = { "entity": pkgs[i].entity}
             console.log("json=", json)
             socket.emit('start-service', json);
         }
@@ -209,7 +209,7 @@ function startAllMockServices() {
             } else {
                 document.getElementById("cb" + pkgs[i].entity).checked = true
                 design_service_status_layout(pkgs[i].name, pkgs[i].entity, "Loading")
-                let json = { "entity": pkgs[i].entity, "key": pkgs[i].key }
+                let json = { "entity": pkgs[i].entity }
                 console.log("json=", json)
                 socket.emit('start-service', json);
             }
@@ -225,7 +225,7 @@ function startAllMockServices() {
                         if (already_running.find((entity) => (entity == pkgs[i].entity))){
                             continue;
                         } else {
-                            let json = { "entity": pkgs[i].entity, "key": pkgs[i].key }
+                            let json = { "entity": pkgs[i].entity }
                             //console.log("commonjs_json=", json)
                             socket.emit('start-service', json);
                         }

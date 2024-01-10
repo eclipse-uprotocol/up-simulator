@@ -143,14 +143,14 @@ def getconfiguration():
 def get_mock_services():
     mockservice_pkgs = []
     running_services = []
-    json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "pub-sub.json"
+    json_path = os.getcwd() + os.sep + "simulatorui" + os.sep + "services.json"
     if 'simulatorui' in os.getcwd():
         json_path = os.sep + "services.json"
     f = open(json_path)
     mockservices = json.load(f)
     f.close()
-    for m in mockservices['Services']:
-        pkgs = {'entity': m['servicename'], 'name': m['display_name'], 'key': m['name']}
+    for m in mockservices:
+        pkgs = {'entity': m['name'], 'name': m['display_name']}
         mockservice_pkgs.append(pkgs)
 
     if os.path.isfile("service_status.txt"):
