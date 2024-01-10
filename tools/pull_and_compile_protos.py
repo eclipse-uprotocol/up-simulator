@@ -28,16 +28,21 @@ import os
 import shutil
 import subprocess
 
+import git
 from git import Repo
+
+# Constants
+REPO_URL = "https://github.com/COVESA/uservices.git"
+REPO_DIR = "protos"
+OUTPUT_DIR = "../protofiles"
 
 
 def clone_or_pull(repo_url, repo_dir):
     try:
         Repo.clone_from(repo_url, repo_dir)
         print(f"Repository cloned successfully from {repo_url} to {repo_dir}")
-    except Exception as clone_error:
-        print(clone_error.__getattribute__('stderr'))
-        # If the clone fails, attempt a Git pull
+    except git.exc.GitCommandError as clone_error:
+        print(f"Error during cloning: {clone_error}")
         try:
             git_pull_command = ["git", "pull"]
             subprocess.run(git_pull_command, cwd=repo_dir, check=True)
@@ -48,25 +53,36 @@ def clone_or_pull(repo_url, repo_dir):
 
 def generate_protobuf(repo_dir, output_dir):
     print(f"Generating protobuf files in {repo_dir} to {output_dir}")
-    # Get a list of all .proto files in the directory and its subdirectories
     proto_files, root_dirs = find_proto_files(repo_dir)
     import_options_str = ' '.join(['-I {}'.format(root_dir + os.sep) for root_dir in root_dirs])
     import_options_list = import_options_str.split()
+    protoc_command = ['protoc', *import_options_list, f'--python_out={output_dir}', *proto_files]
 
-    # Construct the protoc command as a list of strings
-    protoc_command = [
-        'protoc',
-        *import_options_list,
-        f'--python_out={output_dir}',
-        *proto_files
-    ]
+    try:
+        subprocess.run(protoc_command)
+    except subprocess.CalledProcessError as protoc_error:
+        print(f"Error during protoc execution: {protoc_error}")
 
-    # Run protoc command to generate Python files for all .proto files
-    subprocess.run(protoc_command)
+
+def execute_maven_command(project_dir, command):
+    try:
+        with subprocess.Popen(command, cwd=os.path.join(os.getcwd(), project_dir), shell=True, stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE, text=True) as process:
+            stdout, stderr = process.communicate()
+            print(stdout)
+
+            if process.returncode != 0:
+                print(f"Error: {stderr}")
+            else:
+                print("Maven command executed successfully.")
+                src_directory = os.path.join(os.getcwd(), project_dir, "target", "generated-sources", "protobuf",
+                                             "python")
+                shutil.copytree(src_directory, OUTPUT_DIR, dirs_exist_ok=True)
+    except Exception as e:
+        print(f"Error executing Maven command: {e}")
 
 
 def find_proto_files(directory):
-    # Get a list of all .proto files in the directory and its subdirectories
     proto_files = []
     root_dirs = set()
     for root, dirs, files in os.walk(directory):
@@ -78,23 +94,17 @@ def find_proto_files(directory):
 
 
 def delete_protos_folder(repo_dir):
-    print(f"Deleting entire protos folder: {repo_dir}")
+    print(f"Deleting entire protofiles folder: {repo_dir}")
     shutil.rmtree(repo_dir, ignore_errors=True)
 
 
 if __name__ == "__main__":
-    # GitHub repository information
-    repo_url = "https://github.com/COVESA/uservices.git"
-    repo_dir = "protos"
+    if os.path.exists(OUTPUT_DIR):
+        print(f"Deleting existing protofiles in {OUTPUT_DIR}")
+        shutil.rmtree(OUTPUT_DIR)
+    os.makedirs(OUTPUT_DIR)
 
-    # Output directory for protobuf files
-    output_dir = "../protos"
-    if os.path.exists(output_dir):
-        print(f"Deleting existing protofiles in {output_dir}")
-        shutil.rmtree(output_dir)
-    os.makedirs(output_dir)
-
-    # Clone repository
-    clone_or_pull(repo_url, repo_dir)
-    # Generate protobuf files
-    generate_protobuf(repo_dir, output_dir)
+    clone_or_pull(REPO_URL, REPO_DIR)
+    # Execute mvn compile-python
+    maven_command = ['mvn', "protobuf:compile-python"]
+    execute_maven_command(REPO_DIR, maven_command)
