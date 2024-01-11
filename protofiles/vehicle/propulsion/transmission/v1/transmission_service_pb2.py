@@ -12,7 +12,7 @@ _sym_db = _symbol_database.Default()
 
 
 import uprotocol_options_pb2 as uprotocol__options__pb2
-from vehicle.propulsion.transmission.v1 import transmission_topics_pb2 as vehicle_dot_propulsion_dot_transmission_dot_v1_dot_transmission__topics__pb2
+from protofiles.vehicle.propulsion.transmission.v1 import transmission_topics_pb2 as vehicle_dot_propulsion_dot_transmission_dot_v1_dot_transmission__topics__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n=vehicle/propulsion/transmission/v1/transmission_service.proto\x12\"vehicle.propulsion.transmission.v1\x1a\x17uprotocol_options.proto\x1a<vehicle/propulsion/transmission/v1/transmission_topics.proto\"}\n\x17VehicleGearStateOptions\x12\\\n\rresource_name\x18\x01 \x01(\x0e\x32>.vehicle.propulsion.transmission.v1.VehicleGearState.ResourcesB\x05\x82\xce\x18\x01*:\x04\xe0\xc7\x18\x00\"s\n\x0eGearboxOptions\x12[\n\rresource_name\x18\x01 \x01(\x0e\x32\x35.vehicle.propulsion.transmission.v1.Gearbox.ResourcesB\r\x82\xce\x18\tgearbox.*:\x04\xe0\xc7\x18\n27\n\x0cTransmission\x1a\'\xa2\xbb\x18\x17propulsion.transmission\xa8\xbb\x18\x01\xb0\xbb\x18\x00\xb8\xbb\x18\x12\x42\x32\n.org.covesa.uservice.propulsion.transmission.v1P\x01\x62\x06proto3')

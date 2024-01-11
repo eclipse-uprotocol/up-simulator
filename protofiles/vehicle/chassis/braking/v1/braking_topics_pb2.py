@@ -11,8 +11,8 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from common import health_state_pb2 as common_dot_health__state__pb2
-import uservices_options_pb2 as uservices__options__pb2
+from protofiles.common import health_state_pb2 as common_dot_health__state__pb2
+import protofiles.uservices_options_pb2 as uservices__options__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n/vehicle/chassis/braking/v1/braking_topics.proto\x12\x1avehicle.chassis.braking.v1\x1a\x19\x63ommon/health_state.proto\x1a\x17uservices_options.proto\"\xb4\x01\n\nBrakePedal\x12\x1f\n\x08position\x18\x01 \x01(\x02\x42\x08\xd8\x8c\x19\x07\xc8\x8c\x19\x01H\x00\x88\x01\x01\x12\x1f\n\x08pressure\x18\x02 \x01(\x02\x42\x08\xd8\x8c\x19\x0f\xc8\x8c\x19\x01H\x01\x88\x01\x01\x12\x1d\n\nis_pressed\x18\x03 \x01(\x08\x42\x04\xc8\x8c\x19\x01H\x02\x88\x01\x01\"\x1c\n\tResources\x12\x0f\n\x0b\x62rake_pedal\x10\x00\x42\x0b\n\t_positionB\x0b\n\t_pressureB\r\n\x0b_is_pressed\"`\n\tBrakePads\x12\x0c\n\x04name\x18\x01 \x01(\t\x12#\n\x06health\x18\x02 \x01(\x0b\x32\x13.common.HealthState\" \n\tResources\x12\t\n\x05\x66ront\x10\x00\x12\x08\n\x04rear\x10\x01\x42\x32\n.org.covesa.uservice.vehicle.chassis.braking.v1P\x01\x62\x06proto3')

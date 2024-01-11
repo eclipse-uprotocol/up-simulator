@@ -11,7 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from example.hello_world.v1 import hello_world_topics_pb2 as example_dot_hello__world_dot_v1_dot_hello__world__topics__pb2
+from protofiles.example.hello_world.v1 import hello_world_topics_pb2 as example_dot_hello__world_dot_v1_dot_hello__world__topics__pb2
 import uprotocol_options_pb2 as uprotocol__options__pb2
 
 

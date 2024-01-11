@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 from google.rpc import status_pb2 as google_dot_rpc_dot_status__pb2
 import uprotocol_options_pb2 as uprotocol__options__pb2
-from vehicle.chassis.braking.v1 import braking_topics_pb2 as vehicle_dot_chassis_dot_braking_dot_v1_dot_braking__topics__pb2
+from protofiles.vehicle.chassis.braking.v1 import braking_topics_pb2 as vehicle_dot_chassis_dot_braking_dot_v1_dot_braking__topics__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n0vehicle/chassis/braking/v1/braking_service.proto\x12\x1avehicle.chassis.braking.v1\x1a\x17google/rpc/status.proto\x1a\x17uprotocol_options.proto\x1a/vehicle/chassis/braking/v1/braking_topics.proto\"\"\n\x12ResetHealthRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"A\n\x1dManageHealthMonitoringRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x12\n\nis_enabled\x18\x02 \x01(\x08\"i\n\x11\x42rakePedalOptions\x12N\n\rresource_name\x18\x01 \x01(\x0e\x32\x30.vehicle.chassis.braking.v1.BrakePedal.ResourcesB\x05\x82\xce\x18\x01*:\x04\xe0\xc7\x18\x00\"r\n\x10\x42rakePadsOptions\x12X\n\rresource_name\x18\x01 \x01(\x0e\x32/.vehicle.chassis.braking.v1.BrakePads.ResourcesB\x10\x82\xce\x18\x0c\x62rake_pads.*:\x04\xe0\xc7\x18\n2\xf2\x01\n\x07\x42raking\x12W\n\x0bResetHealth\x12..vehicle.chassis.braking.v1.ResetHealthRequest\x1a\x12.google.rpc.Status\"\x04\xc0\xc1\x18\x01\x12m\n\x16ManageHealthMonitoring\x12\x39.vehicle.chassis.braking.v1.ManageHealthMonitoringRequest\x1a\x12.google.rpc.Status\"\x04\xc0\xc1\x18\x02\x1a\x1f\xa2\xbb\x18\x0f\x63hassis.braking\xa8\xbb\x18\x01\xb0\xbb\x18\x00\xb8\xbb\x18\x11\x42*\n&org.covesa.uservice.chassis.braking.v1P\x01\x62\x06proto3')

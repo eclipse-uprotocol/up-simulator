@@ -12,7 +12,7 @@ _sym_db = _symbol_database.Default()
 
 
 import uprotocol_options_pb2 as uprotocol__options__pb2
-from vehicle.exterior.v1 import exterior_topics_pb2 as vehicle_dot_exterior_dot_v1_dot_exterior__topics__pb2
+from protofiles.vehicle.exterior.v1 import exterior_topics_pb2 as vehicle_dot_exterior_dot_v1_dot_exterior__topics__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n*vehicle/exterior/v1/exterior_service.proto\x12\x13vehicle.exterior.v1\x1a\x17uprotocol_options.proto\x1a)vehicle/exterior/v1/exterior_topics.proto\"n\n\x17SolarInformationOptions\x12M\n\rresource_name\x18\x01 \x01(\x0e\x32/.vehicle.exterior.v1.SolarInformation.ResourcesB\x05\x82\xce\x18\x01*:\x04\xe0\xc7\x18\x00\"d\n\x12TemperatureOptions\x12H\n\rresource_name\x18\x01 \x01(\x0e\x32*.vehicle.exterior.v1.Temperature.ResourcesB\x05\x82\xce\x18\x01*:\x04\xe0\xc7\x18\n\"f\n\x13\x41mbientLightOptions\x12I\n\rresource_name\x18\x01 \x01(\x0e\x32+.vehicle.exterior.v1.AmbientLight.ResourcesB\x05\x82\xce\x18\x01*:\x04\xe0\xc7\x18\x14\x32\x33\n\x0fVehicleExterior\x1a \xa2\xbb\x18\x10vehicle.exterior\xa8\xbb\x18\x01\xb0\xbb\x18\x00\xb8\xbb\x18\x10\x42+\n\'org.covesa.uservice.vehicle.exterior.v1P\x01\x62\x06proto3')

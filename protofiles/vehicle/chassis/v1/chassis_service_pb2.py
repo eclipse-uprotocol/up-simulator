@@ -13,8 +13,8 @@ _sym_db = _symbol_database.Default()
 
 from google.rpc import status_pb2 as google_dot_rpc_dot_status__pb2
 import uprotocol_options_pb2 as uprotocol__options__pb2
-import uservices_options_pb2 as uservices__options__pb2
-from vehicle.chassis.v1 import chassis_topics_pb2 as vehicle_dot_chassis_dot_v1_dot_chassis__topics__pb2
+import protofiles.uservices_options_pb2 as uservices__options__pb2
+from protofiles.vehicle.chassis.v1 import chassis_topics_pb2 as vehicle_dot_chassis_dot_v1_dot_chassis__topics__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(vehicle/chassis/v1/chassis_service.proto\x12\x12vehicle.chassis.v1\x1a\x17google/rpc/status.proto\x1a\x17uprotocol_options.proto\x1a\x17uservices_options.proto\x1a\'vehicle/chassis/v1/chassis_topics.proto\"^\n\x11UpdateTireRequest\x12*\n\x1cis_leak_notification_enabled\x18\x01 \x01(\x08\x42\x04\xd0\x8c\x19\x01\x12\x1d\n\x0fis_leak_present\x18\x02 \x01(\x08\x42\x04\xd0\x8c\x19\x01\"Z\n\x0bTireOptions\x12\x45\n\rresource_name\x18\x01 \x01(\x0e\x32\".vehicle.chassis.v1.Tire.ResourcesB\n\x82\xce\x18\x06tire.*:\x04\xe0\xc7\x18\x00\"w\n\x1cTractionControlSystemOptions\x12Q\n\rresource_name\x18\x01 \x01(\x0e\x32\x33.vehicle.chassis.v1.TractionControlSystem.ResourcesB\x05\x82\xce\x18\x01*:\x04\xe0\xc7\x18\n\"\x8d\x01\n\'ElectronicStabilityControlSystemOptions\x12\\\n\rresource_name\x18\x01 \x01(\x0e\x32>.vehicle.chassis.v1.ElectronicStabilityControlSystem.ResourcesB\x05\x82\xce\x18\x01*:\x04\xe0\xc7\x18\x14\x32q\n\x07\x43hassis\x12M\n\nUpdateTire\x12%.vehicle.chassis.v1.UpdateTireRequest\x1a\x12.google.rpc.Status\"\x04\xc0\xc1\x18\x01\x1a\x17\xa2\xbb\x18\x07\x63hassis\xa8\xbb\x18\x01\xb0\xbb\x18\x00\xb8\xbb\x18\x14\x42*\n&org.covesa.uservice.vehicle.chassis.v1P\x01\x62\x06proto3')

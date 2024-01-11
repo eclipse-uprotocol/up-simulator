@@ -12,7 +12,7 @@ _sym_db = _symbol_database.Default()
 
 
 from google.protobuf import descriptor_pb2 as google_dot_protobuf_dot_descriptor__pb2
-import units_pb2 as units__pb2
+import protofiles.units_pb2 as units__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17uservices_options.proto\x1a google/protobuf/descriptor.proto\x1a\x0bunits.proto:5\n\x07vss_ref\x12\x1f.google.protobuf.MessageOptions\x18\xe5\x90\x03 \x01(\t\x88\x01\x01:4\n\x08readonly\x12\x1d.google.protobuf.FieldOptions\x18\xc9\x91\x03 \x01(\x08\x88\x01\x01:5\n\twriteonly\x12\x1d.google.protobuf.FieldOptions\x18\xca\x91\x03 \x01(\x08\x88\x01\x01:8\n\x04unit\x12\x1d.google.protobuf.FieldOptions\x18\xcb\x91\x03 \x01(\x0e\x32\x06.Units\x88\x01\x01:5\n\tmax_value\x12\x1d.google.protobuf.FieldOptions\x18\xcc\x91\x03 \x01(\x01\x88\x01\x01:5\n\tmin_value\x12\x1d.google.protobuf.FieldOptions\x18\xcd\x91\x03 \x01(\x01\x88\x01\x01:9\n\rdefault_value\x12\x1d.google.protobuf.FieldOptions\x18\xcf\x91\x03 \x01(\x01\x88\x01\x01\x42\x17\n\x13org.covesa.userviceP\x01\x62\x06proto3')

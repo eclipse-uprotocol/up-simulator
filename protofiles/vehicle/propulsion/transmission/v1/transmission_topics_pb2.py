@@ -12,7 +12,7 @@ _sym_db = _symbol_database.Default()
 
 
 from google.protobuf import descriptor_pb2 as google_dot_protobuf_dot_descriptor__pb2
-import uservices_options_pb2 as uservices__options__pb2
+import protofiles.uservices_options_pb2 as uservices__options__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n<vehicle/propulsion/transmission/v1/transmission_topics.proto\x12\"vehicle.propulsion.transmission.v1\x1a google/protobuf/descriptor.proto\x1a\x17uservices_options.proto\"\xf3\x01\n\x10VehicleGearState\x12U\n\rselected_gear\x18\x01 \x01(\x0e\x32\x39.vehicle.propulsion.transmission.v1.VehicleGearState.GearH\x00\x88\x01\x01\"_\n\x04Gear\x12\x11\n\rS_UNSPECIFIED\x10\x00\x12\r\n\tS_UNKNOWN\x10\x01\x12\n\n\x06S_PARK\x10\x02\x12\r\n\tS_REVERSE\x10\x03\x12\r\n\tS_NEUTRAL\x10\x04\x12\x0b\n\x07S_DRIVE\x10\x05\"\x15\n\tResources\x12\x08\n\x04gear\x10\x00\x42\x10\n\x0e_selected_gear\"\x80\x01\n\x07Gearbox\x12\x0c\n\x04name\x18\x01 \x01(\t\x12(\n\x11\x66luid_temperature\x18\x02 \x01(\x02\x42\x08\xd8\x8c\x19\x03\xc8\x8c\x19\x01H\x00\x88\x01\x01\"\'\n\tResources\x12\x0b\n\x07primary\x10\x00\x12\r\n\tsecondary\x10\x01\x42\x14\n\x12_fluid_temperatureB2\n.org.covesa.uservice.propulsion.transmission.v1P\x01\x62\x06proto3')

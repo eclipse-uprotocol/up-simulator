@@ -25,6 +25,7 @@
 # -------------------------------------------------------------------------
 
 import os
+import re
 import shutil
 import subprocess
 
@@ -65,8 +66,31 @@ def execute_maven_command(project_dir, command):
                 src_directory = os.path.join(os.getcwd(), project_dir, "target", "generated-sources", "protobuf",
                                              "python")
                 shutil.copytree(src_directory, OUTPUT_DIR, dirs_exist_ok=True)
+                process_python_protofiles(OUTPUT_DIR)
     except Exception as e:
         print(f"Error executing Maven command: {e}")
+
+
+def replace_in_file(file_path, search_pattern, replace_pattern):
+    with open(file_path, 'r') as file:
+        file_content = file.read()
+
+    updated_content = re.sub(search_pattern, replace_pattern, file_content)
+
+    with open(file_path, 'w') as file:
+        file.write(updated_content)
+
+
+def process_python_protofiles(directory):
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.py'):
+                file_path = os.path.join(root, file)
+                replace_in_file(file_path, r'from vehicle', 'from protofiles.vehicle')
+                replace_in_file(file_path, r'from example', 'from protofiles.example')
+                replace_in_file(file_path, r'from common', 'from protofiles.common')
+                replace_in_file(file_path, r'import uservices_options_pb2', 'import protofiles.uservices_options_pb2')
+                replace_in_file(file_path, r'import units_pb2', 'import protofiles.units_pb2')
 
 
 if __name__ == "__main__":
