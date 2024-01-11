@@ -124,9 +124,13 @@ let toggleTheme = function (elem) {
             }
         }
         lightLogo.style.display = "block"
+        logoImgElement.style.display = 'none';
 
 
         navbarElement.classList.add('navbarBrand-light')
+        lightLogo.src = '/static/icons/logo_light.svg'
+        lightLogo.style.height = '80px'
+        lightLogo.style.width = '200px'
 
         if (btndelete) {
             btndelete.classList.add('btn-delete-light')
@@ -301,7 +305,7 @@ let toggleTheme = function (elem) {
         lightLogo.style.display = "none"
 
         navbarElement.classList.remove('navbarBrand-light')
-        logoImgElement.src = '/static/icons/sim_logo.svg'
+        logoImgElement.src = '/static/icons/logo_dark.svg'
         logoImgElement.style.height = '80px'
         logoImgElement.style.width = '200px'
 
