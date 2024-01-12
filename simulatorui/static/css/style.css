@@ -3324,6 +3324,13 @@ p.text-muted {
 
 /* main content end*/
 /* ==========================    Rsponsive Menu  start   ====================== */
+
+@media only screen and (min-width: 990px){
+  .R-navbar-strap {
+    height: 0;
+  }
+}
+
 @media only screen and (max-width: 991px) {
   .pcoded-header {
     background: #3f4d67;
