@@ -13107,7 +13107,7 @@ div.code-toolbar>.toolbar span:hover {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 99999;
-  width: 300px;
+  width: 380px;
   max-width: 90%;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
