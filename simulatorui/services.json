@@ -35,9 +35,8 @@
       "DeactivateHorn"
     ],
     "message": [
-      "HornStatus",
-      "HornSequence",
-      "HornCycle"
+      "HornStatus"
+
     ]
   },
   {

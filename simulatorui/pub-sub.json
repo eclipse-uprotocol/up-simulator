@@ -29,21 +29,6 @@
       "Zone": {
         "Configuration": [
           {
-            "name": "zone.row1",
-            "display_name": "row1",
-            "topic": "body.cabin_climate/1/zone.row1123Zone"
-          },
-          {
-            "name": "zone.row2",
-            "display_name": "row2",
-            "topic": "body.cabin_climate/1/zone.row2123Zone"
-          },
-          {
-            "name": "zone.row3",
-            "display_name": "row3",
-            "topic": "body.cabin_climate/1/zone.row3123Zone"
-          },
-          {
             "name": "zone.row1_left",
             "display_name": "row1_left",
             "topic": "body.cabin_climate/1/zone.row1_left123Zone"
@@ -76,33 +61,14 @@
         ],
         "uidetails": [
           {
-            "type": "bool",
-            "property": "power_on"
-          },
-          {
-            "type": "bool",
-            "property": "auto_on"
-          },
-          {
-            "type": "bool",
-            "property": "lock_zone"
-          },
-          {
             "type": "float",
-            "property": "temperature_setpoint",
-            "minrange": -40,
-            "maxrange": 87.5
-          },
-          {
-            "type": "int",
-            "property": "blower_level",
-            "minrange": 0,
-            "maxrange": 100
+            "property": "temperature",
+            "minrange": -0,
+            "maxrange": 50
           },
           {
             "type": "dropdown",
-            "property": "blower_auto_state",
-            "propertyText": "blower_auto_state",
+            "property": "fan_auto_state",
             "mode": [
               {
                 "label": "AM_UNSPECIFIED",
@@ -131,9 +97,14 @@
             ]
           },
           {
+            "type": "int",
+            "property": "fan_speed",
+            "minrange": 0,
+            "maxrange": 100
+          },
+          {
             "type": "dropdown",
             "property": "air_distribution",
-            "propertyText": "air_distribution",
             "mode": [
               {
                 "label": "AD_UNSPECIFIED",
@@ -182,9 +153,20 @@
             ]
           },
           {
+            "type": "bool",
+            "property": "is_power_on"
+          },
+          {
+            "type": "bool",
+            "property": "is_auto_on"
+          },
+          {
+            "type": "bool",
+            "property": "is_zone_locked"
+          },
+          {
             "type": "dropdown",
             "property": "air_distribution_auto_state",
-            "propertyText": "air_distribution_auto_state",
             "mode": [
               {
                 "label": "AM_UNSPECIFIED",
@@ -215,7 +197,6 @@
           {
             "type": "dropdown",
             "property": "temperature_auto_state",
-            "propertyText": "temperature_auto_state",
             "mode": [
               {
                 "label": "AM_UNSPECIFIED",
@@ -269,6 +250,12 @@
             "property": "sync_3rdRow_to_driver"
           },
           {
+            "type": "int",
+            "property": "estimated_cabin_temperature",
+            "minrange": 0,
+            "maxrange": 50
+          },
+          {
             "type": "bool",
             "property": "rear_zone_lockout"
           },
@@ -290,23 +277,11 @@
           },
           {
             "type": "bool",
-            "property": "third_row_zone_lockout",
-            "writeonly": "True"
-          },
-          {
-            "type": "bool",
-            "property": "user_controls_interaction"
-          },
-          {
-            "type": "int",
-            "property": "estimated_cabin_temperature",
-            "minrange": 0,
-            "maxrange": 100
+            "property": "third_row_zone_lockout"
           },
           {
             "type": "dropdown",
             "property": "ac_compressor_setting",
-            "propertyText": "ac_compressor_setting",
             "mode": [
               {
                 "label": "CS_UNSPECIFIED",
@@ -329,8 +304,6 @@
           {
             "type": "dropdown",
             "property": "heater_setting",
-            "propertyText": "heater_setting",
-            "writeonly": "True",
             "mode": [
               {
                 "label": "HS_UNSPECIFIED",
@@ -349,7 +322,6 @@
           {
             "type": "dropdown",
             "property": "temperature_units",
-            "propertyText": "temperature_units",
             "mode": [
               {
                 "label": "TU_UNSPECIFIED",
@@ -368,7 +340,6 @@
           {
             "type": "dropdown",
             "property": "ionizer_status",
-            "propertyText": "ionizer_status",
             "mode": [
               {
                 "label": "IS_UNSPECIFIED",
@@ -391,6 +362,194 @@
                 "value": 4
               }
             ]
+          },
+          {
+            "type": "bool",
+            "property": "user_controls_interaction"
+          }
+        ]
+      }
+    },
+    {
+      "Zones": {
+        "Configuration": [
+          {
+            "name": "cabin_hvac",
+            "display_name": "cabin_hvac",
+            "topic": "body.cabin_climate/1/cabin_hvac123Zone"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "repeated",
+            "class": "Zone",
+            "key": "zones",
+            "value": [
+              {
+                "type": "float",
+                "property": "temperature",
+                "minrange": -0,
+                "maxrange": 50
+              },
+              {
+                "type": "dropdown",
+                "property": "fan_auto_state",
+                "mode": [
+                  {
+                    "label": "AM_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "AM_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "AM_AUTO",
+                    "value": 2
+                  },
+                  {
+                    "label": "AM_MANUAL",
+                    "value": 3
+                  },
+                  {
+                    "label": "AM_AUTO_LOW",
+                    "value": 4
+                  },
+                  {
+                    "label": "AM_AUTO_HIGH",
+                    "value": 5
+                  }
+                ]
+              },
+              {
+                "type": "int",
+                "property": "fan_speed",
+                "minrange": 0,
+                "maxrange": 100
+              },
+              {
+                "type": "dropdown",
+                "property": "air_distribution",
+                "mode": [
+                  {
+                    "label": "AD_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "AD_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "AD_AUTO",
+                    "value": 2
+                  },
+                  {
+                    "label": "AD_FLOOR",
+                    "value": 3
+                  },
+                  {
+                    "label": "AD_FLOOR_VENT",
+                    "value": 4
+                  },
+                  {
+                    "label": "AD_VENT",
+                    "value": 5
+                  },
+                  {
+                    "label": "AD_VENT_WINDSHIELD",
+                    "value": 6
+                  },
+                  {
+                    "label": "AD_WINDSHIELD",
+                    "value": 7
+                  },
+                  {
+                    "label": "AD_FLOOR_WINDSHIELD",
+                    "value": 8
+                  },
+                  {
+                    "label": "AD_FLOOR_VENT_WINDSHIELD",
+                    "value": 9
+                  },
+                  {
+                    "label": "AD_MAX_DEFROST",
+                    "value": 10
+                  }
+                ]
+              },
+              {
+                "type": "bool",
+                "property": "is_power_on"
+              },
+              {
+                "type": "bool",
+                "property": "is_auto_on"
+              },
+              {
+                "type": "bool",
+                "property": "is_zone_locked"
+              },
+              {
+                "type": "dropdown",
+                "property": "air_distribution_auto_state",
+                "mode": [
+                  {
+                    "label": "AM_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "AM_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "AM_AUTO",
+                    "value": 2
+                  },
+                  {
+                    "label": "AM_MANUAL",
+                    "value": 3
+                  },
+                  {
+                    "label": "AM_AUTO_LOW",
+                    "value": 4
+                  },
+                  {
+                    "label": "AM_AUTO_HIGH",
+                    "value": 5
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "property": "temperature_auto_state",
+                "mode": [
+                  {
+                    "label": "AM_UNSPECIFIED",
+                    "value": 0
+                  },
+                  {
+                    "label": "AM_OFF",
+                    "value": 1
+                  },
+                  {
+                    "label": "AM_AUTO",
+                    "value": 2
+                  },
+                  {
+                    "label": "AM_MANUAL",
+                    "value": 3
+                  },
+                  {
+                    "label": "AM_AUTO_LOW",
+                    "value": 4
+                  },
+                  {
+                    "label": "AM_AUTO_HIGH",
+                    "value": 5
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
@@ -410,6 +569,28 @@
           {
             "type": "bool",
             "property": "is_active"
+          },
+          {
+            "type": "dropdown",
+            "property": "mode",
+            "mode": [
+              {
+                "label": "HM_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "HM_UNKNOWN",
+                "value": 1
+              },
+              {
+                "label": "HM_SEQUENCED",
+                "value": 2
+              },
+              {
+                "label": "HM_CONTINUOUS",
+                "value": 3
+              }
+            ]
           },
           {
             "type": "bool",
@@ -437,29 +618,80 @@
             "type": "int",
             "property": "priority",
             "minrange": 0,
-            "maxrange": 225
+            "maxrange": 255
+          }
+        ]
+      }
+    }
+  ],
+  "body.mirrors": [
+    {
+      "HeatedSideMirror": {
+        "Configuration": [
+          {
+            "name": "side_mirror",
+            "display_name": "side_mirror",
+            "topic": "body.horn/1/side_mirror123HeatedSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "property": "is_heat_on"
+          }
+        ]
+      },
+      "SideMirrorMovementSettings": {
+        "Configuration": [
+          {
+            "name": "side_mirror",
+            "display_name": "side_mirror",
+            "topic": "body.horn/1/side_mirror123SideMirrorMovementSettings"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "property": "is_auto_tilt_enabled"
           },
           {
-            "type": "dropdown",
-            "property": "mode",
-            "mode": [
-              {
-                "label": "HM_UNSPECIFIED",
-                "value": 0
-              },
-              {
-                "label": "HM_UNKNOWN",
-                "value": 1
-              },
-              {
-                "label": "HM_SEQUENCED",
-                "value": 2
-              },
-              {
-                "label": "HM_CONTINUOUS",
-                "value": 3
-              }
-            ]
+            "type": "bool",
+            "property": "is_auto_fold_enabled"
+          }
+        ]
+      },
+      "HeatedSideMirrorSettings": {
+        "Configuration": [
+          {
+            "name": "side_mirror",
+            "display_name": "side_mirror",
+            "topic": "body.horn/1/side_mirror123HeatedSideMirrorSettings"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "property": "is_auto_heat_on"
+          }
+        ]
+      },
+      "ExteriorSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "display_name": "left",
+            "topic": "body.horn/1/left123SideExteriorSideMirror"
+          },
+          {
+            "name": "right",
+            "display_name": "right",
+            "topic": "body.horn/1/right123SideExteriorSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "No protofields available"
           }
         ]
       }
@@ -574,7 +806,6 @@
           {
             "type": "dropdown",
             "property": "current_height",
-            "propertyText": "current_height",
             "mode": [
               {
                 "label": "RHL_UNSPECIFIED",
@@ -633,7 +864,6 @@
           {
             "type": "dropdown",
             "property": "target_height",
-            "propertyText": "target_height",
             "mode": [
               {
                 "label": "RHL_UNSPECIFIED",
@@ -835,7 +1065,6 @@
           {
             "type": "dropdown",
             "property": "source",
-            "propertyText": "source",
             "mode": [
               {
                 "label": "S_UNSPECIFIED",
@@ -858,7 +1087,6 @@
           {
             "type": "dropdown",
             "property": "capability_state",
-            "propertyText": "capability_state",
             "mode": [
               {
                 "label": "CS_UNSPECIFIED",
@@ -923,20 +1151,6 @@
         ],
         "uidetails": [
           {
-            "type": "bool",
-            "property": "is_leak_detection_enabled"
-          },
-          {
-            "type": "bool",
-            "property": "pressure_invalid"
-          },
-          {
-            "type": "int",
-            "property": "time_to_flat",
-            "minrange": 0,
-            "maxrange": 2097151
-          },
-          {
             "type": "float",
             "property": "pressure",
             "minrange": 0,
@@ -951,7 +1165,6 @@
           {
             "type": "dropdown",
             "property": "pressure_warning",
-            "propertyText": "pressure_warning",
             "mode": [
               {
                 "label": "TPS_UNSPECIFIED",
@@ -974,7 +1187,6 @@
           {
             "type": "dropdown",
             "property": "leak_state",
-            "propertyText": "leak_state",
             "mode": [
               {
                 "label": "TLS_UNSPECIFIED",
@@ -993,6 +1205,20 @@
                 "value": 3
               }
             ]
+          },
+          {
+            "type": "bool",
+            "property": "is_leak_detection_enabled"
+          },
+          {
+            "type": "int",
+            "property": "time_to_flat",
+            "minrange": 0,
+            "maxrange": 2097151
+          },
+          {
+            "type": "bool",
+            "property": "pressure_invalid"
           }
         ]
       }
@@ -1186,20 +1412,14 @@
             "property": "is_invalid"
           },
           {
-            "type": "bool",
-            "property": "is_pressure_low_indication_on"
-          },
-          {
-            "type": "float",
-            "property": "temperature",
-            "minrange": -40,
-            "maxrange": 215
-          },
-          {
             "type": "float",
             "property": "pressure",
             "minrange": 0,
             "maxrange": 1020
+          },
+          {
+            "type": "bool",
+            "property": "is_pressure_low_indication_on"
           },
           {
             "type": "label",
@@ -1246,6 +1466,12 @@
                 "value": 6
               }
             ]
+          },
+          {
+            "type": "float",
+            "property": "temperature",
+            "minrange": -40,
+            "maxrange": 215
           }
         ]
       }
@@ -1436,10 +1662,6 @@
         ],
         "uidetails": [
           {
-            "type": "bool",
-            "property": "is_speed_limit_active"
-          },
-          {
             "type": "float",
             "property": "speed",
             "minrange": 0,
@@ -1450,6 +1672,10 @@
             "property": "speed_limit",
             "minrange": 0,
             "maxrange": 510
+          },
+          {
+            "type": "bool",
+            "property": "is_speed_limit_active"
           }
         ]
       }
