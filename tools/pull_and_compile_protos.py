@@ -32,21 +32,18 @@ import subprocess
 import git
 from git import Repo
 
-# Constants
-REPO_URL = "https://github.com/COVESA/uservices.git"
-REPO_DIR = "protos"
-OUTPUT_DIR = "../protofiles"
+from utils.constant import PROTO_OUTPUT_DIR, REPO_URL, PROTO_REPO_DIR
 
 
-def clone_or_pull(repo_url, repo_dir):
+def clone_or_pull(repo_url, PROTO_REPO_DIR):
     try:
-        Repo.clone_from(repo_url, repo_dir)
-        print(f"Repository cloned successfully from {repo_url} to {repo_dir}")
+        Repo.clone_from(repo_url, PROTO_REPO_DIR)
+        print(f"Repository cloned successfully from {repo_url} to {PROTO_REPO_DIR}")
     except git.exc.GitCommandError as clone_error:
         print(f"Error during cloning: {clone_error}")
         try:
             git_pull_command = ["git", "pull"]
-            subprocess.run(git_pull_command, cwd=repo_dir, check=True)
+            subprocess.run(git_pull_command, cwd=PROTO_REPO_DIR, check=True)
             print("Git pull successful after clone failure.")
         except subprocess.CalledProcessError as pull_error:
             print(f"Error during Git pull: {pull_error}")
@@ -65,8 +62,8 @@ def execute_maven_command(project_dir, command):
                 print("Maven command executed successfully.")
                 src_directory = os.path.join(os.getcwd(), project_dir, "target", "generated-sources", "protobuf",
                                              "python")
-                shutil.copytree(src_directory, OUTPUT_DIR, dirs_exist_ok=True)
-                process_python_protofiles(OUTPUT_DIR)
+                shutil.copytree(src_directory, PROTO_OUTPUT_DIR, dirs_exist_ok=True)
+                process_python_protofiles(PROTO_OUTPUT_DIR)
     except Exception as e:
         print(f"Error executing Maven command: {e}")
 
@@ -94,12 +91,12 @@ def process_python_protofiles(directory):
 
 
 if __name__ == "__main__":
-    if os.path.exists(OUTPUT_DIR):
-        print(f"Deleting existing protofiles in {OUTPUT_DIR}")
-        shutil.rmtree(OUTPUT_DIR)
-    os.makedirs(OUTPUT_DIR)
+    if os.path.exists(PROTO_OUTPUT_DIR):
+        print(f"Deleting existing protofiles in {PROTO_OUTPUT_DIR}")
+        shutil.rmtree(PROTO_OUTPUT_DIR)
+    os.makedirs(PROTO_OUTPUT_DIR)
 
-    clone_or_pull(REPO_URL, REPO_DIR)
+    clone_or_pull(REPO_URL, PROTO_REPO_DIR)
     # Execute mvn compile-python
     maven_command = ['mvn', "protobuf:compile-python"]
-    execute_maven_command(REPO_DIR, maven_command)
+    execute_maven_command(PROTO_REPO_DIR, maven_command)

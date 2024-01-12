@@ -24,61 +24,56 @@
 #
 # -------------------------------------------------------------------------
 
-import json
 import os
 import re
+import json
 
-data = []
+from utils.constant import SERVICE_PROTO_SUFFIX, TOPIC_PROTO_SUFFIX, PROTO_REPO_DIR, SERVICES_JSON_FILE_PATH
 
 
 def process_proto(directory):
+    data = []
     for root, dirs, files in os.walk(directory):
-        service_file_path = None
-        topic_file_path = None
-        for file in files:
-            if file.endswith('_service.proto'):
-                service_file_path = os.path.join(root, file)
-            if file.endswith('_topics.proto'):
-                topic_file_path = os.path.join(root, file)
+        service_file_path = next((os.path.join(root, file) for file in files if file.endswith(SERVICE_PROTO_SUFFIX)),
+                                 None)
+        topic_file_path = next((os.path.join(root, file) for file in files if file.endswith(TOPIC_PROTO_SUFFIX)), None)
         if service_file_path and topic_file_path:
-            read_proto_file(service_file_path, topic_file_path)
+            service_content, topic_content = read_proto_files(service_file_path, topic_file_path)
+            extract_proto_info(data, service_content, topic_content)
+
+    return data
 
 
-def read_proto_file(service_file_path, topic_file_path):
-    with open(service_file_path, 'r') as file:
-        service_file_content = file.read()
-    with open(topic_file_path, 'r') as file:
-        topic_file_content = file.read()
-    extract_proto_info(service_file_content, topic_file_content)
+def read_proto_files(service_file_path, topic_file_path):
+    with open(service_file_path, 'r') as service_file, open(topic_file_path, 'r') as topic_file:
+        return service_file.read(), topic_file.read()
 
 
-def extract_proto_info(service_file_content, topic_file_content):
+def extract_proto_info(data, service_file_content, topic_file_content):
     # Extract service name
-    service_name_match = re.search(r'service\s+(\w+)\s*{', service_file_content)
-    service_name = service_name_match.group(1) if service_name_match else None
+    service_name = re.search(r'service\s+(\w+)\s*{', service_file_content)
 
     # Extract uprotocol name
-    uprotocol_name_match = re.search(r'option\s+\(uprotocol\.name\)\s*=\s*"([^"]+)"', service_file_content)
-    uprotocol_name = uprotocol_name_match.group(1) if uprotocol_name_match else None
+    uprotocol_name = re.search(r'option\s+\(uprotocol\.name\)\s*=\s*"([^"]+)"', service_file_content)
 
     # Extract list of RPCs
-    rpc_matches = re.findall(r'rpc\s+(\w+)\s*\(\s*[^)]*\s*\)', service_file_content)
-    rpcs = rpc_matches if rpc_matches else None
+    rpcs = re.findall(r'rpc\s+(\w+)\s*\(\s*[^)]*\s*\)', service_file_content) or []
 
-    message_value_match = re.findall(r'message\s+(\w+)\s*{', topic_file_content)
-    messages = message_value_match if message_value_match else None
+    messages = re.findall(r'message\s+(\w+)\s*{', topic_file_content) or []
 
-    append_to_data(uprotocol_name, service_name, rpcs, messages)
+    append_to_data(data, uprotocol_name, service_name, rpcs, messages)
 
 
-def append_to_data(entity, display_name, rpcs, messages):
-    json_obj = {"name": entity, "display_name": display_name, "rpc": rpcs, "message": messages}
-
+def append_to_data(data, uprotocol_name_match, service_name_match, rpcs, messages):
+    json_obj = {"name": uprotocol_name_match.group(1) if uprotocol_name_match else None,
+                "display_name": service_name_match.group(1) if service_name_match else None, "rpc": rpcs,
+                "message": messages}
     data.append(json_obj)
 
 
 if __name__ == "__main__":
-    process_proto('protos')
-    resulting_json = json.dumps(data, indent=2)
+    result_data = process_proto(PROTO_REPO_DIR)
 
-    print(resulting_json)
+    # Write JSON data to the services.json
+    with open(SERVICES_JSON_FILE_PATH, 'w') as json_file:
+        json.dump(result_data, json_file, indent=2)
