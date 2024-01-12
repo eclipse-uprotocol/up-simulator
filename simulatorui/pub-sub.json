@@ -679,11 +679,13 @@
         "Configuration": [
           {
             "name": "left",
+            "name_key": "id",
             "display_name": "left",
             "topic": "body.horn/1/left123SideExteriorSideMirror"
           },
           {
             "name": "right",
+            "name_key": "id",
             "display_name": "right",
             "topic": "body.horn/1/right123SideExteriorSideMirror"
           }

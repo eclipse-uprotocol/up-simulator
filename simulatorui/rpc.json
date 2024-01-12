@@ -24,24 +24,6 @@
       "ExecuteClimateCommand": {
         "Configuration": [
           {
-            "name": "zone.row1",
-            "display_name": "row1",
-            "topic": "body.cabin_climate/1/zone.row1123Zone",
-            "rpcmethod": "ExecuteClimateCommand"
-          },
-          {
-            "name": "zone.row2",
-            "display_name": "row2",
-            "topic": "body.cabin_climate/1/zone.row2123Zone",
-            "rpcmethod": "ExecuteClimateCommand"
-          },
-          {
-            "name": "zone.row3",
-            "display_name": "row3",
-            "topic": "body.cabin_climate/1/zone.row3123Zone",
-            "rpcmethod": "ExecuteClimateCommand"
-          },
-          {
             "name": "zone.row1_left",
             "display_name": "row1_left",
             "topic": "body.cabin_climate/1/zone.row1_left123Zone",
@@ -84,23 +66,16 @@
             "text": "Zone"
           },
           {
-            "type": "bool",
-            "rpcproperty": "zone.power_on",
-            "property": "power_on"
-          },
-          {
             "type": "float",
-            "rpcproperty": "zone.temperature_setpoint",
-            "property": "temperature_setpoint",
-            "minrange": -40,
-            "maxrange": 87.5
+            "rpcproperty": "zone.temperature",
+            "property": "temperature",
+            "minrange": -0,
+            "maxrange": 50
           },
           {
             "type": "dropdown",
-            "property": "blower_auto_state",
-            "rpcproperty": "zone.blower_auto_state",
-            "propertyText": "blower_auto_state",
-            "readonly": "True",
+            "property": "fan_auto_state",
+            "rpcproperty": "zone.fan_auto_state",
             "mode": [
               {
                 "label": "AM_UNSPECIFIED",
@@ -130,16 +105,15 @@
           },
           {
             "type": "int",
-            "rpcproperty": "zone.blower_level",
-            "property": "blower_level",
+            "rpcproperty": "zone.fan_speed",
+            "property": "fan_speed",
             "minrange": 0,
             "maxrange": 100
           },
           {
             "type": "dropdown",
-            "rpcproperty": "zone.air_distribution",
             "property": "air_distribution",
-            "propertyText": "air_distribution",
+            "rpcproperty": "zone.air_distribution",
             "mode": [
               {
                 "label": "AD_UNSPECIFIED",
@@ -189,19 +163,23 @@
           },
           {
             "type": "bool",
-            "rpcproperty": "zone.auto_on",
-            "property": "auto_on"
+            "property": "is_power_on",
+            "rpcproperty": "zone.is_power_on"
           },
           {
             "type": "bool",
-            "rpcproperty": "zone.lock_zone",
-            "property": "lock_zone"
+            "property": "is_auto_on",
+            "rpcproperty": "zone.is_auto_on"
+          },
+          {
+            "type": "bool",
+            "property": "is_zone_locked",
+            "rpcproperty": "zone.is_zone_locked"
           },
           {
             "type": "dropdown",
             "property": "air_distribution_auto_state",
             "rpcproperty": "zone.air_distribution_auto_state",
-            "propertyText": "air_distribution_auto_state",
             "mode": [
               {
                 "label": "AM_UNSPECIFIED",
@@ -233,8 +211,6 @@
             "type": "dropdown",
             "property": "temperature_auto_state",
             "rpcproperty": "zone.temperature_auto_state",
-            "propertyText": "temperature_auto_state",
-            "readonly": "True",
             "mode": [
               {
                 "label": "AM_UNSPECIFIED",
@@ -282,62 +258,60 @@
           },
           {
             "type": "bool",
-            "rpcproperty": "settings.sync_all",
-            "property": "sync_all"
+            "property": "sync_all",
+            "rpcproperty": "settings.sync_all"
           },
           {
             "type": "bool",
-            "rpcproperty": "settings.sync_rear_to_driver",
-            "property": "sync_rear_to_driver"
+            "property": "sync_rear_to_driver",
+            "rpcproperty": "settings.sync_rear_to_driver"
           },
           {
             "type": "bool",
-            "rpcproperty": "settings.sync_3rdRow_to_driver",
-            "property": "sync_3rdRow_to_driver"
+            "property": "sync_3rdRow_to_driver",
+            "rpcproperty": "settings.sync_3rdRow_to_driver"
           },
           {
             "type": "int",
             "property": "estimated_cabin_temperature",
+            "rpcproperty": "settings.estimated_cabin_temperature",
             "minrange": 0,
-            "maxrange": 100,
-            "readonly": "True"
+            "maxrange": 50
           },
           {
             "type": "bool",
-            "rpcproperty": "settings.rear_zone_lockout",
-            "property": "rear_zone_lockout"
+            "property": "rear_zone_lockout",
+            "rpcproperty": "settings.rear_zone_lockout"
           },
           {
             "type": "bool",
-            "rpcproperty": "settings.air_recirc_mode",
-            "property": "air_recirc_mode"
+            "property": "air_recirc_mode",
+            "rpcproperty": "settings.air_recirc_mode"
           },
           {
             "type": "bool",
-            "rpcproperty": "settings.max_defrost",
-            "property": "max_defrost"
+            "property": "max_defrost",
+            "rpcproperty": "settings.max_defrost"
           },
           {
             "type": "bool",
-            "rpcproperty": "settings.rear_window_defog",
-            "property": "rear_window_defog"
+            "property": "rear_window_defog",
+            "rpcproperty": "settings.rear_window_defog"
           },
           {
             "type": "bool",
             "property": "cabin_conditioning_invalid",
-            "readonly": "True"
+            "rpcproperty": "settings.cabin_conditioning_invalid"
           },
           {
             "type": "bool",
-            "rpcproperty": "settings.third_row_zone_lockout",
             "property": "third_row_zone_lockout",
-            "writeonly": "True"
+            "rpcproperty": "settings.third_row_zone_lockout"
           },
           {
             "type": "dropdown",
-            "rpcproperty": "settings.ac_compressor_setting",
             "property": "ac_compressor_setting",
-            "propertyText": "ac_compressor_setting",
+            "rpcproperty": "settings.ac_compressor_setting",
             "mode": [
               {
                 "label": "CS_UNSPECIFIED",
@@ -361,8 +335,6 @@
             "type": "dropdown",
             "property": "heater_setting",
             "rpcproperty": "settings.heater_setting",
-            "propertyText": "heater_setting",
-            "writeonly": "True",
             "mode": [
               {
                 "label": "HS_UNSPECIFIED",
@@ -381,8 +353,7 @@
           {
             "type": "dropdown",
             "property": "temperature_units",
-            "propertyText": "temperature_units",
-            "readonly": "True",
+            "rpcproperty": "settings.temperature_units",
             "mode": [
               {
                 "label": "TU_UNSPECIFIED",
@@ -401,8 +372,7 @@
           {
             "type": "dropdown",
             "property": "ionizer_status",
-            "propertyText": "ionizer_status",
-            "readonly": "True",
+            "rpcproperty": "settings.ionizer_status",
             "mode": [
               {
                 "label": "IS_UNSPECIFIED",
@@ -429,7 +399,391 @@
           {
             "type": "bool",
             "property": "user_controls_interaction",
-            "readonly": "True"
+            "rpcproperty": "settings.user_controls_interaction"
+          }
+        ]
+      }
+    },
+    {
+      "SetTemperature": {
+        "Configuration": [
+          {
+            "name": "zone.row1_left",
+            "display_name": "row1_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row1_left123Zone",
+            "rpcmethod": "SetTemperature"
+          },
+          {
+            "name": "zone.row1_right",
+            "display_name": "row1_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row1_right123Zone",
+            "rpcmethod": "SetTemperature"
+          },
+          {
+            "name": "zone.row2_left",
+            "display_name": "row2_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row2_left123Zone",
+            "rpcmethod": "SetTemperature"
+          },
+          {
+            "name": "zone.row2_right",
+            "display_name": "row2_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row2_right123Zone",
+            "rpcmethod": "SetTemperature"
+          },
+          {
+            "name": "zone.row3_left",
+            "display_name": "row3_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row3_left123Zone",
+            "rpcmethod": "SetTemperature"
+          },
+          {
+            "name": "zone.row3_right",
+            "display_name": "row3_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row3_right123Zone",
+            "rpcmethod": "SetTemperature"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "float",
+            "property": "temperature",
+            "minrange": -0,
+            "maxrange": 50
+          },
+          {
+            "type": "dropdown",
+            "property": "temperature_state",
+            "mode": [
+              {
+                "label": "AM_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "AM_OFF",
+                "value": 1
+              },
+              {
+                "label": "AM_AUTO",
+                "value": 2
+              },
+              {
+                "label": "AM_MANUAL",
+                "value": 3
+              },
+              {
+                "label": "AM_AUTO_LOW",
+                "value": 4
+              },
+              {
+                "label": "AM_AUTO_HIGH",
+                "value": 5
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "SetFan": {
+        "Configuration": [
+          {
+            "name": "zone.row1_left",
+            "display_name": "row1_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row1_left123Zone",
+            "rpcmethod": "SetFan"
+          },
+          {
+            "name": "zone.row1_right",
+            "display_name": "row1_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row1_right123Zone",
+            "rpcmethod": "SetFan"
+          },
+          {
+            "name": "zone.row2_left",
+            "display_name": "row2_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row2_left123Zone",
+            "rpcmethod": "SetFan"
+          },
+          {
+            "name": "zone.row2_right",
+            "display_name": "row2_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row2_right123Zone",
+            "rpcmethod": "SetFan"
+          },
+          {
+            "name": "zone.row3_left",
+            "display_name": "row3_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row3_left123Zone",
+            "rpcmethod": "SetFan"
+          },
+          {
+            "name": "zone.row3_right",
+            "display_name": "row3_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row3_right123Zone",
+            "rpcmethod": "SetFan"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "int",
+            "property": "fan_speed",
+            "minrange": 0,
+            "maxrange": 100
+          },
+          {
+            "type": "bool",
+            "property": "is_fan_auto_on"
+          }
+        ]
+      }
+    },
+    {
+      "SetAirDistribution": {
+        "Configuration": [
+          {
+            "name": "zone.row1_left",
+            "display_name": "row1_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row1_left123Zone",
+            "rpcmethod": "SetAirDistribution"
+          },
+          {
+            "name": "zone.row1_right",
+            "display_name": "row1_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row1_right123Zone",
+            "rpcmethod": "SetAirDistribution"
+          },
+          {
+            "name": "zone.row2_left",
+            "display_name": "row2_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row2_left123Zone",
+            "rpcmethod": "SetAirDistribution"
+          },
+          {
+            "name": "zone.row2_right",
+            "display_name": "row2_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row2_right123Zone",
+            "rpcmethod": "SetAirDistribution"
+          },
+          {
+            "name": "zone.row3_left",
+            "display_name": "row3_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row3_left123Zone",
+            "rpcmethod": "SetAirDistribution"
+          },
+          {
+            "name": "zone.row3_right",
+            "display_name": "row3_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row3_right123Zone",
+            "rpcmethod": "SetAirDistribution"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "dropdown",
+            "property": "air_distribution",
+            "mode": [
+              {
+                "label": "AD_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "AD_OFF",
+                "value": 1
+              },
+              {
+                "label": "AD_AUTO",
+                "value": 2
+              },
+              {
+                "label": "AD_FLOOR",
+                "value": 3
+              },
+              {
+                "label": "AD_FLOOR_VENT",
+                "value": 4
+              },
+              {
+                "label": "AD_VENT",
+                "value": 5
+              },
+              {
+                "label": "AD_VENT_WINDSHIELD",
+                "value": 6
+              },
+              {
+                "label": "AD_WINDSHIELD",
+                "value": 7
+              },
+              {
+                "label": "AD_FLOOR_WINDSHIELD",
+                "value": 8
+              },
+              {
+                "label": "AD_FLOOR_VENT_WINDSHIELD",
+                "value": 9
+              },
+              {
+                "label": "AD_MAX_DEFROST",
+                "value": 10
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "temperature_state",
+            "mode": [
+              {
+                "label": "AM_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "AM_OFF",
+                "value": 1
+              },
+              {
+                "label": "AM_AUTO",
+                "value": 2
+              },
+              {
+                "label": "AM_MANUAL",
+                "value": 3
+              },
+              {
+                "label": "AM_AUTO_LOW",
+                "value": 4
+              },
+              {
+                "label": "AM_AUTO_HIGH",
+                "value": 5
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "SetPower": {
+        "Configuration": [
+          {
+            "name": "zone.row1_left",
+            "display_name": "row1_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row1_left123Zone",
+            "rpcmethod": "SetPower"
+          },
+          {
+            "name": "zone.row1_right",
+            "display_name": "row1_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row1_right123Zone",
+            "rpcmethod": "SetPower"
+          },
+          {
+            "name": "zone.row2_left",
+            "display_name": "row2_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row2_left123Zone",
+            "rpcmethod": "SetPower"
+          },
+          {
+            "name": "zone.row2_right",
+            "display_name": "row2_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row2_right123Zone",
+            "rpcmethod": "SetPower"
+          },
+          {
+            "name": "zone.row3_left",
+            "display_name": "row3_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row3_left123Zone",
+            "rpcmethod": "SetPower"
+          },
+          {
+            "name": "zone.row3_right",
+            "display_name": "row3_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row3_right123Zone",
+            "rpcmethod": "SetPower"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "property": "is_power_on"
+          }
+        ]
+      }
+    },
+    {
+      "SetLock": {
+        "Configuration": [
+          {
+            "name": "zone.row1_left",
+            "display_name": "row1_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row1_left123Zone",
+            "rpcmethod": "SetLock"
+          },
+          {
+            "name": "zone.row1_right",
+            "display_name": "row1_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row1_right123Zone",
+            "rpcmethod": "SetLock"
+          },
+          {
+            "name": "zone.row2_left",
+            "display_name": "row2_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row2_left123Zone",
+            "rpcmethod": "SetLock"
+          },
+          {
+            "name": "zone.row2_right",
+            "display_name": "row2_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row2_right123Zone",
+            "rpcmethod": "SetLock"
+          },
+          {
+            "name": "zone.row3_left",
+            "display_name": "row3_left",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row3_left123Zone",
+            "rpcmethod": "SetLock"
+          },
+          {
+            "name": "zone.row3_right",
+            "display_name": "row3_right",
+            "name_key": "id",
+            "topic": "body.cabin_climate/1/zone.row3_right123Zone",
+            "rpcmethod": "SetLock"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "property": "is_zone_locked"
           }
         ]
       }
@@ -517,6 +871,221 @@
       }
     }
   ],
+  "body.mirrors": [
+    {
+      "SlideSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "topic": "body.horn/1/left123SideExteriorSideMirror",
+            "rpcmethod": "SlideSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "topic": "body.horn/1/right123SideExteriorSideMirror",
+            "rpcmethod": "SlideSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "int",
+            "property": "position",
+            "minrange": 0,
+            "maxrange": 100
+          }
+        ]
+      }
+    },
+    {
+      "FoldSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "topic": "body.horn/1/left123SideExteriorSideMirror",
+            "rpcmethod": "FoldSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "topic": "body.horn/1/right123SideExteriorSideMirror",
+            "rpcmethod": "FoldSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "UnfoldSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "topic": "body.horn/1/left123SideExteriorSideMirror",
+            "rpcmethod": "UnfoldSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "topic": "body.horn/1/right123SideExteriorSideMirror",
+            "rpcmethod": "UnfoldSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "TiltSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "topic": "body.horn/1/left123SideExteriorSideMirror",
+            "rpcmethod": "TiltSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "topic": "body.horn/1/right123SideExteriorSideMirror",
+            "rpcmethod": "TiltSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "UntiltSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "topic": "body.horn/1/left123SideExteriorSideMirror",
+            "rpcmethod": "UntiltSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "topic": "body.horn/1/right123SideExteriorSideMirror",
+            "rpcmethod": "UntiltSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "ActivateHeatedSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "topic": "body.horn/1/left123SideExteriorSideMirror",
+            "rpcmethod": "ActivateHeatedSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "topic": "body.horn/1/right123SideExteriorSideMirror",
+            "rpcmethod": "ActivateHeatedSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "DeactivateHeatedSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "topic": "body.horn/1/left123SideExteriorSideMirror",
+            "rpcmethod": "DeactivateHeatedSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "topic": "body.horn/1/right123SideExteriorSideMirror",
+            "rpcmethod": "DeactivateHeatedSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "UpdateSideMirrorMovementSettings": {
+        "Configuration": [
+          {
+            "name": "side_mirror",
+            "display_name": "side_mirror",
+            "topic": "body.horn/1/side_mirror123SideMirrorMovementSettings",
+            "rpcmethod": "UpdateSideMirrorMovementSettings"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "rpcproperty": "setting.is_auto_tilt_enabled",
+            "property": "is_auto_tilt_enabled"
+          },
+          {
+            "type": "bool",
+            "rpcproperty": "setting.is_auto_fold_enabled",
+            "property": "is_auto_fold_enabled"
+          }
+        ]
+      }
+    },
+    {
+      "UpdateHeatedSideMirrorsSettings": {
+        "Configuration": [
+          {
+            "name": "side_mirror",
+            "display_name": "side_mirror",
+            "topic": "body.horn/1/side_mirror123HeatedSideMirrorSettings",
+            "rpcmethod": "UpdateHeatedSideMirrorsSettings"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "rpcproperty": "setting.is_auto_heat_on",
+            "property": "is_auto_heat_on"
+          }
+        ]
+      }
+    }
+  ],
   "chassis.braking": [
     {
       "ResetHealth": {
@@ -537,51 +1106,7 @@
         "uidetails": [
           {
             "type": "label",
-            "text": "Health"
-          },
-          {
-            "type": "dropdown",
-            "property": "health.state",
-            "propertyText": "state",
-            "readonly": "True",
-            "mode": [
-              {
-                "label": "S_UNSPECIFIED",
-                "value": 0
-              },
-              {
-                "label": "S_OK",
-                "value": 1
-              },
-              {
-                "label": "S_SERVICE_SOON",
-                "value": 2
-              },
-              {
-                "label": "S_SERVICE_NOW",
-                "value": 3
-              },
-              {
-                "label": "S_DISABLED",
-                "value": 4
-              },
-              {
-                "label": "S_FAULT_PRESENT",
-                "value": 5
-              },
-              {
-                "label": "S_UNSUPPORTED",
-                "value": 6
-              }
-            ]
-          },
-          {
-            "type": "int",
-            "property": "health.remaining_life",
-            "propertyText": "remaining_life",
-            "readonly": "True",
-            "minrange": 0,
-            "maxrange": 100
+            "text": "Type of RPC request is google.protobuf.Empty"
           }
         ]
       }
@@ -1025,84 +1550,6 @@
           {
             "type": "bool",
             "property": "is_leak_present"
-          },
-          {
-            "type": "label",
-            "text": "Tire Status"
-          },
-          {
-            "type": "float",
-            "property": "pressure",
-            "minrange": 0,
-            "maxrange": 1020,
-            "readonly": "True"
-          },
-          {
-            "type": "float",
-            "property": "temperature",
-            "minrange": -20,
-            "maxrange": 107,
-            "readonly": "True"
-          },
-          {
-            "type": "dropdown",
-            "property": "pressure_warning",
-            "propertyText": "pressure_warning",
-            "readonly": "True",
-            "mode": [
-              {
-                "label": "TPS_UNSPECIFIED",
-                "value": 0
-              },
-              {
-                "label": "TPS_NOMINAL",
-                "value": 1
-              },
-              {
-                "label": "TPS_LOW",
-                "value": 3
-              },
-              {
-                "label": "TPS_HIGH",
-                "value": 4
-              }
-            ]
-          },
-          {
-            "type": "dropdown",
-            "property": "leak_state",
-            "propertyText": "leak_state",
-            "readonly": "True",
-            "mode": [
-              {
-                "label": "TLS_UNSPECIFIED",
-                "value": 0
-              },
-              {
-                "label": "TLS_NO_LEAK",
-                "value": 1
-              },
-              {
-                "label": "TLS_SLOW_LEAK",
-                "value": 2
-              },
-              {
-                "label": "TLS_FAST_LEAK",
-                "value": 3
-              }
-            ]
-          },
-          {
-            "type": "bool",
-            "property": "is_leak_detection_enabled",
-            "readonly": "True"
-          },
-          {
-            "type": "int",
-            "property": "time_to_flat",
-            "minrange": 0,
-            "maxrange": 2097151,
-            "readonly": "True"
           }
         ]
       }
@@ -1140,51 +1587,7 @@
         "uidetails": [
           {
             "type": "label",
-            "text": "Health"
-          },
-          {
-            "type": "dropdown",
-            "property": "health.state",
-            "propertyText": "state",
-            "readonly": "True",
-            "mode": [
-              {
-                "label": "S_UNSPECIFIED",
-                "value": 0
-              },
-              {
-                "label": "S_OK",
-                "value": 1
-              },
-              {
-                "label": "S_SERVICE_SOON",
-                "value": 2
-              },
-              {
-                "label": "S_SERVICE_NOW",
-                "value": 3
-              },
-              {
-                "label": "S_DISABLED",
-                "value": 4
-              },
-              {
-                "label": "S_FAULT_PRESENT",
-                "value": 5
-              },
-              {
-                "label": "S_UNSUPPORTED",
-                "value": 6
-              }
-            ]
-          },
-          {
-            "type": "int",
-            "property": "health.remaining_life",
-            "readonly": "True",
-            "propertyText": "remaining_life",
-            "minrange": 0,
-            "maxrange": 100
+            "text": "Type of RPC request is google.protobuf.Empty"
           }
         ]
       }
@@ -1195,13 +1598,13 @@
       "ResetTripMeter": {
         "Configuration": [
           {
-            "name": "trip_1",
+            "name": "trip_meter.trip_1",
             "display_name": "trip_1",
             "topic": "vehicle/1/trip_meter.trip_1123TripMeter",
             "rpcmethod": "ResetTripMeter"
           },
           {
-            "name": "trip_2",
+            "name": "trip_meter.trip_2",
             "display_name": "trip_2",
             "topic": "vehicle/1/trip_meter.trip_2123TripMeter",
             "rpcmethod": "ResetTripMeter"
@@ -1209,16 +1612,8 @@
         ],
         "uidetails": [
           {
-            "type": "bool",
-            "property": "is_invalid",
-            "readonly": "True"
-          },
-          {
-            "type": "float",
-            "property": "value",
-            "minrange": 0,
-            "maxrange": 1253.2,
-            "readonly": "True"
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
           }
         ]
       }

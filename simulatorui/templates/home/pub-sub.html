@@ -53,7 +53,7 @@ E -->
 
                                 <ul id="myULdata">
                                     {% for service in services %}
-                                    {% if service['message']|length >0 %}
+                                    {% if 'message' in service and service['message']|length >0 %}
 
                                     <li>
                                         <a>
@@ -80,7 +80,6 @@ E -->
                                     <p class="text-start">Service Configuration & Status</p>
                                     <p id="box-content">Search or start service to begin</p>
                                     {% for service in services %}
-
 
                                     {% if 'message' in service and service['message']|length >0 %}
                                     <div id="div{{service['name']}}">
