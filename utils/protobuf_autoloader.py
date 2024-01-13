@@ -34,6 +34,7 @@ import re
 import traceback
 
 import protofiles as proto
+from utils.constant import RESOURCE_CATALOG_CSV_NAME, RESOURCE_CATALOG_JSON_NAME
 
 rpc_methods = {}
 rpc_fullname_methods = {}
@@ -64,14 +65,14 @@ def populate_protobuf_classes():
     # Specify the relative path to the CSV file
     relative_path = os.path.abspath(os.path.join(cwd, ".." + os.sep + "core"))
     # Combine the current working directory and the relative path
-    csv_file_path = relative_path + os.sep + "ResourceCatalog.csv"
+    csv_file_path = relative_path + os.sep + RESOURCE_CATALOG_CSV_NAME
     with open(csv_file_path, 'r') as csv_file:
         reader = csv.reader(csv_file)
         for row in reader:
             (uri, message_full_name) = row
             tmp = [uri.strip(), message_full_name.strip()]
             topic_messages.append(tmp)
-    json_file_path = relative_path + os.sep + "ResourceCatalog.json"
+    json_file_path = relative_path + os.sep + RESOURCE_CATALOG_JSON_NAME
 
     with open(json_file_path, 'r') as json_file:
         json_data = json_file.read()
@@ -216,23 +217,8 @@ def find_message_class(containing_module, class_full_name):
                     # try wellknown types
                     class_obj = getattr(importlib.import_module("google.protobuf.wrappers_pb2"), class_base_name, )
                 except (ModuleNotFoundError, AttributeError):
-                    # check for messages contained in protobuf definitions not using standard naming convention
-                    if class_base_name == "SetLampRequest" or class_base_name == "SetLampsRequest":
-                        class_obj = getattr(
-                            importlib.import_module("protofiles.ultifi.vehicle.body.lighting.v1.set_lamps_request_pb2"),
-                            class_base_name, )
-                    elif class_base_name == "UriRequest" or class_base_name == "UriResponse":
-                        class_obj = getattr(importlib.import_module("protofiles.ultifi.core.uri_pb2"),
-                                            class_base_name, )
-                    elif class_base_name == "Topic":
-                        class_obj = getattr(importlib.import_module("protofiles.ultifi.core.topic_pb2"),
-                                            class_base_name, )
-                    elif class_base_name == "CloudEvent":
-                        class_obj = getattr(importlib.import_module("protofiles.io.cloudevents.v1.cloudevents_pb2"),
-                            class_base_name, )
-                    else:
-                        print(f"WARNING: Unable to find protobuf definition for {class_full_name}")
-                        class_obj = None
+                    print(f"WARNING: Unable to find protobuf definition for {class_full_name}")
+                    class_obj = None
     return class_obj
 
 
@@ -247,8 +233,7 @@ def get_rpc_method_uri(service, method):
         for method in rpc_topics[service].keys():
             if method_name == method:
                 return rpc_topics[service][method]["versions"], str(rpc_topics[service][method]["uri"])
-    if service == "example.hello_world":
-        return [1], "ultifi:/example.hello_world/1/rpc." + method.name
+
     return None
 
 
