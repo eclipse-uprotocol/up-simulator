@@ -5,3 +5,4 @@ pure-python-adb
 Flask-SocketIO
 gitpython
 protobuf
+googleapis-common-protos
