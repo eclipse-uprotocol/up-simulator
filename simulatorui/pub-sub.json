@@ -6,12 +6,12 @@
           {
             "name": "one_second",
             "display_name": "one_second",
-            "topic": "example.hello_world/1/one_second123Timer"
+            "topic": "up:/example.hello_world/1/one_second123Timer"
           },
           {
             "name": "one_minute",
             "display_name": "one_minute",
-            "topic": "example.hello_world/1/one_minute123Timer"
+            "topic": "up:/example.hello_world/1/one_minute123Timer"
           }
         ],
         "uidetails": [
@@ -31,32 +31,32 @@
           {
             "name": "zone.row1_left",
             "display_name": "row1_left",
-            "topic": "body.cabin_climate/1/zone.row1_left123Zone"
+            "topic": "up:/body.cabin_climate/1/zone.row1_left123Zone"
           },
           {
             "name": "zone.row1_right",
             "display_name": "row1_right",
-            "topic": "body.cabin_climate/1/zone.row1_right123Zone"
+            "topic": "up:/body.cabin_climate/1/zone.row1_right123Zone"
           },
           {
             "name": "zone.row2_left",
             "display_name": "row2_left",
-            "topic": "body.cabin_climate/1/zone.row2_left123Zone"
+            "topic": "up:/body.cabin_climate/1/zone.row2_left123Zone"
           },
           {
             "name": "zone.row2_right",
             "display_name": "row2_right",
-            "topic": "body.cabin_climate/1/zone.row2_right123Zone"
+            "topic": "up:/body.cabin_climate/1/zone.row2_right123Zone"
           },
           {
             "name": "zone.row3_left",
             "display_name": "row3_left",
-            "topic": "body.cabin_climate/1/zone.row3_left123Zone"
+            "topic": "up:/body.cabin_climate/1/zone.row3_left123Zone"
           },
           {
             "name": "zone.row3_right",
             "display_name": "row3_right",
-            "topic": "body.cabin_climate/1/zone.row3_right123Zone"
+            "topic": "up:/body.cabin_climate/1/zone.row3_right123Zone"
           }
         ],
         "uidetails": [
@@ -233,7 +233,7 @@
           {
             "name": "system_settings",
             "display_name": "system_settings",
-            "topic": "body.cabin_climate/1/system_settings123SystemSettings"
+            "topic": "up:/body.cabin_climate/1/system_settings123SystemSettings"
           }
         ],
         "uidetails": [
@@ -376,7 +376,7 @@
           {
             "name": "cabin_hvac",
             "display_name": "cabin_hvac",
-            "topic": "body.cabin_climate/1/cabin_hvac123Zone"
+            "topic": "up:/body.cabin_climate/1/cabin_hvac123Zone"
           }
         ],
         "uidetails": [
@@ -562,7 +562,7 @@
           {
             "name": "horn",
             "display_name": "horn",
-            "topic": "body.horn/1/horn123HornStatus"
+            "topic": "up:/body.horn/1/horn123HornStatus"
           }
         ],
         "uidetails": [
@@ -631,7 +631,7 @@
           {
             "name": "side_mirror",
             "display_name": "side_mirror",
-            "topic": "body.horn/1/side_mirror123HeatedSideMirror"
+            "topic": "up:/body.horn/1/side_mirror123HeatedSideMirror"
           }
         ],
         "uidetails": [
@@ -646,7 +646,7 @@
           {
             "name": "side_mirror",
             "display_name": "side_mirror",
-            "topic": "body.horn/1/side_mirror123SideMirrorMovementSettings"
+            "topic": "up:/body.horn/1/side_mirror123SideMirrorMovementSettings"
           }
         ],
         "uidetails": [
@@ -665,7 +665,7 @@
           {
             "name": "side_mirror",
             "display_name": "side_mirror",
-            "topic": "body.horn/1/side_mirror123HeatedSideMirrorSettings"
+            "topic": "up:/body.horn/1/side_mirror123HeatedSideMirrorSettings"
           }
         ],
         "uidetails": [
@@ -681,13 +681,13 @@
             "name": "left",
             "name_key": "id",
             "display_name": "left",
-            "topic": "body.horn/1/left123SideExteriorSideMirror"
+            "topic": "up:/body.horn/1/left123SideExteriorSideMirror"
           },
           {
             "name": "right",
             "name_key": "id",
             "display_name": "right",
-            "topic": "body.horn/1/right123SideExteriorSideMirror"
+            "topic": "up:/body.horn/1/right123SideExteriorSideMirror"
           }
         ],
         "uidetails": [
@@ -706,12 +706,12 @@
           {
             "name": "brake_pads.front",
             "display_name": "front",
-            "topic": "chassis.braking/1/brake_pads.front123BrakePads"
+            "topic": "up:/chassis.braking/1/brake_pads.front123BrakePads"
           },
           {
             "name": "brake_pads.rear",
             "display_name": "rear",
-            "topic": "chassis.braking/1/brake_pads.rear123BrakePads"
+            "topic": "up:/chassis.braking/1/brake_pads.rear123BrakePads"
           }
         ],
         "uidetails": [
@@ -770,7 +770,7 @@
           {
             "name": "brake_pedal",
             "display_name": "brake_pedal",
-            "topic": "chassis.braking/1/brake_pedal123BrakePedal"
+            "topic": "up:/chassis.braking/1/brake_pedal123BrakePedal"
           }
         ],
         "uidetails": [
@@ -801,7 +801,7 @@
           {
             "name": "ride_height",
             "display_name": "ride_height",
-            "topic": "chassis.suspension/1/ride_height123RideHeight"
+            "topic": "up:/chassis.suspension/1/ride_height123RideHeight"
           }
         ],
         "uidetails": [
@@ -1060,7 +1060,7 @@
           {
             "name": "ride_height_system_status",
             "display_name": "ride_height_system_status",
-            "topic": "chassis.suspension/1/ride_height_system_status123RideHeightSystemStatus"
+            "topic": "up:/chassis.suspension/1/ride_height_system_status123RideHeightSystemStatus"
           }
         ],
         "uidetails": [
@@ -1123,32 +1123,32 @@
           {
             "name": "front_left",
             "resource_name": "front_left",
-            "topic": "chassis/1/tire.front_left123Tire"
+            "topic": "up:/chassis/1/tire.front_left123Tire"
           },
           {
             "name": "front_right",
             "resource_name": "front_right",
-            "topic": "chassis/1/tire.front_right123Tire"
+            "topic": "up:/chassis/1/tire.front_right123Tire"
           },
           {
             "name": "rear_left",
             "resource_name": "rear_left",
-            "topic": "chassis/1/tire.rear_left123Tire"
+            "topic": "up:/chassis/1/tire.rear_left123Tire"
           },
           {
             "name": "rear_right",
             "resource_name": "rear_right",
-            "topic": "chassis/1/tire.rear_right123Tire"
+            "topic": "up:/chassis/1/tire.rear_right123Tire"
           },
           {
             "name": "rear_left_inner",
             "resource_name": "rear_left_inner",
-            "topic": "chassis/1/tire.rear_left_inner123Tire"
+            "topic": "up:/chassis/1/tire.rear_left_inner123Tire"
           },
           {
             "name": "rear_right_inner",
             "resource_name": "rear_right_inner",
-            "topic": "chassis/1/tire.rear_right_inner123Tire"
+            "topic": "up:/chassis/1/tire.rear_right_inner123Tire"
           }
         ],
         "uidetails": [
@@ -1231,7 +1231,7 @@
           {
             "name": "traction_control_system",
             "display_name": "traction_control_system",
-            "topic": "chassis/1/traction_control_system123TractionControlSystem"
+            "topic": "up:/chassis/1/traction_control_system123TractionControlSystem"
           }
         ],
         "uidetails": [
@@ -1256,7 +1256,7 @@
           {
             "name": "electronic_stability_control_system",
             "display_name": "electronic_stability_control_system",
-            "topic": "chassis/1/electronic_stability_control_system123ElectronicStabilityControlSystem"
+            "topic": "up:/chassis/1/electronic_stability_control_system123ElectronicStabilityControlSystem"
           }
         ],
         "uidetails": [
@@ -1283,7 +1283,7 @@
           {
             "name": "exterior_environment",
             "display_name": "exterior_environment",
-            "topic": "vehicle.exterior/1/exterior_environment123SolarInformation"
+            "topic": "up:/vehicle.exterior/1/exterior_environment123SolarInformation"
           }
         ],
         "uidetails": [
@@ -1302,7 +1302,7 @@
           {
             "name": "exterior_environment",
             "display_name": "exterior_environment",
-            "topic": "vehicle.exterior/1/exterior_environment123Temperature"
+            "topic": "up:/vehicle.exterior/1/exterior_environment123Temperature"
           }
         ],
         "uidetails": [
@@ -1321,7 +1321,7 @@
           {
             "name": "exterior_environment",
             "display_name": "exterior_environment",
-            "topic": "vehicle.exterior/1/exterior_environment123AmbientLight"
+            "topic": "up:/vehicle.exterior/1/exterior_environment123AmbientLight"
           }
         ],
         "uidetails": [
@@ -1346,7 +1346,7 @@
           {
             "name": "air_filter",
             "display_name": "air_filter",
-            "topic": "propulsion.engine/1/air_filter123AirFilter"
+            "topic": "up:/propulsion.engine/1/air_filter123AirFilter"
           }
         ],
         "uidetails": [
@@ -1405,7 +1405,7 @@
           {
             "name": "oil",
             "display_name": "oil",
-            "topic": "propulsion.engine/1/oil123Oil"
+            "topic": "up:/propulsion.engine/1/oil123Oil"
           }
         ],
         "uidetails": [
@@ -1484,7 +1484,7 @@
           {
             "name": "coolant",
             "display_name": "coolant",
-            "topic": "propulsion.engine/1/coolant123Coolant"
+            "topic": "up:/propulsion.engine/1/coolant123Coolant"
           }
         ],
         "uidetails": [
@@ -1507,7 +1507,7 @@
           {
             "name": "engine_state",
             "display_name": "engine_state",
-            "topic": "propulsion.engine/1/engine_state123EngineState"
+            "topic": "up:/propulsion.engine/1/engine_state123EngineState"
           }
         ],
         "uidetails": [
@@ -1538,7 +1538,7 @@
           {
             "name": "gear",
             "display_name": "gear",
-            "topic": "propulsion.transmission/1/gear123VehicleGearState"
+            "topic": "up:/propulsion.transmission/1/gear123VehicleGearState"
           }
         ],
         "uidetails": [
@@ -1582,12 +1582,12 @@
           {
             "name": "gearbox.primary",
             "display_name": "primary",
-            "topic": "propulsion.transmission/1/gearbox.primary123Gearbox"
+            "topic": "up:/propulsion.transmission/1/gearbox.primary123Gearbox"
           },
           {
             "name": "gearbox.secondary",
             "display_name": "secondary",
-            "topic": "propulsion.transmission/1/gearbox.secondary123Gearbox"
+            "topic": "up:/propulsion.transmission/1/gearbox.secondary123Gearbox"
           }
         ],
         "uidetails": [
@@ -1608,7 +1608,7 @@
           {
             "name": "vehicle",
             "display_name": "vehicle",
-            "topic": "vehicle/1/vehicle123TraveledDistance"
+            "topic": "up:/vehicle/1/vehicle123TraveledDistance"
           }
         ],
         "uidetails": [
@@ -1631,12 +1631,12 @@
           {
             "name": "trip_meter.trip_1",
             "display_name": "trip_1",
-            "topic": "vehicle/1/trip_meter.trip_1123TripMeter"
+            "topic": "up:/vehicle/1/trip_meter.trip_1123TripMeter"
           },
           {
             "name": "trip_meter.trip_2",
             "display_name": "trip_2",
-            "topic": "vehicle/1/trip_meter.trip_2123TripMeter"
+            "topic": "up:/vehicle/1/trip_meter.trip_2123TripMeter"
           }
         ],
         "uidetails": [
@@ -1659,7 +1659,7 @@
           {
             "name": "vehicle",
             "display_name": "vehicle",
-            "topic": "vehicle/1/vehicle123VehicleSpeed"
+            "topic": "up:/vehicle/1/vehicle123VehicleSpeed"
           }
         ],
         "uidetails": [
@@ -1688,7 +1688,7 @@
           {
             "name": "vehicle",
             "display_name": "vehicle",
-            "topic": "vehicle/1/vehicle123CollisionAlert"
+            "topic": "up:/vehicle/1/vehicle123CollisionAlert"
           }
         ],
         "uidetails": [
@@ -1705,7 +1705,7 @@
           {
             "name": "vehicle",
             "display_name": "vehicle",
-            "topic": "vehicle/1/vehicle123TheftAlert"
+            "topic": "up:/vehicle/1/vehicle123TheftAlert"
           }
         ],
         "uidetails": [
@@ -1722,7 +1722,7 @@
           {
             "name": "transport_mode",
             "display_name": "transport_mode",
-            "topic": "vehicle/1/vehicle_usage.transport_mode123VehicleUsage"
+            "topic": "up:/vehicle/1/vehicle_usage.transport_mode123VehicleUsage"
           }
         ],
         "uidetails": [
