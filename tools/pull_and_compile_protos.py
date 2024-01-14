@@ -91,10 +91,10 @@ def process_python_protofiles(directory):
 
 
 if __name__ == "__main__":
-    if os.path.exists(PROTO_OUTPUT_DIR):
-        print(f"Deleting existing protofiles in {PROTO_OUTPUT_DIR}")
-        shutil.rmtree(PROTO_OUTPUT_DIR)
-    os.makedirs(PROTO_OUTPUT_DIR)
+    # if os.path.exists(PROTO_OUTPUT_DIR):
+    #     print(f"Deleting existing protofiles in {PROTO_OUTPUT_DIR}")
+    #     shutil.rmtree(PROTO_OUTPUT_DIR)
+    # os.makedirs(PROTO_OUTPUT_DIR)
 
     clone_or_pull(REPO_URL, PROTO_REPO_DIR)
     # Execute mvn compile-python
