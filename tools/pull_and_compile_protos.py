@@ -62,6 +62,7 @@ def execute_maven_command(project_dir, command):
                 print("Maven command executed successfully.")
                 src_directory = os.path.join(os.getcwd(), project_dir, "target", "generated-sources", "protobuf",
                                              "python")
+
                 shutil.copytree(src_directory, PROTO_OUTPUT_DIR, dirs_exist_ok=True)
                 process_python_protofiles(PROTO_OUTPUT_DIR)
     except Exception as e:
@@ -80,6 +81,7 @@ def replace_in_file(file_path, search_pattern, replace_pattern):
 
 def process_python_protofiles(directory):
     for root, dirs, files in os.walk(directory):
+        create_init_py(root)
         for file in files:
             if file.endswith('.py'):
                 file_path = os.path.join(root, file)
@@ -88,6 +90,18 @@ def process_python_protofiles(directory):
                 replace_in_file(file_path, r'from common', 'from protofiles.common')
                 replace_in_file(file_path, r'import uservices_options_pb2', 'import protofiles.uservices_options_pb2')
                 replace_in_file(file_path, r'import units_pb2', 'import protofiles.units_pb2')
+                replace_in_file(file_path, r'import uprotocol_options_pb2', 'import protofiles.uprotocol_options_pb2')
+
+
+def create_init_py(directory):
+    init_file_path = os.path.join(directory, "__init__.py")
+
+    # Check if the file already exists
+    if not os.path.exists(init_file_path):
+        # Create an empty __init__.py file
+        with open(init_file_path, "w"):
+            pass
+        print(f"Added __init__.py file to {directory}")
 
 
 if __name__ == "__main__":

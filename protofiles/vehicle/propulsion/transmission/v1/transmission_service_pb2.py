@@ -11,7 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-import uprotocol_options_pb2 as uprotocol__options__pb2
+import protofiles.uprotocol_options_pb2 as uprotocol__options__pb2
 from protofiles.vehicle.propulsion.transmission.v1 import transmission_topics_pb2 as vehicle_dot_propulsion_dot_transmission_dot_v1_dot_transmission__topics__pb2
 
 

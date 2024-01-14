@@ -12,7 +12,7 @@ _sym_db = _symbol_database.Default()
 
 
 from protofiles.example.hello_world.v1 import hello_world_topics_pb2 as example_dot_hello__world_dot_v1_dot_hello__world__topics__pb2
-import uprotocol_options_pb2 as uprotocol__options__pb2
+import protofiles.uprotocol_options_pb2 as uprotocol__options__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n0example/hello_world/v1/hello_world_service.proto\x12\x16\x65xample.hello_world.v1\x1a/example/hello_world/v1/hello_world_topics.proto\x1a\x17uprotocol_options.proto\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\" \n\rHelloResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"[\n\x0cTimerOptions\x12\x45\n\rresource_name\x18\x01 \x01(\x0e\x32\'.example.hello_world.v1.Timer.ResourcesB\x05\x82\xce\x18\x01*:\x04\xe0\xc7\x18\x01\x32\x91\x01\n\nHelloWorld\x12]\n\x08SayHello\x12$.example.hello_world.v1.HelloRequest\x1a%.example.hello_world.v1.HelloResponse\"\x04\xc0\xc1\x18\x01\x1a$\xa2\xbb\x18\x13\x65xample.hello_world\xa8\xbb\x18\x01\xb0\xbb\x18\x00\xb8\xbb\x18\xe7\x07\x42.\n*org.covesa.uservice.example.hello_world.v1P\x01\x62\x06proto3')

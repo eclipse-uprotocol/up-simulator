@@ -12,7 +12,7 @@ _sym_db = _symbol_database.Default()
 
 
 from google.rpc import status_pb2 as google_dot_rpc_dot_status__pb2
-import uprotocol_options_pb2 as uprotocol__options__pb2
+import protofiles.uprotocol_options_pb2 as uprotocol__options__pb2
 from protofiles.vehicle.chassis.braking.v1 import braking_topics_pb2 as vehicle_dot_chassis_dot_braking_dot_v1_dot_braking__topics__pb2
 
 
