@@ -82,9 +82,9 @@ class Message(object):
         any_obj.Pack(self.message)
         payload_data = any_obj.SerializeToString()
         payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
-        attributes = UAttributesBuilder.publish(UPriority.REALTIME_INTERACTIVE).build()
+        attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
         status = self.transport.send(LongUriSerializer().deserialize(self.uri), payload, attributes)
-        common_util.common_publish_status_handler(self.uri, status.getCode(), status.msg())
+        common_util.common_publish_status_handler(self.uri, status.code, status.message)
         return self.message
 
 
