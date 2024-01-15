@@ -474,13 +474,6 @@ def get_request_map(service=None):
             request_map[i] = (str(rpc_methods[service][i]["request"].__module__) + "." + str(
                 rpc_methods[service][i]["request"].__qualname__))
 
-    request_map[
-        'ActivateThreatAlert'] = ('protofiles.ultifi.vehicle.insights.threat_alert'
-                                  '.threat_alert_service_pb2.ActivationRequest')
-    request_map['GetStatus'] = 'google.protobuf.empty_pb2.Empty'
-    request_map[
-        'ReceiveChimeMessage'] = ('protofiles.ultifi.vehicle.sound.chime_producer.v1'
-                                  '.CCU_UprotocolRpc_pb2.ChimeMessage')
     return request_map
 
 
@@ -493,15 +486,6 @@ def get_response_map(service=None):
             response_map[i] = (str(rpc_methods[service][i]["response"].__module__) + "." + str(
                 rpc_methods[service][i]["response"].__qualname__))
 
-    response_map[
-        'ActivateThreatAlert'] = ('protofiles.ultifi.vehicle.insights.threat_alert'
-                                  '.threat_alert_service_pb2.ActivationResponse')
-    response_map[
-        'GetStatus'] = ('protofiles.ultifi.vehicle.insights.threat_alert.threat_alert_service_pb2'
-                        '.ThreatAlertStatus')
-    response_map[
-        'ReceiveChimeMessage'] = ('protofiles.ultifi.vehicle.sound.chime_producer.v1'
-                                  '.CCU_UprotocolRpc_pb2.ChimeMessageResponse')
     return response_map
 
 
@@ -524,14 +508,13 @@ def get_topic_map():
 def get_topics_by_service(service_name):
     global topic_messages
     ret = []
-    if service_name == None:
+    if service_name is None:
         return ret
     for topic in topic_messages:
-        # if topic[0].startswith("ultifi:" + service_name):
-        # (basename, message_name) = topic[1].rsplit(".", 1)
-        modname = message_to_module[topic[1]]
-        message_class = find_message_class(modname, topic[1])
-        ret.append((topic[0], message_class))
+        if ("/"+service_name+"/") in topic[0]:
+            modname = message_to_module[topic[1]]
+            message_class = find_message_class(modname, topic[1])
+            ret.append((topic[0], message_class))
     return ret
 
 
