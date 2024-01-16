@@ -604,7 +604,7 @@ function executePublish_Set(typeButton, json_data) {
             setmaskfield(json_data, methodname, serviceclass, typeButton, topic)
         } else {
             //uncomment later
-            //showSpinner();
+            showSpinner();
             callSendRPCApi(JSON.stringify(json_data).replace("#", "123"), methodname, serviceclass, [])
         }
     } else if (typeButton == "PUB") {
@@ -635,7 +635,7 @@ function sendRpcFromMask() {
     dialog.style.display = 'none';
     if (type_button == 'RPC') {
         //uncomment later
-        //showSpinner();
+        showSpinner();
         callSendRPCApi(JSON.stringify(rpc_json_data).replace("#", "123"), method_name, service_class, checkedItems)
     } else {
         addRpcToRow(rpc_json_data, per_topic, method_name, service_class, checkedItems)
@@ -908,8 +908,7 @@ function handleBoolElement(uiDetailsBool, resourceBool, elBool) {
     iDiv.setAttribute("style", "margin-bottom: 5px;");
 
     var iLabel = document.createElement('label');
-    iLabel.setAttribute('class', "containercheck")
-
+    iLabel.setAttribute('class', "containercheck containerCheck-singleLine")
     if (localStorage.getItem('th') === 'light') {
         iLabel.classList.add('containercheck-light')
     } else if (localStorage.getItem('th') === 'dark') {

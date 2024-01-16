@@ -966,12 +966,18 @@ input[type="radio"]:checked {
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
-  line-height: 12px;
+  line-height: 9px;
   color: var(--whiteColor);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.containerCheck-singleLine {
+  line-height: 1.2rem;
+  margin-bottom: 0px !important;
+  padding-left: 2rem;
 }
 
 .containercheck input {
