@@ -1,0 +1,213 @@
+.rpcdashboard-firstRow {
+  width: 100%;
+  display: flex;
+  padding: 10px;
+}
+
+.rpcdashboard-firstRow>div:first-child>div>div>div:first-child {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #FFFFFF;
+}
+
+.rpcdashboard-firstRow>div:first-child>div>div>div:nth-child(2) {
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #5EB1F3;
+  margin-left: 20px;
+}
+
+.rpcdashboard-firstRow>div:nth-child(2)>div>div:nth-child(1) {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #FFFFFF;
+}
+
+.rpcdashboard-firstRow>div:nth-child(2)>div>div:nth-child(2) {
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #F8F8F8;
+  margin-left: 20px;
+}
+
+.rpcdashboard-firstRow>div:nth-child(2)>div>div:nth-child(3) {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #6CC24A;
+  margin-left: 20px;
+}
+
+.rpcdashboard-firstRow>div:nth-child(3)>div>div:nth-child(1) {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #FFFFFF;
+}
+
+.rpcdashboard-firstRow>div:nth-child(3)>div>div:nth-child(2) {
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #F8F8F8;
+  margin-left: 20px;
+}
+
+.rpcdashboard-firstRow>div:nth-child(3)>div>div:nth-child(3) {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #E35205;
+  margin-left: 20px;
+}
+
+.rpcdashboard-secondRow {
+  display: flex;
+  width: 100%;
+}
+
+.rpcdashboard-secondRow>div:nth-child(1) {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #FFFFFF;
+  margin: 40px 0px 20px 16px;
+}
+
+.rpcdashboard-secondRow>div:nth-child(2) {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #FFFFFF;
+  margin: 40px 0px 20px 16px;
+}
+
+
+.rpcdashboard-secondRow>div:nth-child(3)>a {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #FFFFFF;
+  margin: 40px 0px 20px 16px;
+}
+
+.rpcdashboard-thirdRow>div:nth-child(1) {
+  width: 100%;
+  float: left;
+  height: 680px;
+  overflow: auto;
+}
+
+.rpcdashboard-thirdRow>div:nth-child(2) {
+  width: 100%;
+  float: left;
+}
+
+.rpcdashboard-thirdRow>div:nth-child(1)>div:first-child {
+  float: left;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 150%;
+  color: #FFFFFF;
+  width: 100%;
+  max-width: 100%;
+}
+
+.rpcdashboard-thirdRow>div:nth-child(2)>div:first-child {
+  height: 680px;
+}
+
+.rpcdashboard-thirdRow>div:nth-child(2)>div:first-child>div#rpcselected {
+  display: none;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  color: #FFFFFF;
+  margin: 20px;
+}
+
+.rpcdashboard-thirdRow>div:nth-child(2)>div:first-child>div:nth-child(2) {
+  display: flex;
+  width: 100%;
+  margin: 20px;
+}
+
+#requestHeading {
+  display: none;
+  width: 80%;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  color: #FFFFFF;
+}
+
+#request {
+  width: 80%;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #FFFFFF;
+}
+
+#responseHeading {
+  padding-left: 5px;
+  display: none;
+  width: 80%;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  color: #FFFFFF;
+}
+
+#response {
+  padding-left: 5px;
+  width: 80%;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+}
+
+#publishedHeading {
+  padding-left: 5px;
+  display: none;
+  width: 80%;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  color: #FFFFFF;
+}
+
+#publisheddata {
+  padding-left: 5px;
+  width: 80%;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: -0.432733px;
+  color: #FFFFFF;
+}
+
+.rpcdashboard-thirdRow>div:nth-child(2)>div:first-child>p:nth-child(3) {
+  display: block;
+  margin-top: 300px;
+}
