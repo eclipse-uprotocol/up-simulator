@@ -67,7 +67,7 @@ function createUIApksMock(pkgs, i) {
         sevice_status.style.display = "none";
         if (document.getElementById("cb" + pkgs[i].entity).checked) {
             design_service_status_layout(pkgs[i].name, pkgs[i].entity, "Loading")
-            let json = { "entity": pkgs[i].entity}
+            let json = { "entity": pkgs[i].entity }
             console.log("json=", json)
             socket.emit('start-service', json);
         }
@@ -176,30 +176,30 @@ function design_service_status_layout(name, entity, status) {
     document.querySelector(".servicedata").appendChild(divicon);
 }
 
-function stopMockService(id){
-  uncheck_id = document.getElementById(id);
-  uncheckIcon_id = document.getElementById("icon" + id);
-  uncheckbutton_id = document.getElementById("buttonload" + id);
-  document.querySelector(".servicedata").removeChild(uncheck_id);
-  document.querySelector(".servicedata").removeChild(uncheckbutton_id);
-  document.querySelector(".servicedata").removeChild(uncheckIcon_id);
+function stopMockService(id) {
+    uncheck_id = document.getElementById(id);
+    uncheckIcon_id = document.getElementById("icon" + id);
+    uncheckbutton_id = document.getElementById("buttonload" + id);
+    document.querySelector(".servicedata").removeChild(uncheck_id);
+    document.querySelector(".servicedata").removeChild(uncheckbutton_id);
+    document.querySelector(".servicedata").removeChild(uncheckIcon_id);
 
-  activeCheckbox = document.getElementById("cb"+id)
-  activeCheckbox.checked = false
+    activeCheckbox = document.getElementById("cb" + id)
+    activeCheckbox.checked = false
 
-  fetch("/updateservicestatus?entity=" + id + "&file=service_status.txt")
-  .then((res) => res.json())
-  .then((data) => {
-  if (data.result) {
+    fetch("/updateservicestatus?entity=" + id + "&file=service_status.txt")
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.result) {
 
-  }
-  }).catch((error) => console.log(error));
+            }
+        }).catch((error) => console.log(error));
 }
 
 function startAllMockServices() {
     console.log("all mock service starting...")
     var pkgs = document.getElementById("startAll");
-    if(pkgs){
+    if (pkgs) {
         pkgs = JSON.parse(pkgs.getAttribute("tagpkg"))
         var sevice_status = document.getElementById('box-content');
         sevice_status.style.display = "none";
@@ -222,7 +222,7 @@ function startAllMockServices() {
                     const pkgs = data.pkgs_mock
                     const already_running = data.running;
                     for (var i in pkgs) {
-                        if (already_running.find((entity) => (entity == pkgs[i].entity))){
+                        if (already_running.find((entity) => (entity == pkgs[i].entity))) {
                             continue;
                         } else {
                             let json = { "entity": pkgs[i].entity }
@@ -245,11 +245,11 @@ function refreshMockServiceStatus(key, isAlreadyRunning) {
     changeIconId = key + "Mock";
     changeStatus = document.getElementById(key);
     changeStatusIcon = document.getElementById(changeIconId)
-    if(changeStatus){
+    if (changeStatus) {
         changeStatus.textContent = "Running";
         changeStatus.style.color = "green";
     }
-    if(changeStatusIcon){
+    if (changeStatusIcon) {
         changeStatusIcon.classList.remove("fa", "fa-refresh", "fa-spin", "statusIcon");
         changeStatusIcon.classList.add("fa", "fa", "fa-solid", "fa-stop", "stopIcon");
     }
@@ -258,17 +258,17 @@ function refreshMockServiceStatus(key, isAlreadyRunning) {
 
 function stopAllMockServices() {
     var pkgs = document.getElementById("startAll");
-    if(pkgs){
+    if (pkgs) {
         pkgs = JSON.parse(pkgs.getAttribute("tagpkg"));
     } else {
         pkgs = {};
     }
     var service_status = document.getElementById('box-content');
     var serviceData = document.getElementById("hiddenservicedata");
-    if(serviceData){
+    if (serviceData) {
         serviceData.hidden = true;
     }
-    if(service_status){
+    if (service_status) {
         service_status.style.display = "block";
     }
     console.log(pkgs);
@@ -277,7 +277,7 @@ function stopAllMockServices() {
         console.log(checkboxId);
         var service_checkbox = document.getElementById(checkboxId);
         console.log(service_checkbox);
-        if(service_checkbox){
+        if (service_checkbox) {
             service_checkbox.checked = false;
             //console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@entityj@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
         }

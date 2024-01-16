@@ -24,6 +24,8 @@
 #
 # -------------------------------------------------------------------------
 
+NAMESPACE = "/simulator"
+
 SERVICE_PROTO_SUFFIX = '_service.proto'
 TOPIC_PROTO_SUFFIX = '_topics.proto'
 SERVICES_JSON_FILE_PATH = "../simulatorui/services.json"
@@ -32,3 +34,42 @@ PROTO_REPO_DIR = "protos"
 PROTO_OUTPUT_DIR = "../protofiles"
 RESOURCE_CATALOG_CSV_NAME = "ResourceCatalog.csv"
 RESOURCE_CATALOG_JSON_NAME = "ResourceCatalog.json"
+
+FILENAME_RPC_LOGGER = "rpc_logger.txt"
+FILENAME_SERVICE_RUNNING_STATUS = "service_status.txt"
+FILENAME_PUBSUB_LOGGER = "pubsub_logger.txt"
+
+API_START_SERVICE = "start-service"
+API_STOP_ALL_SERVICE = "stop_all_mockservices"
+API_PUBLISH = "publish"
+API_SENDRPC = "sendrpc"
+API_SUBSCRIBE = "subscribe"
+API_SET_ZENOH_CONFIG = "set_zenoh_config"
+API_SET_SOMEIP_CONFIG = "set_someip_config"
+API_SET_UTRANSPORT = "set_utransport"
+API_RESET = "reset"
+
+CALLBACK_START_SERVICE = "start_service_callback"
+CALLBACK_SENDRPC = "sendrpc_callback"
+CALLBACK_RPCLOGGER = "rpc_logger_callback"
+CALLBACK_PUBSUB_LOGGER = "pub_sub_logger_callback"
+
+CALLBACK_SENDRPC_EXC = "onSendRPCException"
+CALLBACK_SENDRPC_RESPONSE = "sendrpc_response_callback"
+CALLBACK_SUBSCRIBE_STATUS_SUCCESS = "subscribe_callback_success"
+CALLBACK_SUBSCRIBE_STATUS_FAILED = "subscribe_callback_fail"
+CALLBACK_EXCEPTION_SUBSCRIBE = "onSubException"
+CALLBACK_GENERIC_ERROR = "onError"
+
+KEY_MESSAGE = "message"
+KEY_CODE = "code"
+KEY_STATUS = "status"
+KEY_METHODNAME = "methodname"
+KEY_REQUEST = "request"
+KEY_RESPONSE = "response"
+KEY_DATA = "data"
+KEY_RPCCOUNT = "rpccount"
+KEY_SUCCESSRPC = "successrpc"
+KEY_FAILEDRPC = "failedrpc"
+KEY_ISFAILED = "isfailed"
+KEY_TIME = "time"

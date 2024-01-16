@@ -1,47 +1,50 @@
-# Copyright (C) GM Global Technology Operations LLC 2022-2023.
-# All Rights Reserved.
-# GM Confidential Restricted.
-
-"""
-CovesaService class for class-based mock services. Class-based services inherit
-from this class and a static method decorator is used to define RPC
-handlers. Methods defined in a child class must be named the same as the RPC
-method and decorated with the :code:@CovesaService.rpc_handler decorator. The decorated
-method will be registered automatically and called when the rpc method is 
-invoked. The parameters to an rpc_handler are the request protobuf object and 
-response protobuf object. The request protobuf will be automatically populated 
-with the request data. The response object will be a protobuf object of the 
-type returned by the rpc method and should be returned by the function. The 
-response will be sent when the handler returns. See rpc_send_example.py for a 
-basic example. This also decouples rpc methods and services; rpc methods from
-multiple services can be combined into a single class.
-"""
+# -------------------------------------------------------------------------
+#
+# Copyright (c) 2023 General Motors GTO LLC
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# SPDX-FileType: SOURCE
+# SPDX-FileCopyrightText: 2023 General Motors GTO LLC
+# SPDX-License-Identifier: Apache-2.0
+#
+# -------------------------------------------------------------------------
 
 import os
 import pickle
-import re
 import signal
 import time
 from pathlib import Path
 from sys import platform, exit
-from threading import Thread, current_thread, main_thread
-from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.proto.uattributes_pb2 import UAttributes, UMessageType, UPriority
-from uprotocol.proto.upayload_pb2 import UPayloadFormat
-from google.protobuf import text_format, any_pb2
-from uprotocol.uuid.factory.uuidfactory import Factories
-from uprotocol.proto.ustatus_pb2 import UStatus
-from uprotocol.uuid.serializer.longuuidserializer import LongUuidSerializer
+from threading import current_thread, main_thread
 
-from utils import common_util
+from google.protobuf import text_format, any_pb2
+from uprotocol.proto.uattributes_pb2 import UAttributes, UPriority
+from uprotocol.proto.upayload_pb2 import UPayload
+from uprotocol.proto.upayload_pb2 import UPayloadFormat
+from uprotocol.proto.uri_pb2 import UUri
+from uprotocol.proto.ustatus_pb2 import UStatus
 from uprotocol.rpc.rpcmapper import RpcMapper
 from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
-from uprotocol.proto.uri_pb2 import UUri
 
 from core.exceptions import SimulationError
-
 from core.transport_layer import TransportLayer
+from utils import common_util
 from utils import protobuf_autoloader
 
 
@@ -84,7 +87,7 @@ class Message(object):
         payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
         attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
         status = self.transport.send(LongUriSerializer().deserialize(self.uri), payload, attributes)
-        common_util.common_publish_status_handler(self.uri, status.code, status.message)
+        common_util.print_publish_status(self.uri, status.code, status.message)
         return self.message
 
 
@@ -188,61 +191,6 @@ class CovesaService(object):
             self.messages[str(uri)] = Message(uri, message_class.DESCRIPTOR.full_name, message_class, self.service,
                                               self.transport, )
 
-    # def loadRpcMethods(self, service_name):
-    #     """
-    #     Interal method to load rpc method data.
-    #
-    #     Args:
-    #         service_name (str): String to identify COVESA service
-    #     """
-    #     methods = protobuf_autoloader.get_methods_by_service(service_name)
-    #     if service_name not in self.rpc_methods.keys():
-    #         self.rpc_methods[service_name] = {}
-    #     # for method in methods.keys():
-    #     #     self.rpc_methods[service_name][method] = ResponseReceivedCallback(method, methods[method]["request"],
-    #     #                                                                       methods[method]["response"],
-    #     #                                                                       methods[method]["uri"],
-    #     #                                                                       # methods[method]["versions"],
-    #     #                                                                       self.rpc, self)
-    #
-    # def addRpcResponseHandler(self, rpc_class):
-    #     """
-    #     Adds an custom class for rpc response handling.
-    #
-    #     Args:
-    #         rpc_class (): Class representing remote procedure call
-    #     """
-    #     if self.service == None:
-    #         print("You must set the service name in the CovesaService constructor or via CovesaService.setService()")
-    #         raise SimulationError("service_name not specified when registering response handler.")
-    #     for attr in dir(rpc_class):
-    #         if (callable(getattr(rpc_class, attr)) and getattr(rpc_class, attr).__name__ in
-    #                 protobuf_autoloader.rpc_methods[
-    #                     self.service].keys()):
-    #             method_name = getattr(rpc_class, attr).__name__
-    #             request = protobuf_autoloader.get_request_class(self.service, method_name)
-    #             response = protobuf_autoloader.get_response_class(self.service, method_name)
-    #             uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, method_name)
-    #             self.rpc_methods[self.service][method_name] = rpc_class(method_name, request, response, uri, self.rpc,
-    #                                                                     self)
-    #
-    # def invokeMethod(self, method_name, params={}, version=1):
-    #     """
-    #     Calls an rpc method.
-    #
-    #     Args:
-    #         method_name (str): Name of rpc method
-    #         params (dictionary, Optional): Dictionary of parameters for rpc method (default is an empty dictionary)
-    #         version (int): The version of the API to use (Not available yet, WIP)
-    #     """
-    #     if self.service == None:
-    #         print("You must set the service name in the CovesaService constructor or via CovesaService.setService()")
-    #         raise SimulationError("service_name not specified when sending RPC request.")
-    #     for param in params.keys():
-    #         self.rpc_methods[self.service][method_name].setParam(param, params[param])
-    #     self.rpc_methods[self.service][method_name].send(version)
-    #     return self.rpc_methods[self.service][method_name]
-
     def publish(self, uri, params={}):
 
         for param in params.keys():
@@ -260,7 +208,7 @@ class CovesaService(object):
                 print(f"Skipping subscription for {uri}")
             self.subscriptions[uri] = listener
             self.transport.register_listener(LongUriSerializer().deserialize(uri), listener.on_receive)
-            common_util.common_subscribe_status_handler(uri, 0, "OK")
+            common_util.print_subscribe_status(uri, 0, "OK")
             time.sleep(1)
 
     def start(self):

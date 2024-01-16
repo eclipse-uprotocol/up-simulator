@@ -90,16 +90,55 @@ function setupSocket() {
             document.getElementById("zenohrouterip").value = localStorage.getItem("zenoh_router_ip")
 
         }
-
-//        socket.emit('get-info', { "segment": segment })
-
+        socket.emit('reset')
         if (segment.includes('mockservice')) {
             getMockServices()
         }
 
 
     });
+    socket.on('start_service_callback', function (j) {
+        refreshMockServiceStatus(j, false);
 
+    });
+    socket.on('sendrpc_callback', function (res) {
+        onSendRPCCallBack(res)
+    });
+
+    socket.on('rpc_logger_callback', function (res) {
+        if (document.getElementById("table_rpc")) {
+            setDataOnPageLoad(res);
+        }
+    });
+    socket.on('onSendRPCException', function (ex) {
+        onSendRPCException(ex)
+    });
+
+    socket.on('sendrpc_response_callback', function (res) {
+        hideSpinner()
+        onSendRPCResponseCallBack(res)
+    });
+
+    socket.on('subscribe_callback_success', function (msg) {
+        hideSpinner();
+        onSubCallbackSuccess(msg);
+    });
+    socket.on('onSubException', function (ex) {
+        hideSpinner();
+        onSubException(ex)
+    });
+    socket.on('subscribe_callback_fail', function (msg) {
+        hideSpinner();
+        onSubCallbackFail(msg);
+    });
+    socket.on('onError', function (errormessage) {
+        onPubSubError(errormessage)
+    });
+    socket.on('pub_sub_logger_callback', function (res) {
+        if (document.getElementById("table_pub_sub")) {
+            setPubSubDataOnPageLoad(res);
+        }
+    });
 
 };
 

@@ -511,7 +511,7 @@ def get_topics_by_service(service_name):
     if service_name is None:
         return ret
     for topic in topic_messages:
-        if ("/"+service_name+"/") in topic[0]:
+        if ("/" + service_name + "/") in topic[0]:
             modname = message_to_module[topic[1]]
             message_class = find_message_class(modname, topic[1])
             ret.append((topic[0], message_class))

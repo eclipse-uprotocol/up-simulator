@@ -180,7 +180,7 @@ function onbackClicked() {
     showConfigDialog(false, servicename)
 
 }
-function onRbChanged(label, data, entity,typeTab) {
+function onRbChanged(label, data, entity, typeTab) {
 
     if (typeTab == "Publish") {
         if (localStorage.getItem("utransportConfig") == "SOME/IP" || localStorage.getItem("utransportConfig") == "ZENOH") {
@@ -256,7 +256,7 @@ function onConfigClick(rb) {
         setvalues({}, 'true')
         selectedTopic = rb.getAttribute("topic")
         if (localStorage.getItem("utransportConfig") in ["BINDER", "VEHICLE"]) {
-            executesubscribe(rb.getAttribute("topic"))
+            execute_subscribe(rb.getAttribute("topic"))
         }
 
 
@@ -422,7 +422,10 @@ function setvalues(json_proto, clearValues) {
     }
 }
 
-function executesubscribe(topic) {
+function execute_subscribe(topic) {
+    if (typeof topic == "undefined") {
+        topic = selectedTopic
+    }
     //connect to the socket server.
     if (topic.length > 0) {
         if (document.getElementById('execute').innerText != 'AddRPC') {
@@ -434,22 +437,20 @@ function executesubscribe(topic) {
             } catch {
             }
             if (!topic.includes("dynamic_topic")) {
-                //uncomment later
-                //showSpinner();
-                var jsonsubscribe = { "topic": topic.replace("#", "123") }
-                socket.emit('subscribe', jsonsubscribe);
+                showSpinner();
+                var json_subscribe = { "topic": topic.replace("#", "123") }
+                socket.emit('subscribe', json_subscribe);
             }
         }
     }
 }
 
 
-
 function callPublishApi(data, topic, serviceclass) {
     if (topic.includes("dynamic_topic")) {
         topic = topic.replace("dynamic_topic", JSON.parse(data)['name'])
         if (localStorage.getItem("utransportConfig") in ["BINDER", "VEHICLE"]) {
-            executesubscribe(topic)
+            execute_subscribe(topic)
         }
         var jsonpublish = { "service_class": serviceclass, "topic": topic, "data": data }
         socket.emit('publish', jsonpublish);
@@ -603,7 +604,6 @@ function executePublish_Set(typeButton, json_data) {
             .includes(serviceclass)) {
             setmaskfield(json_data, methodname, serviceclass, typeButton, topic)
         } else {
-            //uncomment later
             showSpinner();
             callSendRPCApi(JSON.stringify(json_data).replace("#", "123"), methodname, serviceclass, [])
         }
@@ -634,7 +634,6 @@ function sendRpcFromMask() {
         .map(checkbox => checkbox.value);
     dialog.style.display = 'none';
     if (type_button == 'RPC') {
-        //uncomment later
         showSpinner();
         callSendRPCApi(JSON.stringify(rpc_json_data).replace("#", "123"), method_name, service_class, checkedItems)
     } else {

@@ -26,18 +26,10 @@
 
 
 import logging
-import os
-import telnetlib
-import subprocess
+
 from ppadb.client import Client as AdbClient
 
-logger = logging.getLogger("adb_commands")
-
-
-def adbcommands(cmd):
-    sp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    rc = sp.wait()
-    print(f'{cmd} , {rc}')
+logger = logging.getLogger("adb_utils")
 
 
 def get_emulator_device():
@@ -49,19 +41,3 @@ def get_emulator_device():
     else:
         print(len(devices))
         return devices[0]
-
-
-def check_service_running_status(service):
-    """Check if <service> is running."""
-    try:
-        findService = get_emulator_device().shell("ps -e -o NAME | grep " + service)
-        assert service in findService
-        logger.info("Process : " + findService + " running")
-
-        running = True
-    except AssertionError as e:
-        logger.error(f'Assertion error:', exc_info=e)
-        logger.debug(service + " not found")
-        running = False
-
-    return running

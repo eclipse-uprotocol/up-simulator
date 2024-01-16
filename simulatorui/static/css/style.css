@@ -3325,7 +3325,7 @@ p.text-muted {
 /* main content end*/
 /* ==========================    Rsponsive Menu  start   ====================== */
 
-@media only screen and (min-width: 990px){
+@media only screen and (min-width: 990px) {
   .R-navbar-strap {
     height: 0;
   }

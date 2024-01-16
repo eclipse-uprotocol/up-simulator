@@ -126,13 +126,13 @@ function setDataInUi(json_data) {
     div.appendChild(h6)
     publisheddata.appendChild(div)
 
-    let cloudEventDiv= document.getElementById('rpc-dashboard-cloud-eventId')
+    let cloudEventDiv = document.getElementById('rpc-dashboard-cloud-eventId')
 
-    if(json_data.hasOwnProperty("ce_id") && json_data["ce_id"]!=null){
-        cloudEventDiv.style.display='block'
-        cloudEventDiv.innerText="Cloud Event Id: "+json_data["ce_id"]
-    }else{
-        cloudEventDiv.style.display='none'
+    if (json_data.hasOwnProperty("ce_id") && json_data["ce_id"] != null) {
+      cloudEventDiv.style.display = 'block'
+      cloudEventDiv.innerText = "Cloud Event Id: " + json_data["ce_id"]
+    } else {
+      cloudEventDiv.style.display = 'none'
     }
 
   }, false)

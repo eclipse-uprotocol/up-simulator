@@ -97,12 +97,12 @@ function setPubSubDataInUi(json_data) {
     }
     div.appendChild(h6)
     dash_data.appendChild(div)
-    let cloudEventDiv= document.getElementById('pubsub-cloud-eventId')
-    if(json_data.hasOwnProperty("ce_id") && json_data["ce_id"]!=null){
-        cloudEventDiv.style.display='block'
-        cloudEventDiv.innerText="Cloud Event Id: "+json_data["ce_id"]
-    }else{
-        cloudEventDiv.style.display='none'
+    let cloudEventDiv = document.getElementById('pubsub-cloud-eventId')
+    if (json_data.hasOwnProperty("ce_id") && json_data["ce_id"] != null) {
+      cloudEventDiv.style.display = 'block'
+      cloudEventDiv.innerText = "Cloud Event Id: " + json_data["ce_id"]
+    } else {
+      cloudEventDiv.style.display = 'none'
     }
 
 

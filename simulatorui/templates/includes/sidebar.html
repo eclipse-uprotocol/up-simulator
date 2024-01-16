@@ -54,10 +54,10 @@
 <nav class="pcoded-navbar" style="font-family: Overpass,sans-serif,aril;">
     <div class="navbar-wrapper">
         <div class="navbar-brand header-logo" style="margin-bottom:20px">
-             <img id="logoImg" src="{{ config.ASSETS_ROOT }}/icons/logo_dark.svg"
-                        style="width:170px;height:90px;padding-top:5px;padding-left:15px;" />
-                    <img id="logo-light" src="{{ config.ASSETS_ROOT }}/icons/logo_light.svg"
-                        style="width:170px;height:90px;padding-top:5px;padding-left:15px;display:none" />
+            <img id="logoImg" src="{{ config.ASSETS_ROOT }}/icons/logo_dark.svg"
+                style="width:170px;height:90px;padding-top:5px;padding-left:15px;" />
+            <img id="logo-light" src="{{ config.ASSETS_ROOT }}/icons/logo_light.svg"
+                style="width:170px;height:90px;padding-top:5px;padding-left:15px;display:none" />
 
         </div>
         <!--        toggle buttons-->
@@ -135,7 +135,8 @@
                         <label class="sidebarHeading"> <u>Features</u></label>
                     </li>
                     <li class="nav-item {% if 'pub-sub' in segment %} active {% endif %}">
-                        <a class="nav-link" href="{{ url_for('simulator_blueprint.route_pubsub')}}"> Publish-Subscribe</a>
+                        <a class="nav-link" href="{{ url_for('simulator_blueprint.route_pubsub')}}">
+                            Publish-Subscribe</a>
                     </li>
 
                     <li class="nav-item {% if 'send-rpc' in segment %} active {% endif %}">
