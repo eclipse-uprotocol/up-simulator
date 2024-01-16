@@ -30,7 +30,8 @@ import os
 from flask import redirect, url_for, render_template, request
 
 from simulatorui import blueprint
-from simulatorui.utils import adb_commands
+from utils import adb_commands
+from utils.constant import FILENAME_RPC_LOGGER, FILENAME_PUBSUB_LOGGER
 
 
 @blueprint.route('/')
@@ -40,7 +41,6 @@ def route_default():
 
 @blueprint.route('/configuration.html')
 def route_configuration():
-    global sdk_version, portal_version
     deviceInfo = {'Image': "", 'Build_date': "", 'Build_id': "", 'Model': ""}
     emu_status = 'Emulator is not running'
     try:
@@ -82,6 +82,28 @@ def route_pubsub():
 
     return render_template('home/pub-sub.html', segment=get_segment(request), services=services, pubsub=pubsub,
                            json_proto={})
+
+@blueprint.route('/rpc-logger.html')
+def start_rpc_dashboard():
+
+    try:
+        f = open(os.path.join(os.getcwd(), FILENAME_RPC_LOGGER))
+        data = f.read()
+        f.close()
+    except:
+        data = ''
+    return render_template('home/rpc-logger.html', rpc_calls=data, segment=get_segment(request))
+
+@blueprint.route('/pub-sub-logger.html')
+def pub_dashboard():
+
+    try:
+        f = open(os.path.join(os.getcwd(), FILENAME_PUBSUB_LOGGER))
+        data = f.read()
+        f.close()
+    except:
+        data = ''
+    return render_template('home/pub-sub-logger.html', data=data, segment=get_segment(request))
 
 
 @blueprint.route('/send-rpc.html')
