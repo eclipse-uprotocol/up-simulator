@@ -155,7 +155,11 @@ function onTopicUpdateSomeIP(json_proto, json_proto_original, topic, port, destp
 }
 
 function onTopicUpdate(json_proto, json_proto_original, topic) {
+        console.log('ontopicupdate1')
+
     if (JSON.stringify(json_proto, null, 2).length > 2) {
+            console.log('ontopicupdate2')
+
         if (topic == selectedTopic) {
             createspan("Received topic update from Bus Service" + "\n", true, true, "logsdesc")
             createspan(JSON.stringify(json_proto_original, null, 2) + "\n\n", true, false, "logsdesc")
@@ -608,8 +612,7 @@ function executePublish_Set(typeButton, json_data) {
             callSendRPCApi(JSON.stringify(json_data).replace("#", "123"), methodname, serviceclass, [])
         }
     } else if (typeButton == "PUB") {
-        //uncomment later
-        //showSpinner();
+        showSpinner();
         callPublishApi(JSON.stringify(json_data).replace("#", "123"), topic.replace("#", "123"), serviceclass)
     } else if (typeButton == 'AddRPC') {
         if (['body.access', 'body.cabin_climate', 'body.lighting.interior', 'body.lighting.exterior']

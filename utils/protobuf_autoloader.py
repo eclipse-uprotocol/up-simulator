@@ -305,9 +305,7 @@ def _populate_message(service_name, message_class, data_dict):
         arg = message_class.DESCRIPTOR.fields_by_name[field]
         # if the field is a pointer to another message, go get that message
         if arg.type == FieldDescriptor.TYPE_MESSAGE:
-
             _next = find_message(arg.message_type.full_name)
-
             # make sure data_dict is a dict
             if isinstance(data_dict, dict):
 
@@ -361,7 +359,16 @@ def find_message(message_full_name):
             module = message_to_module[containing_message]
             message_class = find_message_class(module, containing_message)
         except:
-            if containing_message.startswith("google"):
+            if containing_message.startswith("google.type"):
+                from google import type as google_type
+                for loader, modname, ispkg in pkgutil.walk_packages(google_type.__path__):
+                    mod = importlib.import_module("google.type." + modname)
+                    try:
+                        message_class = getattr(mod, basename)
+                        return message_class
+                    except:
+                        continue
+            elif containing_message.startswith("google"):
                 from google import protobuf as google_protobuf
                 for loader, modname, ispkg in pkgutil.walk_packages(google_protobuf.__path__):
                     mod = importlib.import_module("google.protobuf." + modname)
@@ -373,6 +380,15 @@ def find_message(message_full_name):
         return getattr(message_class, basename)
 
     return message_class
+
+
+# returns a class object for the request message for a given topic uri
+def get_request_class_from_topic_uri(given_topic):
+    for topic in topic_messages:
+        if given_topic in topic:
+            modname = message_to_module[topic[1]]
+            message_class = find_message_class(modname, topic[1])
+            return message_class
 
 
 # public wrapper around unpack_data_dict and _populate_message

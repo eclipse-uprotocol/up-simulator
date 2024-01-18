@@ -21,7 +21,7 @@ socketio = SocketIO(app)
 is_reset = True
 
 transport_layer = TransportLayer()
-socket_utility = SocketUtility(socketio, app, request, transport_layer)
+socket_utility = SocketUtility(socketio, request, transport_layer)
 
 
 @socketio.on(CONSTANTS.API_SET_UTRANSPORT, namespace=CONSTANTS.NAMESPACE)
@@ -43,6 +43,7 @@ def set_zenoh_config(routerip):
 @socketio.on(CONSTANTS.API_SUBSCRIBE, namespace=CONSTANTS.NAMESPACE)
 def subscribe(json_subscribe):
     print('received subscribe json ' + str(json_subscribe))
+    app.config['SID'] = request.sid
     set_reset_flag()
     socket_utility.execute_subscribe(json_subscribe)
 
@@ -58,6 +59,8 @@ def sendrpc(json_sendrpc):
 def publish(json_publish):
     set_reset_flag()
     print('received publish json ' + str(json_publish))
+    app.config['SID'] = request.sid
+    socket_utility.execute_publish(json_publish)
 
 
 @socketio.on(CONSTANTS.API_START_SERVICE, namespace=CONSTANTS.NAMESPACE)
@@ -75,10 +78,9 @@ def stop_all_mock_services():
 
 @socketio.on(CONSTANTS.API_RESET, namespace=CONSTANTS.NAMESPACE)
 def reset():
-    print('reset called')
-
     global is_reset
     if is_reset:
+        print('reset called')
         if os.path.isfile(CONSTANTS.FILENAME_RPC_LOGGER):
             os.remove(CONSTANTS.FILENAME_RPC_LOGGER)
         if os.path.isfile(CONSTANTS.FILENAME_PUBSUB_LOGGER):

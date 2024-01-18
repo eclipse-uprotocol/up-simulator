@@ -48,49 +48,6 @@ from utils import common_util
 from utils import protobuf_autoloader
 
 
-class Message(object):
-    """
-    Message class used to return status messages to the user via console.
-    """
-
-    def __init__(self, uri, full_name, message_class, service_name, transport):
-        self.uri = uri
-        self.transport = transport
-        self.message_class = message_class
-        self.full_name = full_name
-        self.params = {}
-        fields = protobuf_autoloader.get_message_fields(message_class)
-        for field in fields:
-            self.params[field] = None
-        self.service = service_name
-
-    def setParam(self, name, value):
-        """
-        Creates a new paramater in Message object's parameter dictionary.
-
-        Args:
-            name (str): Key for params dictionary 
-            value (str): Value for params dictionary
-        """
-        self.params[name] = value
-
-    def publish(self):
-        """
-        Returns message variable from Message object.
-        Returns:
-            string: Value from message_class
-        """
-        self.message = protobuf_autoloader.populate_message(self.service, self.message_class, self.params)
-        any_obj = any_pb2.Any()
-        any_obj.Pack(self.message)
-        payload_data = any_obj.SerializeToString()
-        payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
-        attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
-        status = self.transport.send(LongUriSerializer().deserialize(self.uri), payload, attributes)
-        common_util.print_publish_status(self.uri, status.code, status.message)
-        return self.message
-
-
 class CovesaService(object):
     instance = None
 
@@ -98,14 +55,9 @@ class CovesaService(object):
 
         self.transport = TransportLayer()
         self.service = service_name
-        self.messages = {}
-        self.rpc_methods = {}
-        if self.service is not None:
-            self.loadMessageClasses(service_name)
-        #     self.loadRpcMethods(service_name)
         self.subscriptions = {}
         self.portal_callback = portal_callback
-        self.publish_data = []  # used by portal
+        self.publish_data = []
         self.state = {}  # default variable to keep track of the mock service's state
         self.state_dir = os.path.join(str(Path.home()), ".sdv")  # location of serialized state
         self.state_file = os.path.join(self.state_dir, str(self.__class__.__name__))
@@ -130,17 +82,6 @@ class CovesaService(object):
         return instance
 
     def RequestListener(func):
-        """
-        Decorator for mock services. Returns a wrapper function.
-
-        Args:
-            func (function): A function 
-
-        Returns:
-            function: Value from message_class
-        """
-        setattr(func, "rpc_callback", True)
-
         class wrapper:
             @staticmethod
             def on_receive(topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
@@ -177,28 +118,20 @@ class CovesaService(object):
                         self.transport.register_listener(LongUriSerializer().deserialize(method_uri), func)
                         break
 
-    def loadMessageClasses(self, service_name):
-        """
-        Internal function to load message data.
-
-        Args:
-            service_name (str): String to identify Ultifi service
-        """
-        messages = protobuf_autoloader.get_topics_by_service(service_name)
-        for message in messages:
-            (uri, message_class) = message
-
-            self.messages[str(uri)] = Message(uri, message_class.DESCRIPTOR.full_name, message_class, self.service,
-                                              self.transport, )
-
     def publish(self, uri, params={}):
 
-        for param in params.keys():
-            self.messages[uri].setParam(param, params[param])
-        ret = self.messages[uri].publish()
-        self.publish_data.append(ret)
+        message_class = protobuf_autoloader.get_request_class_from_topic_uri(uri)
+        message = protobuf_autoloader.populate_message(self.service, message_class, params)
+        any_obj = any_pb2.Any()
+        any_obj.Pack(message)
+        payload_data = any_obj.SerializeToString()
+        payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
+        attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
+        status = self.transport.send(LongUriSerializer().deserialize(uri), payload, attributes)
+        common_util.print_publish_status(uri, status.code, status.message)
+        self.publish_data.append(message)
         time.sleep(0.25)
-        return ret
+        return message
 
     def subscribe(self, uris, listener):
 
@@ -223,40 +156,19 @@ class CovesaService(object):
         return self
 
     def disconnect(self):
-
         time.sleep(5)
 
     def print(self, protobuf_obj):
-        """
-        Prints a protobuf object. 
 
-        Args:
-            protobuf_obj (obj):  A protobuf object
-        """
         print(f"Message: {protobuf_obj.DESCRIPTOR.full_name}")
         print(text_format.MessageToString(protobuf_obj))
 
     def signal_handler(self, sig, frame):
-        """
-        Signal handler to quit mock services.
 
-        Args:
-            sig (obj): A signal
-            frame (obj): A frame
-        """
         print("Exiting gracefully....")
         exit()
 
     def init_message_state(self, message_class):
-        """
-        Initialize a data structure for maintaining state for a message type
-
-        Args:
-            message_class (object):  A protobuf object.
-
-        Returns:
-            dict: A mapping of message fields: default value
-        """
         state = {}
         message_fields = protobuf_autoloader.get_message_fields(message_class)
         default_obj = message_class()

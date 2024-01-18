@@ -62,19 +62,21 @@ def start_service(entity, callback):
     elif entity == "chassis.braking":
         from mockservices.braking import BrakingService
         BrakingService(callback).start()
+    elif entity == "example.hello_world":
+        from mockservices.hello_world import HelloWorldService
+        HelloWorldService(callback).start()
 
 
 class SocketUtility:
 
-    def __init__(self, socket_io, app, req, transport):
+    def __init__(self, socket_io, req, transport_layer):
         self.socketio = socket_io
-        self.app = app
         self.oldtopic = ''
         self.vin = None
-        self.lastpublished_data = None
+        self.last_published_data = None
         self.request = req
         self.sender = None
-        self.transport_layer = transport
+        self.transport_layer = transport_layer
         self.retry_rpc = 0
         self.retry_pub = 0
         self.retry_sub = 0
@@ -149,6 +151,44 @@ class SocketUtility:
             log = traceback.format_exc()
             self.socketio.emit(CONSTANTS.CALLBACK_SENDRPC_EXC, log, namespace=CONSTANTS.NAMESPACE)
 
+    def execute_publish(self, json_publish):
+        try:
+            status = verify_all_checks()
+            if status == '':
+                topic = json_publish['topic'].replace("123", "#")
+                data = json_publish['data'].replace("123", "#")
+                service_class = json_publish['service_class']
+
+                json_data = json.loads(data)
+
+                req_cls = protobuf_autoloader.get_request_class_from_topic_uri(topic)
+
+                message = protobuf_autoloader.populate_message(service_class, req_cls, json_data)
+
+                self.last_published_data = MessageToDict(message, preserving_proto_field_name=True,
+                                                         including_default_value_fields=True)
+                new_topic = LongUriSerializer().deserialize(topic)
+                any_obj = any_pb2.Any()
+                any_obj.Pack(message)
+                payload_data = any_obj.SerializeToString()
+                payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
+
+                attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
+                status = self.transport_layer.send(new_topic, payload, attributes)
+                Handlers.publish_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.utransport, topic,
+                                                status.code, status.message, self.last_published_data)
+
+                published_data = MessageToDict(message)
+                self.socketio.emit(CONSTANTS.CALLBACK_PUBLISH_STATUS_SUCCESS,
+                                   {'msg': "Publish Data  ", 'data': published_data}, namespace=CONSTANTS.NAMESPACE)
+
+            else:
+                self.socketio.emit(CONSTANTS.CALLBACK_GENERIC_ERROR, status, namespace=CONSTANTS.NAMESPACE)
+
+        except:
+            log = traceback.format_exc()
+            self.socketio.emit(CONSTANTS.CALLBACK_EXCEPTION_PUBLISH, log, namespace=CONSTANTS.NAMESPACE)
+
     def start_mock_service(self, json_service):
         def handler(rpc_request, method_name, json_data, rpcdata):
             Handlers.rpc_logger_handler(self.socketio, self.lock_rpc, rpc_request, method_name, json_data, rpcdata)
@@ -172,26 +212,32 @@ class SocketUtility:
                 # if self.oldtopic != '':
                 #     self.bus_obj_subscribe.unsubscribe(self.oldtopic, self.common_unsubscribe_status_handler)
                 new_topic = LongUriSerializer().deserialize(topic)
-                status = self.transport_layer.register_listener(new_topic, SubscribeUListener(self.socketio))
+                status = self.transport_layer.register_listener(new_topic, SubscribeUListener(self.socketio,
+                                                                                              self.transport_layer.utransport,
+                                                                                              self.lock_pubsub))
                 if status is None:
-                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub, topic, 0, "Ok")
+                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.utransport,
+                                                      topic, 0, "Ok")
                 else:
-                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub, topic, status.code,
-                                                      status.message)
+                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.utransport,
+                                                      topic, status.code, status.message)
 
             else:
-                self.socketio.emit(CONSTANTS.CALLBACK_GENERIC_ERROR, status, namespace='/Portal')
+                self.socketio.emit(CONSTANTS.CALLBACK_GENERIC_ERROR, status, namespace=CONSTANTS.NAMESPACE)
 
         except Exception as ex:
             log = traceback.format_exc()
-            self.socketio.emit(CONSTANTS.CALLBACK_EXCEPTION_SUBSCRIBE, log, namespace='/Portal')
+            self.socketio.emit(CONSTANTS.CALLBACK_EXCEPTION_SUBSCRIBE, log, namespace=CONSTANTS.NAMESPACE)
 
 
 class SubscribeUListener(UListener):
 
-    def __init__(self, socketio: SocketIO):
+    def __init__(self, socketio: SocketIO, utransport: str, lock_pubsub: threading.Lock):
         self.socketio = socketio
+        self.utransport = utransport
+        self.lock_pubsub = lock_pubsub
 
     def on_receive(self, topic: UUri, payload: UPayload, attributes: UAttributes):
         print("onreceive")
-        Handlers.on_receive_event_handler(self.socketio, LongUriSerializer().serialize(topic), payload)
+        Handlers.on_receive_event_handler(self.socketio, self.lock_pubsub, self.utransport,
+                                          LongUriSerializer().serialize(topic), payload)

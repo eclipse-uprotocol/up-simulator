@@ -64,11 +64,11 @@ def rpc_logger_handler(socketio, lock_rpc, rpc_request, method_name, json_data, 
                                           including_default_value_fields=True)
         total_rpc = total_rpc + 1
         isfailed = True
-        if rpc_response.__contains__(CONSTANTS.KEY_MESSAGE) and rpc_response[CONSTANTS.KEY_MESSAGE].__contains__(
+        if (rpc_response.__contains__(CONSTANTS.KEY_MESSAGE) and rpc_response[CONSTANTS.KEY_MESSAGE].__contains__(
                 "OK") or rpc_response.__contains__(CONSTANTS.KEY_CODE) and rpc_response[
-            CONSTANTS.KEY_CODE] == 0 or rpc_response.__contains__(CONSTANTS.KEY_STATUS) and type(
+                CONSTANTS.KEY_CODE] == 0 or rpc_response.__contains__(CONSTANTS.KEY_STATUS) and type(
             rpc_response[CONSTANTS.KEY_STATUS]) is dict and rpc_response[CONSTANTS.KEY_STATUS][
-            CONSTANTS.KEY_MESSAGE].__contains__("OK"):
+                CONSTANTS.KEY_MESSAGE].__contains__("OK")) or method_name == "SayHello":
             success_rpc = success_rpc + 1
             isfailed = False
         failed_rpc = total_rpc - success_rpc
@@ -84,14 +84,18 @@ def rpc_logger_handler(socketio, lock_rpc, rpc_request, method_name, json_data, 
         logger.error(f'Exception handler:', exc_info=ex)
 
 
-def subscribe_status_handler(socketio, lock_pubsub, topic, status_code, status_message):
+def subscribe_status_handler(socketio, lock_pubsub, utransport, topic, status_code, status_message):
     logger.debug(f"Topic: {topic}, Status Code: {status_code}, Status Message: {status_message}")
 
     if status_code == 0:
         socketio.oldtopic = topic
         json_res = {"type": "Subscribe", "topic": topic, "status": "Success"}
         save_pub_sub_data(socketio, lock_pubsub, json_res)
-        socketio.emit(CONSTANTS.CALLBACK_SUBSCRIBE_STATUS_SUCCESS, "Successfully subscribed to " + topic,
+        message = "Successfully subscribed to " + topic
+
+        if utransport == "ZENOH":
+            message = "Successfully subscribed to  " + topic + " to ZENOH"
+        socketio.emit(CONSTANTS.CALLBACK_SUBSCRIBE_STATUS_SUCCESS, message,
                       namespace=CONSTANTS.NAMESPACE)
     else:
         json_res = {"type": "Subscribe", "topic": topic, "status": "Failed"}
@@ -101,19 +105,43 @@ def subscribe_status_handler(socketio, lock_pubsub, topic, status_code, status_m
                       f"status message {status_message}", namespace=CONSTANTS.NAMESPACE)
 
 
-def on_receive_event_handler(socketio, topic, payload: UPayload):
+def publish_status_handler(socketio, lock_pubsub, utransport, topic, status_code, status_message, last_published_data):
+    if status_code == 0:
+        json_res = {"type": "Publish", "topic": topic, "transport": utransport, "status": "Success",
+                    "message": last_published_data}
+        save_pub_sub_data(socketio, lock_pubsub, json_res)
+        message = "Successfully published message for " + topic
+        if utransport == "ZENOH":
+            message = "Successfully published message for " + topic + " to ZENOH"
+        socketio.emit(CONSTANTS.CALLBACK_PUBLISH_STATUS_SUCCESS, {'msg': message}, namespace=CONSTANTS.NAMESPACE)
+
+    else:
+        json_res = {"type": "Publish", "topic": topic, "transport": utransport, "status": "Failed",
+                    "message": last_published_data}
+        save_pub_sub_data(socketio, lock_pubsub, json_res)
+        socketio.emit(CONSTANTS.CALLBACK_PUBLISH_STATUS_FAILED, {
+            'msg': f"Unsuccessful publish for {topic} as the status code is {status_code} with status message "
+                   f"{status_message}"},
+                      namespace=CONSTANTS.NAMESPACE)
+
+
+def on_receive_event_handler(socketio, lock_pubsub, utransport, topic, payload: UPayload):
     try:
+        topic = "up:" + topic
         topic_class = protobuf_autoloader.get_topic_map()[topic]
         res = common_util.get_class(topic_class)
         any_message = any_pb2.Any()
-        any_message.ParseFromString(payload.get_data())
-        RpcMapper.unpack_payload(any_message, res)
+        any_message.ParseFromString(payload.value)
+        res = RpcMapper.unpack_payload(any_message, res)
         original_members = MessageToDict(res, preserving_proto_field_name=True, including_default_value_fields=True)
         members = flatten_dict(original_members)
-        json_res = {"type": "OnTopicUpdate", "transport": socketio.transport_layer.utransport, "topic": topic,
+        json_res = {"type": "OnTopicUpdate", "transport": utransport, "topic": topic,
                     "status": "Success", "message": original_members}
-        socketio.save_pub_sub_data(json_res)
-        socketio.emit("onTopicUpdate", {"json_data": members, "original_json_data": original_members},
-                      namespace=CONSTANTS.NAMESPACE, room=socketio.app.config['SID'])
+        save_pub_sub_data(socketio, lock_pubsub, json_res)
+        from run import app
+
+        socketio.emit(CONSTANTS.CALLBACK_ONEVENT_RECEIVE,
+                      {"json_data": members, "original_json_data": original_members, "topic": topic},
+                      namespace=CONSTANTS.NAMESPACE)
     except Exception as ex:
         logger.error(f'Exception occurs inside onTopicUpdate:', exc_info=ex)

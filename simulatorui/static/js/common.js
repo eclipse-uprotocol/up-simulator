@@ -139,6 +139,19 @@ function setupSocket() {
             setPubSubDataOnPageLoad(res);
         }
     });
+    socket.on('publish_callback_success', function (res) {
+        onPubCallBackSuccess(res)
+    });
+    socket.on('publish_callback_fail', function (res) {
+        onPubCallBackFail(res)
+    });
+
+    socket.on('onPubException', function (ex) {
+        onPubException(ex)
+    });
+    socket.on('onTopicUpdate', function (json_res) {
+        onTopicUpdate(json_res.json_data, json_res.original_json_data,json_res.topic)
+    });
 
 };
 
