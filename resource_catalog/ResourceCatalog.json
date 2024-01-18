@@ -1,0 +1,2949 @@
+{
+  "node": [
+    {
+      "node": {
+        "uri": "up:/app.iv_bev/1",
+        "id": "11",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "2"
+          },
+          {
+            "name": "max_number_of_saved_location",
+            "value": "10"
+          },
+          {
+            "name": "geofence_default_radius",
+            "value": "50"
+          },
+          {
+            "name": "geofence_minimum_radius",
+            "value": "20"
+          },
+          {
+            "name": "geofence_maximum_radius",
+            "value": "1000"
+          },
+          {
+            "name": "coordinate_precision",
+            "value": "3.34"
+          },
+          {
+            "name": "soc_resolution",
+            "value": "0.001525902"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/app.iv_bev/1/rpc.UpdateLocation",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/app.iv_bev/1/rpc.DeleteLocation",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/app.iv_bev/1/rpc.CreateLocation",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/app.iv_bev/1/rpc.CreateSchedule",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/app.iv_bev/1/rpc.SetChargeMode",
+            "id": "5",
+            "type": "method"
+          },
+          {
+            "uri": "up:/app.iv_bev/1/rpc.StartBatteryPreconditioning",
+            "id": "6",
+            "type": "method"
+          },
+          {
+            "uri": "up:/app.iv_bev/1/rpc.StopBatteryPreconditioning",
+            "id": "7",
+            "type": "method"
+          },
+          {
+            "uri": "up:/app.iv_bev/1/rpc.PauseCharging",
+            "id": "8",
+            "type": "method"
+          },
+          {
+            "uri": "up:/app.iv_bev/1/charging_location#LocationSetting",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/app.iv_bev/1/charger#ChargingParameters",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/app.iv_bev/1/geofence_zone#CurrentZoneSettings",
+            "id": "3",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/app.brb/1",
+        "id": "10002",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/app.brb/1/app_status#BRBAppStatus",
+            "id": "0",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/app.brb_legacy/1",
+        "id": "10003",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/app.brb_legacy/1/rpc.CheckExitConditions",
+            "id": "1",
+            "type": "method"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/app.rpcm/1",
+        "id": "10006",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/app.rpcm/1/rpc.UpdateSettings",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/app.rpcm/1/settings#Settings",
+            "id": "0",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/app.trailering/1",
+        "id": "10005",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/app.trailering/1/rpc.UpdateSettings",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/app.trailering/1/trailer.trailer_articulation_angle#TrailerArticulationAngle",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/app.trailering/1/trailer.rear_trailer_camera_alignment_status#TrailerCameraAlignmentStatus",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/app.trailering/1/trailer.settings#Settings",
+            "id": "20",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/app.ufl/1",
+        "id": "10004",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/app.ufl/1/loop#Loop",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/app.ufl/1/loop#Mitigation",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/app.ufl/1/loop#Status",
+            "id": "20",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/app.ufl/1/loop#DataCapture",
+            "id": "30",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/core.udiscovery/1",
+        "id": "1",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/core.udiscovery/1/rpc.LookupUri",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/1/rpc.UpdateNode",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/1/rpc.FindNode",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/1/rpc.FindNodeProperty",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/1/rpc.DeleteNode",
+            "id": "5",
+            "type": "method"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/core.udiscovery/2",
+        "id": "1",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "2"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/core.udiscovery/2/rpc.LookupUri",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/2/rpc.UpdateNode",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/2/rpc.FindNodes",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/2/rpc.FindNodeProperties",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/2/rpc.DeleteNodes",
+            "id": "5",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/2/rpc.AddNodes",
+            "id": "6",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/2/rpc.UpdateProperty",
+            "id": "7",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/2/rpc.RegisterForNotifications",
+            "id": "8",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/2/rpc.UnregisterForNotifications",
+            "id": "9",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.udiscovery/2/nodes#Notification",
+            "id": "0",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/core.usubscription/1",
+        "id": "0",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/core.usubscription/1/rpc.Subscribe",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/1/rpc.Unsubscribe",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/1/rpc.FetchSubscriptions",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/1/rpc.CreateTopic",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/1/rpc.DeleteTopic",
+            "id": "5",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/1/rpc.RegisterForSubscriptionChanges",
+            "id": "7",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/1/rpc.UnregisterForSubscriptionChanges",
+            "id": "8",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/1/subscription_change#Subscription",
+            "id": "0",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/core.usubscription/2",
+        "id": "0",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "2"
+          },
+          {
+            "name": "version_minor",
+            "value": "1"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/core.usubscription/2/rpc.Subscribe",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/2/rpc.Unsubscribe",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/2/rpc.FetchSubscriptions",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/2/rpc.CreateTopic",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/2/rpc.DeprecateTopic",
+            "id": "5",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/2/rpc.RegisterForNotifications",
+            "id": "6",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/2/rpc.UnregisterForNotifications",
+            "id": "7",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/2/rpc.FetchSubscribers",
+            "id": "8",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/2/rpc.Reset",
+            "id": "9",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.usubscription/2/subscriptions#Update",
+            "id": "0",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/core.utelemetry/1",
+        "id": "2",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/core.utelemetry/1/telemetry.ue#Metrics",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/core.utelemetry/1/telemetry.all_ues#Metrics",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/core.utelemetry/1/telemetry.udevice#Metrics",
+            "id": "2",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/core.utwin/1",
+        "id": "26",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/core.utwin/1/rpc.GetLastEvent",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/core.utwin/1/rpc.SetLastEvent",
+            "id": "2",
+            "type": "method"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/example.hello_world/1",
+        "id": "3000",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/example.hello_world/1/rpc.SayHello",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/example.hello_world/1/one_second#Timer",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/example.hello_world/1/one_minute#Timer",
+            "id": "2",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/adas.parking/1",
+        "id": "3",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/adas.parking/1/rpc.SetSearchMode",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/adas.parking/1/rpc.SelectParkingSpot",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/adas.parking/1/rpc.StartParking",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/adas.parking/1/rpc.ExitParkingSpot",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/adas.parking/1/rpc.Stop",
+            "id": "5",
+            "type": "method"
+          },
+          {
+            "uri": "up:/adas.parking/1/supervised_remote_parking#ParkingSequenceIndicator",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/adas.parking/1/supervised_remote_parking#DriverNoticeMessage",
+            "id": "20",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/adas.parking/1/perception#ParkingSpotsMap",
+            "id": "30",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/adas.parking/1/perception#ObjectsMap",
+            "id": "40",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/adas.parking/1/vehicle#VehiclePosition",
+            "id": "50",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/adas.parking/1/parking_path#ParkingPath",
+            "id": "60",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/adas.parking/1/vehicle#DriveHorizon",
+            "id": "70",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/body.access/1",
+        "id": "4",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "2"
+          },
+          {
+            "name": "child_lock_control",
+            "value": "CLC_DEDICATED_CHILD_LOCK"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/body.access/1/rpc.ExecuteDoorCommand",
+            "id": "1",
+            "type": "method",
+            "properties": [
+              {
+                "name": "is_independent_door_unlock_supported",
+                "value": "false"
+              }
+            ]
+          },
+          {
+            "uri": "up:/body.access/1/rpc.ExecuteSunroofCommand",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.access/1/rpc.ExecuteWindowCommand",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.access/1/rpc.ExecuteBackGlassCommand",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.access/1/rpc.ExecuteStorageCompartmentCommand",
+            "id": "5",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.access/1/door.front_left#Door",
+            "id": "0",
+            "type": "topic",
+            "properties": [
+              {
+                "name": "is_driver_door",
+                "value": "true"
+              }
+            ]
+          },
+          {
+            "uri": "up:/body.access/1/door.front_right#Door",
+            "id": "1",
+            "type": "topic",
+            "properties": [
+              {
+                "name": "is_driver_door",
+                "value": "false"
+              }
+            ]
+          },
+          {
+            "uri": "up:/body.access/1/door.rear_left#Door",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.access/1/door.rear_right#Door",
+            "id": "3",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.access/1/sunroof.front#Sunroof",
+            "id": "10",
+            "type": "topic",
+            "properties": [
+              {
+                "name": "sunshade_position_control",
+                "value": "SPC_OPEN_CLOSE_POSITIONS_ONLY"
+              }
+            ]
+          },
+          {
+            "uri": "up:/body.access/1/window.front_left#Window",
+            "id": "20",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.access/1/window.front_right#Window",
+            "id": "21",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.access/1/window.rear_left#Window",
+            "id": "22",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.access/1/window.rear_right#Window",
+            "id": "23",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.access/1/backglass.backglass#BackGlass",
+            "id": "30",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.access/1/storage_compartment.trunk#StorageCompartment",
+            "id": "40",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.access/1/storage_compartment.frunk#StorageCompartment",
+            "id": "41",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.access/1/storage_compartment.rear_closure#StorageCompartment",
+            "id": "42",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/body.cabin_climate/1",
+        "id": "5",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "1"
+          },
+          {
+            "name": "temperature_setpoint_min",
+            "value": "16"
+          },
+          {
+            "name": "temperature_setpoint_max",
+            "value": "31"
+          },
+          {
+            "name": "number_of_blower_levels_front",
+            "value": "8"
+          },
+          {
+            "name": "number_of_blower_levels_rear",
+            "value": "8"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/body.cabin_climate/1/rpc.ExecuteClimateCommand",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/rpc.UpdateSystemSettings",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/zone.row1#Zone",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/zone.row2#Zone",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/zone.row3#Zone",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/zone.row1_left#Zone",
+            "id": "3",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/zone.row1_right#Zone",
+            "id": "4",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/zone.row2_left#Zone",
+            "id": "5",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/zone.row2_right#Zone",
+            "id": "6",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/zone.row3_left#Zone",
+            "id": "7",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/zone.row3_right#Zone",
+            "id": "8",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.cabin_climate/1/system_settings#SystemSettings",
+            "id": "10",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/body.horn/1",
+        "id": "28",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "1"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/body.horn/1/rpc.ActivateHorn",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.horn/1/rpc.DeactivateHorn",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.horn/1/horn#HornStatus",
+            "id": "0",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/body.lighting.exterior/1",
+        "id": "6",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/body.lighting.exterior/1/rpc.SetLamp",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/rpc.SetLamps",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/rpc.SetHighBeamLamp",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/rpc.SetLowBeamLamp",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/rpc.SetParkLamp",
+            "id": "5",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/rpc.SetTurnLamp",
+            "id": "6",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.front_fog#Lamp",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.rear_fog#Lamp",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.highbeam#Lamp",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.license#Lamp",
+            "id": "3",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.lowbeam#Lamp",
+            "id": "4",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.front_left_park#Lamp",
+            "id": "5",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.front_right_park#Lamp",
+            "id": "6",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.rear_left_park#Lamp",
+            "id": "7",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.rear_right_park#Lamp",
+            "id": "8",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.front_left_park_aux#Lamp",
+            "id": "9",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.front_right_park_aux#Lamp",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.rear_left_park_aux#Lamp",
+            "id": "11",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.rear_right_park_aux#Lamp",
+            "id": "12",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.left_puddle#Lamp",
+            "id": "13",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.right_puddle#Lamp",
+            "id": "14",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.reverse#Lamp",
+            "id": "15",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.left_sidemarker#Lamp",
+            "id": "16",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.right_sidemarker#Lamp",
+            "id": "17",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.left_side_mirror_turn_repeater#Lamp",
+            "id": "18",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.right_side_mirror_turn_repeater#Lamp",
+            "id": "19",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.left_task#Lamp",
+            "id": "20",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.right_task#Lamp",
+            "id": "21",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.front_left_turn#Lamp",
+            "id": "22",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.front_right_turn#Lamp",
+            "id": "23",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.rear_left_turn#Lamp",
+            "id": "24",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.exterior/1/lamp.rear_right_turn#Lamp",
+            "id": "25",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/body.lighting.interior/1",
+        "id": "7",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/body.lighting.interior/1/rpc.SetLamp",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/rpc.SetLamps",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/rpc.SetAmbientMoodLighting",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/rpc.SetInteriorLampDefeat",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.ambientmood_front_footwell#Lamp",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.ambientmood_rear_footwell#Lamp",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.ambientmood_front_left_door_handle#Lamp",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.ambientmood_front_right_door_handle#Lamp",
+            "id": "3",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.ambientmood_rear_left_door_handle#Lamp",
+            "id": "4",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.ambientmood_rear_right_door_handle#Lamp",
+            "id": "5",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.ambientmood_instrument_panel#Lamp",
+            "id": "6",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.ambientmood_overhead#Lamp",
+            "id": "7",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.cargo_bed#Lamp",
+            "id": "8",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.cargo_hitch#Lamp",
+            "id": "9",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.cargo_mirror#Lamp",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.cargo#Lamp",
+            "id": "11",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/lamp.dome#Lamp",
+            "id": "12",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.lighting.interior/1/interior_lamp_defeat#InteriorLampDefeat",
+            "id": "20",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/body.seating/1",
+        "id": "23",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/body.seating/1/rpc.UpdateSeatPosition",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.seating/1/rpc.UpdateSeatTemperature",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.seating/1/rpc.UpdateSeatMassage",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.seating/1/rpc.UpdateSeatPositionGroup",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.seating/1/rpc.UpdateSeatTemperatureGroup",
+            "id": "5",
+            "type": "method"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row1_left#SeatTemperature",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row1_center#SeatTemperature",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row1_right#SeatTemperature",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row2_left#SeatTemperature",
+            "id": "3",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row2_center#SeatTemperature",
+            "id": "4",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row2_right#SeatTemperature",
+            "id": "5",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row3_left#SeatTemperature",
+            "id": "6",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row3_center#SeatTemperature",
+            "id": "7",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row3_right#SeatTemperature",
+            "id": "8",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row1_left#SeatOccupantSafety",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row1_center#SeatOccupantSafety",
+            "id": "11",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row1_right#SeatOccupantSafety",
+            "id": "12",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row2_left#SeatOccupantSafety",
+            "id": "13",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row2_center#SeatOccupantSafety",
+            "id": "14",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row2_right#SeatOccupantSafety",
+            "id": "15",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row3_left#SeatOccupantSafety",
+            "id": "16",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row3_center#SeatOccupantSafety",
+            "id": "17",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row3_right#SeatOccupantSafety",
+            "id": "18",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row1_left#SeatMassage",
+            "id": "20",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row1_center#SeatMassage",
+            "id": "21",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row1_right#SeatMassage",
+            "id": "22",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row2_left#SeatMassage",
+            "id": "23",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row2_center#SeatMassage",
+            "id": "24",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row2_right#SeatMassage",
+            "id": "25",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row3_left#SeatMassage",
+            "id": "26",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row3_center#SeatMassage",
+            "id": "27",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/body.seating/1/seat.row3_right#SeatMassage",
+            "id": "28",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/chassis.braking/1",
+        "id": "17",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/chassis.braking/1/rpc.ResetHealth",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/chassis.braking/1/rpc.ManageHealthMonitoring",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/chassis.braking/1/brake_pedal#BrakePedal",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/chassis.braking/1/brake_pads.front#BrakePads",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/chassis.braking/1/brake_pads.rear#BrakePads",
+            "id": "11",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/chassis.suspension/1",
+        "id": "21",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/chassis.suspension/1/rpc.SetRideHeight",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/chassis.suspension/1/ride_height#RideHeight",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus",
+            "id": "20",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/chassis/1",
+        "id": "20",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/chassis/1/rpc.UpdateTire",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/chassis/1/tire.front_left#Tire",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/chassis/1/tire.front_right#Tire",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/chassis/1/tire.rear_left#Tire",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/chassis/1/tire.rear_right#Tire",
+            "id": "3",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/chassis/1/tire.rear_left_inner#Tire",
+            "id": "4",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/chassis/1/tire.rear_right_inner#Tire",
+            "id": "5",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/chassis/1/traction_control_system#TractionControlSystem",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/chassis/1/electronic_stability_control_system#ElectronicStabilityControlSystem",
+            "id": "20",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/energy.high_voltage.battery/1",
+        "id": "8",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "1"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/energy.high_voltage.battery/1/rpc.StartBatteryPreconditioning",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.high_voltage.battery/1/rpc.StopBatteryPreconditioning",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.high_voltage.battery/1/battery#BatteryState",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.high_voltage.battery/1/battery#BatteryProperties",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.high_voltage.battery/1/battery#EnergyState",
+            "id": "3",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.high_voltage.battery/1/battery#Temperature",
+            "id": "4",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.high_voltage.battery/1/battery#BatteryPreconditioning",
+            "id": "5",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.high_voltage.battery/1/battery#InstantaneousPowerOutput",
+            "id": "6",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/energy.high_voltage.charging/1",
+        "id": "9",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "2"
+          },
+          {
+            "name": "minimum_reserve_soc",
+            "value": "20"
+          },
+          {
+            "name": "default_charge_mode",
+            "value": "CM_NOW"
+          },
+          {
+            "name": "default_ready_by_hours",
+            "value": "7"
+          },
+          {
+            "name": "default_ready_by_minutes",
+            "value": "30"
+          },
+          {
+            "name": "default_cabin_preconditioning_activation",
+            "value": "true"
+          },
+          {
+            "name": "default_cabin_preconditioning_temp",
+            "value": "20"
+          },
+          {
+            "name": "charge_later_activation_time_window",
+            "value": "11"
+          },
+          {
+            "name": "min_target_soc",
+            "value": "45"
+          },
+          {
+            "name": "max_target_soc",
+            "value": "100"
+          },
+          {
+            "name": "default_target_soc",
+            "value": "90"
+          },
+          {
+            "name": "L1_charge_rate_reduced",
+            "value": "8"
+          },
+          {
+            "name": "L1_charge_rate_maximum",
+            "value": "12"
+          },
+          {
+            "name": "L1_charge_rate_maximum_value_effective_duration",
+            "value": "90"
+          },
+          {
+            "name": "min_discharge_target_soc",
+            "value": "20"
+          },
+          {
+            "name": "max_discharge_target_soc",
+            "value": "20"
+          },
+          {
+            "name": "energy_measurement_unit",
+            "value": "EM_DISTANCE_PER_ELECTRICAL_ENERGY"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/energy.high_voltage.charging/1/rpc.StartCharging",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/rpc.AnalyzeChargingSchedule",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/rpc.OverlayChargingSchedule",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/rpc.StopCharging",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/rpc.PauseCharging",
+            "id": "5",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/rpc.StartBatteryPreconditioning",
+            "id": "6",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/rpc.StopBatteryPreconditioning",
+            "id": "7",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/battery#CouplerState",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/battery#ChargingTime",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/battery#ChargingPerformance",
+            "id": "3",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/battery#ChargeStatus",
+            "id": "5",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging/1/battery#ChargingServiceProfile",
+            "id": "6",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/energy.high_voltage.charging_station/1",
+        "id": "10",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/energy.high_voltage.charging_station/1/charging_station#EvseCharacteristics",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.high_voltage.charging_station/1/charging_station#ChargingPowerInfo",
+            "id": "2",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/energy.power_management/1",
+        "id": "12",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "1"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/energy.power_management/1/rpc.SetUsageProfile",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.power_management/1/rpc.ActivateVehicleSubsystem",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.power_management/1/rpc.UpdateVehicleMode",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_subsystem.propulsion#VehicleSubsystem",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_subsystem.vehicle_access#VehicleSubsystem",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_subsystem.electrification#VehicleSubsystem",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_subsystem.low_voltage_power#VehicleSubsystem",
+            "id": "3",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_subsystem.camera#VehicleSubsystem",
+            "id": "4",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_subsystem.connectivity#VehicleSubsystem",
+            "id": "5",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_subsystem.infotainment#VehicleSubsystem",
+            "id": "6",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_subsystem.charging#VehicleSubsystem",
+            "id": "7",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_subsystem.interior_lighting#VehicleSubsystem",
+            "id": "8",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_subsystem.exterior_lighting#VehicleSubsystem",
+            "id": "9",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/vehicle_mode#VehicleMode",
+            "id": "20",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/notification#SetUsageProfileRequestStatus",
+            "id": "30",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/energy.power_management/1/notification#ActivateVehicleSubsystemRequestStatus",
+            "id": "40",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/vehicle.exterior/1",
+        "id": "16",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/vehicle.exterior/1/exterior_environment#SolarInformation",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle.exterior/1/exterior_environment#Temperature",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle.exterior/1/exterior_environment#AmbientLight",
+            "id": "20",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/vehicle.geofencing/1",
+        "id": "15",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/vehicle.geofencing/1/rpc.CreateGeofenceGroup",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/vehicle.geofencing/1/rpc.DeleteGeofenceGroup",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/vehicle.geofencing/1/rpc.GetGeofenceGroups",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/vehicle.geofencing/1/rpc.IsVehicleInGeofenceGroup",
+            "id": "4",
+            "type": "method"
+          },
+          {
+            "uri": "up:/vehicle.geofencing/1/rpc.IsVehicleInGeofence",
+            "id": "5",
+            "type": "method"
+          },
+          {
+            "uri": "up:/vehicle.geofencing/1/restricted_zone.restricted_camera#RestrictedZone",
+            "id": "0",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/propulsion.engine/1",
+        "id": "19",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/propulsion.engine/1/rpc.ResetHealth",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/propulsion.engine/1/air_filter#AirFilter",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/propulsion.engine/1/oil#Oil",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/propulsion.engine/1/coolant#Coolant",
+            "id": "20",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/propulsion.engine/1/engine_state#EngineState",
+            "id": "30",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/propulsion.transmission/1",
+        "id": "18",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/propulsion.transmission/1/gear#VehicleGearState",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/propulsion.transmission/1/gearbox.primary#Gearbox",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/propulsion.transmission/1/gearbox.secondary#Gearbox",
+            "id": "11",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/sensors.camera/1",
+        "id": "13",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "2"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/sensors.camera/1/rpc.GetCameraResources",
+            "id": "0",
+            "type": "method"
+          },
+          {
+            "uri": "up:/sensors.camera/1/rpc.StartCameraResource",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/sensors.camera/1/rpc.StopCameraResource",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/sensors.camera/1/rpc.UpdateSettings",
+            "id": "3",
+            "type": "method"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.interior_first_row#CameraFrame",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.interior_second_row#CameraFrame",
+            "id": "1",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_perspective#CameraFrame",
+            "id": "2",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_perspective#CameraFrame",
+            "id": "3",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_junction#CameraFrame",
+            "id": "4",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_junction#CameraFrame",
+            "id": "5",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.side_rearward#CameraFrame",
+            "id": "6",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.side_forward#CameraFrame",
+            "id": "7",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_overhead#CameraFrame",
+            "id": "8",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_overhead#CameraFrame",
+            "id": "9",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.surround_overhead_360#CameraFrame",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.surround_bowl_360#CameraFrame",
+            "id": "11",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_hitch#CameraFrame",
+            "id": "12",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.cargo_bed#CameraFrame",
+            "id": "13",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.bed_hitch#CameraFrame",
+            "id": "14",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_rear#CameraFrame",
+            "id": "15",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_interior#CameraFrame",
+            "id": "16",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_split_mirrors#CameraFrame",
+            "id": "17",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_combo#CameraFrame",
+            "id": "18",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailering_left_mirror#CameraFrame",
+            "id": "19",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailering_right_mirror#CameraFrame",
+            "id": "20",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.transparent_trailer#CameraFrame",
+            "id": "21",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.underbody_forward#CameraFrame",
+            "id": "22",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.zoomed_underbody_forward#CameraFrame",
+            "id": "23",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.underbody_rearward#CameraFrame",
+            "id": "24",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.zoomed_underbody_rearward#CameraFrame",
+            "id": "25",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_underbody_forward_split#CameraFrame",
+            "id": "26",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.forward_rearward_underbody_split#CameraFrame",
+            "id": "27",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_front#CameraFrame",
+            "id": "28",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_right#CameraFrame",
+            "id": "29",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_rear#CameraFrame",
+            "id": "30",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_left#CameraFrame",
+            "id": "31",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.mosaic#CameraFrame",
+            "id": "32",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.interior_first_row#StreamStatus",
+            "id": "40",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.interior_second_row#StreamStatus",
+            "id": "41",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_perspective#StreamStatus",
+            "id": "42",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_perspective#StreamStatus",
+            "id": "43",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_junction#StreamStatus",
+            "id": "44",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_junction#StreamStatus",
+            "id": "45",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.side_rearward#StreamStatus",
+            "id": "46",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.side_forward#StreamStatus",
+            "id": "47",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_overhead#StreamStatus",
+            "id": "48",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_overhead#StreamStatus",
+            "id": "49",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.surround_overhead_360#StreamStatus",
+            "id": "50",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.surround_bowl_360#StreamStatus",
+            "id": "51",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_hitch#StreamStatus",
+            "id": "52",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.cargo_bed#StreamStatus",
+            "id": "53",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.bed_hitch#StreamStatus",
+            "id": "54",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_rear#StreamStatus",
+            "id": "55",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_interior#StreamStatus",
+            "id": "56",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_split_mirrors#StreamStatus",
+            "id": "57",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_combo#StreamStatus",
+            "id": "58",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailering_left_mirror#StreamStatus",
+            "id": "59",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailering_right_mirror#StreamStatus",
+            "id": "60",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.transparent_trailer#StreamStatus",
+            "id": "61",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.underbody_forward#StreamStatus",
+            "id": "62",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.zoomed_underbody_forward#StreamStatus",
+            "id": "63",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.underbody_rearward#StreamStatus",
+            "id": "64",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.zoomed_underbody_rearward#StreamStatus",
+            "id": "65",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_underbody_forward_split#StreamStatus",
+            "id": "66",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.forward_rearward_underbody_split#StreamStatus",
+            "id": "67",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_front#StreamStatus",
+            "id": "68",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_right#StreamStatus",
+            "id": "69",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_rear#StreamStatus",
+            "id": "70",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_left#StreamStatus",
+            "id": "71",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.mosaic#StreamStatus",
+            "id": "72",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.interior_first_row#FrameInvalid",
+            "id": "80",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.interior_second_row#FrameInvalid",
+            "id": "81",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_perspective#FrameInvalid",
+            "id": "82",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_perspective#FrameInvalid",
+            "id": "83",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_junction#FrameInvalid",
+            "id": "84",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_junction#FrameInvalid",
+            "id": "85",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.side_rearward#FrameInvalid",
+            "id": "86",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.side_forward#FrameInvalid",
+            "id": "87",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_overhead#FrameInvalid",
+            "id": "88",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_overhead#FrameInvalid",
+            "id": "89",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.surround_overhead_360#FrameInvalid",
+            "id": "90",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.surround_bowl_360#FrameInvalid",
+            "id": "91",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_hitch#FrameInvalid",
+            "id": "92",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.cargo_bed#FrameInvalid",
+            "id": "93",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.bed_hitch#FrameInvalid",
+            "id": "94",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_rear#FrameInvalid",
+            "id": "95",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_interior#FrameInvalid",
+            "id": "96",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_split_mirrors#FrameInvalid",
+            "id": "97",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_combo#FrameInvalid",
+            "id": "98",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailering_left_mirror#FrameInvalid",
+            "id": "99",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailering_right_mirror#FrameInvalid",
+            "id": "100",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.transparent_trailer#FrameInvalid",
+            "id": "101",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.underbody_forward#FrameInvalid",
+            "id": "102",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.zoomed_underbody_forward#FrameInvalid",
+            "id": "103",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.underbody_rearward#FrameInvalid",
+            "id": "104",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.zoomed_underbody_rearward#FrameInvalid",
+            "id": "105",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_underbody_forward_split#FrameInvalid",
+            "id": "106",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.forward_rearward_underbody_split#FrameInvalid",
+            "id": "107",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_front#FrameInvalid",
+            "id": "108",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_right#FrameInvalid",
+            "id": "109",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_rear#FrameInvalid",
+            "id": "110",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_left#FrameInvalid",
+            "id": "111",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.mosaic#FrameInvalid",
+            "id": "112",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.interior_first_row#CapabilityInfo",
+            "id": "120",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.interior_second_row#CapabilityInfo",
+            "id": "121",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_perspective#CapabilityInfo",
+            "id": "122",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_perspective#CapabilityInfo",
+            "id": "123",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_junction#CapabilityInfo",
+            "id": "124",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_junction#CapabilityInfo",
+            "id": "125",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.side_rearward#CapabilityInfo",
+            "id": "126",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.side_forward#CapabilityInfo",
+            "id": "127",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_overhead#CapabilityInfo",
+            "id": "128",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_overhead#CapabilityInfo",
+            "id": "129",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.surround_overhead_360#CapabilityInfo",
+            "id": "130",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.surround_bowl_360#CapabilityInfo",
+            "id": "131",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.rear_hitch#CapabilityInfo",
+            "id": "132",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.cargo_bed#CapabilityInfo",
+            "id": "133",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.bed_hitch#CapabilityInfo",
+            "id": "134",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_rear#CapabilityInfo",
+            "id": "135",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_interior#CapabilityInfo",
+            "id": "136",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_split_mirrors#CapabilityInfo",
+            "id": "137",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailer_combo#CapabilityInfo",
+            "id": "138",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailering_left_mirror#CapabilityInfo",
+            "id": "139",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.trailering_right_mirror#CapabilityInfo",
+            "id": "140",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.transparent_trailer#CapabilityInfo",
+            "id": "141",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.underbody_forward#CapabilityInfo",
+            "id": "142",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.zoomed_underbody_forward#CapabilityInfo",
+            "id": "143",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.underbody_rearward#CapabilityInfo",
+            "id": "144",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.zoomed_underbody_rearward#CapabilityInfo",
+            "id": "145",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.front_underbody_forward_split#CapabilityInfo",
+            "id": "146",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.forward_rearward_underbody_split#CapabilityInfo",
+            "id": "147",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_front#CapabilityInfo",
+            "id": "148",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_right#CapabilityInfo",
+            "id": "149",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_rear#CapabilityInfo",
+            "id": "150",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.vehicle_left#CapabilityInfo",
+            "id": "151",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/view.mosaic#CapabilityInfo",
+            "id": "152",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/sensors.camera/1/settings#Settings",
+            "id": "160",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/vehicle.session/1",
+        "id": "27",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/vehicle.session/1/interval.session#Interval",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle.session/1/interval.trip#Interval",
+            "id": "11",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle.session/1/interval.standby#Interval",
+            "id": "12",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle.session/1/interval.idle#Interval",
+            "id": "13",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle.session/1/interval.plug_connected#Interval",
+            "id": "14",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle.session/1/interval.charge#Interval",
+            "id": "15",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle.session/1/interval.discharge#Interval",
+            "id": "16",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/sound.ev_propulsion_sound/1",
+        "id": "34",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/sound.ev_propulsion_sound/1/rpc.UpdateSettings",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/sound.ev_propulsion_sound/1/rpc.GetSupportedSettings",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/sound.ev_propulsion_sound/1/settings#Settings",
+            "id": "0",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/vehicle.trailering.profile/1",
+        "id": "29",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/vehicle.trailering.profile/1/rpc.SetActiveTrailerProfile",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/vehicle.trailering.profile/1/trailer.profile#ActiveTrailerProfile",
+            "id": "0",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/vehicle.trailering/1",
+        "id": "24",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "1"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/vehicle.trailering/1/trailer.trailer_connection_info#TrailerConnectionInfo",
+            "id": "0",
+            "type": "topic"
+          }
+        ]
+      }
+    },
+    {
+      "node": {
+        "uri": "up:/vehicle/1",
+        "id": "14",
+        "type": "service",
+        "properties": [
+          {
+            "name": "version_major",
+            "value": "1"
+          },
+          {
+            "name": "version_minor",
+            "value": "0"
+          }
+        ],
+        "node": [
+          {
+            "uri": "up:/vehicle/1/rpc.ResetTripMeter",
+            "id": "1",
+            "type": "method"
+          },
+          {
+            "uri": "up:/vehicle/1/rpc.SetTransportMode",
+            "id": "2",
+            "type": "method"
+          },
+          {
+            "uri": "up:/vehicle/1/vehicle#TraveledDistance",
+            "id": "0",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle/1/trip_meter.trip_1#TripMeter",
+            "id": "10",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle/1/trip_meter.trip_2#TripMeter",
+            "id": "11",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle/1/vehicle#VehicleSpeed",
+            "id": "20",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle/1/vehicle#TheftAlert",
+            "id": "30",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle/1/vehicle#CollisionAlert",
+            "id": "40",
+            "type": "topic"
+          },
+          {
+            "uri": "up:/vehicle/1/vehicle_usage.transport_mode#VehicleUsage",
+            "id": "50",
+            "type": "topic"
+          }
+        ]
+      }
+    }
+  ]
+}

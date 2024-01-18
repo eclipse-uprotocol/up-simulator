@@ -68,7 +68,7 @@ def populate_protobuf_classes():
 
     cwd = pathlib.Path(__file__).parent.resolve()
     # Specify the relative path to the CSV file
-    relative_path = os.path.abspath(os.path.join(cwd, ".." + os.sep + "core"))
+    relative_path = os.path.abspath(os.path.join(cwd, ".." + os.sep + "resource_catalog"))
     # Combine the current working directory and the relative path
     csv_file_path = relative_path + os.sep + RESOURCE_CATALOG_CSV_NAME
     with open(csv_file_path, 'r') as csv_file:
