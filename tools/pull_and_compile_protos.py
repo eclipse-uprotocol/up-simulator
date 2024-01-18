@@ -85,12 +85,12 @@ def process_python_protofiles(directory):
         for file in files:
             if file.endswith('.py'):
                 file_path = os.path.join(root, file)
-                replace_in_file(file_path, r'from vehicle', 'from protofiles.vehicle')
-                replace_in_file(file_path, r'from example', 'from protofiles.example')
-                replace_in_file(file_path, r'from common', 'from protofiles.common')
-                replace_in_file(file_path, r'import uservices_options_pb2', 'import protofiles.uservices_options_pb2')
-                replace_in_file(file_path, r'import units_pb2', 'import protofiles.units_pb2')
-                replace_in_file(file_path, r'import uprotocol_options_pb2', 'import protofiles.uprotocol_options_pb2')
+                replace_in_file(file_path, r'from vehicle', 'from core.protofiles.vehicle')
+                replace_in_file(file_path, r'from example', 'from core.protofiles.example')
+                replace_in_file(file_path, r'from common', 'from core.protofiles.common')
+                replace_in_file(file_path, r'import uservices_options_pb2', 'import core.protofiles.uservices_options_pb2')
+                replace_in_file(file_path, r'import units_pb2', 'import core.protofiles.units_pb2')
+                replace_in_file(file_path, r'import uprotocol_options_pb2', 'import core.protofiles.uprotocol_options_pb2')
 
 
 def create_init_py(directory):

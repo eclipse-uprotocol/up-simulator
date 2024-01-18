@@ -45,7 +45,7 @@ from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 from core.exceptions import SimulationError
 from core.transport_layer import TransportLayer
 from utils import common_util
-from utils import protobuf_autoloader
+from core import protobuf_autoloader
 
 
 class CovesaService(object):
@@ -129,6 +129,7 @@ class CovesaService(object):
         attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
         status = self.transport.send(LongUriSerializer().deserialize(uri), payload, attributes)
         common_util.print_publish_status(uri, status.code, status.message)
+        self.publish_data.clear()
         self.publish_data.append(message)
         time.sleep(0.25)
         return message

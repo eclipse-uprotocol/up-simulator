@@ -7,7 +7,7 @@ import utils.constant as CONSTANTS
 from core.transport_layer import TransportLayer
 from simulatorui import create_app
 from simulatorui.config import config_dict
-from utils.socket_utils import SocketUtility
+from simulatorui.utils.socket_utils import SocketUtility
 
 debug = False
 get_config_mode = 'Debug' if debug else 'Production'

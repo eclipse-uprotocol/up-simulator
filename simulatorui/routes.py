@@ -26,11 +26,12 @@
 
 import json
 import os
+from urllib.parse import unquote
 
 from flask import redirect, url_for, render_template, request
 
 from simulatorui import blueprint
-from utils import adb_utils
+from simulatorui.utils import adb_utils
 from utils.constant import FILENAME_RPC_LOGGER, FILENAME_PUBSUB_LOGGER
 
 
@@ -145,9 +146,8 @@ def get_segment(request):
 def getconfiguration():
     try:
         resource = str(request.args.get('resource'))
-        service = str(request.args.get('service').replace("123", "#"))
+        service = str(unquote(request.args.get('service')))
         ui = json.loads(service)
-        # ui = json_data['ui']
         layout = None
         for i in ui:
             for key, value in i.items():

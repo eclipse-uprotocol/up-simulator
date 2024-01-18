@@ -26,37 +26,37 @@
           {
             "name": "zone.row1_left",
             "display_name": "row1_left",
-            "topic": "up:/body.cabin_climate/1/zone.row1_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_left#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row1_right",
             "display_name": "row1_right",
-            "topic": "up:/body.cabin_climate/1/zone.row1_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_right#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row2_left",
             "display_name": "row2_left",
-            "topic": "up:/body.cabin_climate/1/zone.row2_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_left#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row2_right",
             "display_name": "row2_right",
-            "topic": "up:/body.cabin_climate/1/zone.row2_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_right#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row3_left",
             "display_name": "row3_left",
-            "topic": "up:/body.cabin_climate/1/zone.row3_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_left#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row3_right",
             "display_name": "row3_right",
-            "topic": "up:/body.cabin_climate/1/zone.row3_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_right#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           }
         ],
@@ -247,7 +247,7 @@
           {
             "name": "system_settings",
             "display_name": "system_settings",
-            "topic": "up:/body.cabin_climate/1/system_settings123SystemSettings",
+            "topic": "up:/body.cabin_climate/1/system_settings#SystemSettings",
             "rpcmethod": "UpdateSystemSettings"
           }
         ],
@@ -411,42 +411,42 @@
             "name": "zone.row1_left",
             "display_name": "row1_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row1_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_left#Zone",
             "rpcmethod": "SetTemperature"
           },
           {
             "name": "zone.row1_right",
             "display_name": "row1_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row1_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_right#Zone",
             "rpcmethod": "SetTemperature"
           },
           {
             "name": "zone.row2_left",
             "display_name": "row2_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row2_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_left#Zone",
             "rpcmethod": "SetTemperature"
           },
           {
             "name": "zone.row2_right",
             "display_name": "row2_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row2_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_right#Zone",
             "rpcmethod": "SetTemperature"
           },
           {
             "name": "zone.row3_left",
             "display_name": "row3_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row3_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_left#Zone",
             "rpcmethod": "SetTemperature"
           },
           {
             "name": "zone.row3_right",
             "display_name": "row3_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row3_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_right#Zone",
             "rpcmethod": "SetTemperature"
           }
         ],
@@ -497,42 +497,42 @@
             "name": "zone.row1_left",
             "display_name": "row1_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row1_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_left#Zone",
             "rpcmethod": "SetFan"
           },
           {
             "name": "zone.row1_right",
             "display_name": "row1_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row1_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_right#Zone",
             "rpcmethod": "SetFan"
           },
           {
             "name": "zone.row2_left",
             "display_name": "row2_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row2_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_left#Zone",
             "rpcmethod": "SetFan"
           },
           {
             "name": "zone.row2_right",
             "display_name": "row2_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row2_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_right#Zone",
             "rpcmethod": "SetFan"
           },
           {
             "name": "zone.row3_left",
             "display_name": "row3_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row3_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_left#Zone",
             "rpcmethod": "SetFan"
           },
           {
             "name": "zone.row3_right",
             "display_name": "row3_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row3_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_right#Zone",
             "rpcmethod": "SetFan"
           }
         ],
@@ -557,42 +557,42 @@
             "name": "zone.row1_left",
             "display_name": "row1_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row1_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_left#Zone",
             "rpcmethod": "SetAirDistribution"
           },
           {
             "name": "zone.row1_right",
             "display_name": "row1_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row1_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_right#Zone",
             "rpcmethod": "SetAirDistribution"
           },
           {
             "name": "zone.row2_left",
             "display_name": "row2_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row2_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_left#Zone",
             "rpcmethod": "SetAirDistribution"
           },
           {
             "name": "zone.row2_right",
             "display_name": "row2_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row2_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_right#Zone",
             "rpcmethod": "SetAirDistribution"
           },
           {
             "name": "zone.row3_left",
             "display_name": "row3_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row3_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_left#Zone",
             "rpcmethod": "SetAirDistribution"
           },
           {
             "name": "zone.row3_right",
             "display_name": "row3_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row3_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_right#Zone",
             "rpcmethod": "SetAirDistribution"
           }
         ],
@@ -687,42 +687,42 @@
             "name": "zone.row1_left",
             "display_name": "row1_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row1_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_left#Zone",
             "rpcmethod": "SetPower"
           },
           {
             "name": "zone.row1_right",
             "display_name": "row1_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row1_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_right#Zone",
             "rpcmethod": "SetPower"
           },
           {
             "name": "zone.row2_left",
             "display_name": "row2_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row2_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_left#Zone",
             "rpcmethod": "SetPower"
           },
           {
             "name": "zone.row2_right",
             "display_name": "row2_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row2_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_right#Zone",
             "rpcmethod": "SetPower"
           },
           {
             "name": "zone.row3_left",
             "display_name": "row3_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row3_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_left#Zone",
             "rpcmethod": "SetPower"
           },
           {
             "name": "zone.row3_right",
             "display_name": "row3_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row3_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_right#Zone",
             "rpcmethod": "SetPower"
           }
         ],
@@ -741,42 +741,42 @@
             "name": "zone.row1_left",
             "display_name": "row1_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row1_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_left#Zone",
             "rpcmethod": "SetLock"
           },
           {
             "name": "zone.row1_right",
             "display_name": "row1_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row1_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row1_right#Zone",
             "rpcmethod": "SetLock"
           },
           {
             "name": "zone.row2_left",
             "display_name": "row2_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row2_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_left#Zone",
             "rpcmethod": "SetLock"
           },
           {
             "name": "zone.row2_right",
             "display_name": "row2_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row2_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row2_right#Zone",
             "rpcmethod": "SetLock"
           },
           {
             "name": "zone.row3_left",
             "display_name": "row3_left",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row3_left123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_left#Zone",
             "rpcmethod": "SetLock"
           },
           {
             "name": "zone.row3_right",
             "display_name": "row3_right",
             "name_key": "id",
-            "topic": "up:/body.cabin_climate/1/zone.row3_right123Zone",
+            "topic": "up:/body.cabin_climate/1/zone.row3_right#Zone",
             "rpcmethod": "SetLock"
           }
         ],
@@ -878,13 +878,13 @@
           {
             "name": "left",
             "name_key": "id",
-            "topic": "up:/body.horn/1/left123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/left#SideExteriorSideMirror",
             "rpcmethod": "SlideSideMirror"
           },
           {
             "name": "right",
             "name_key": "id",
-            "topic": "up:/body.horn/1/right123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/right#SideExteriorSideMirror",
             "rpcmethod": "SlideSideMirror"
           }
         ],
@@ -904,13 +904,13 @@
           {
             "name": "left",
             "name_key": "id",
-            "topic": "up:/body.horn/1/left123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/left#SideExteriorSideMirror",
             "rpcmethod": "FoldSideMirror"
           },
           {
             "name": "right",
             "name_key": "id",
-            "topic": "up:/body.horn/1/right123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/right#SideExteriorSideMirror",
             "rpcmethod": "FoldSideMirror"
           }
         ],
@@ -928,13 +928,13 @@
           {
             "name": "left",
             "name_key": "id",
-            "topic": "up:/body.horn/1/left123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/left#SideExteriorSideMirror",
             "rpcmethod": "UnfoldSideMirror"
           },
           {
             "name": "right",
             "name_key": "id",
-            "topic": "up:/body.horn/1/right123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/right#SideExteriorSideMirror",
             "rpcmethod": "UnfoldSideMirror"
           }
         ],
@@ -952,13 +952,13 @@
           {
             "name": "left",
             "name_key": "id",
-            "topic": "up:/body.horn/1/left123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/left#SideExteriorSideMirror",
             "rpcmethod": "TiltSideMirror"
           },
           {
             "name": "right",
             "name_key": "id",
-            "topic": "up:/body.horn/1/right123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/right#SideExteriorSideMirror",
             "rpcmethod": "TiltSideMirror"
           }
         ],
@@ -976,13 +976,13 @@
           {
             "name": "left",
             "name_key": "id",
-            "topic": "up:/body.horn/1/left123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/left#SideExteriorSideMirror",
             "rpcmethod": "UntiltSideMirror"
           },
           {
             "name": "right",
             "name_key": "id",
-            "topic": "up:/body.horn/1/right123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/right#SideExteriorSideMirror",
             "rpcmethod": "UntiltSideMirror"
           }
         ],
@@ -1000,13 +1000,13 @@
           {
             "name": "left",
             "name_key": "id",
-            "topic": "up:/body.horn/1/left123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/left#SideExteriorSideMirror",
             "rpcmethod": "ActivateHeatedSideMirror"
           },
           {
             "name": "right",
             "name_key": "id",
-            "topic": "up:/body.horn/1/right123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/right#SideExteriorSideMirror",
             "rpcmethod": "ActivateHeatedSideMirror"
           }
         ],
@@ -1024,13 +1024,13 @@
           {
             "name": "left",
             "name_key": "id",
-            "topic": "up:/body.horn/1/left123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/left#SideExteriorSideMirror",
             "rpcmethod": "DeactivateHeatedSideMirror"
           },
           {
             "name": "right",
             "name_key": "id",
-            "topic": "up:/body.horn/1/right123SideExteriorSideMirror",
+            "topic": "up:/body.horn/1/right#SideExteriorSideMirror",
             "rpcmethod": "DeactivateHeatedSideMirror"
           }
         ],
@@ -1048,7 +1048,7 @@
           {
             "name": "side_mirror",
             "display_name": "side_mirror",
-            "topic": "up:/body.horn/1/side_mirror123SideMirrorMovementSettings",
+            "topic": "up:/body.horn/1/side_mirror#SideMirrorMovementSettings",
             "rpcmethod": "UpdateSideMirrorMovementSettings"
           }
         ],
@@ -1072,7 +1072,7 @@
           {
             "name": "side_mirror",
             "display_name": "side_mirror",
-            "topic": "up:/body.horn/1/side_mirror123HeatedSideMirrorSettings",
+            "topic": "up:/body.horn/1/side_mirror#HeatedSideMirrorSettings",
             "rpcmethod": "UpdateHeatedSideMirrorsSettings"
           }
         ],
@@ -1093,13 +1093,13 @@
           {
             "name": "brake_pads.front",
             "display_name": "front",
-            "topic": "up:/chassis.braking/1/brake_pads.front123BrakePads",
+            "topic": "up:/chassis.braking/1/brake_pads.front#BrakePads",
             "rpcmethod": "ResetHealth"
           },
           {
             "name": "brake_pads.rear",
             "display_name": "rear",
-            "topic": "up:/chassis.braking/1/brake_pads.rear123BrakePads",
+            "topic": "up:/chassis.braking/1/brake_pads.rear#BrakePads",
             "rpcmethod": "ResetHealth"
           }
         ],
@@ -1117,13 +1117,13 @@
           {
             "name": "brake_pads.front",
             "display_name": "front",
-            "topic": "up:/chassis.braking/1/brake_pads.front123BrakePads",
+            "topic": "up:/chassis.braking/1/brake_pads.front#BrakePads",
             "rpcmethod": "ManageHealthMonitoring"
           },
           {
             "name": "brake_pads.rear",
             "display_name": "rear",
-            "topic": "up:/chassis.braking/1/brake_pads.rear123BrakePads",
+            "topic": "up:/chassis.braking/1/brake_pads.rear#BrakePads",
             "rpcmethod": "ManageHealthMonitoring"
           }
         ],
@@ -1143,7 +1143,7 @@
           {
             "name": "ride_height",
             "display_name": "ride_height",
-            "topic": "up:/chassis.suspension/1/ride_height123RideHeight",
+            "topic": "up:/chassis.suspension/1/ride_height#RideHeight",
             "rpcmethod": "SetRideHeight"
           }
         ],
@@ -1508,37 +1508,37 @@
           {
             "name": "tire.front_left",
             "display_name": "front_left",
-            "topic": "up:/chassis/1/tire.front_left123Tire",
+            "topic": "up:/chassis/1/tire.front_left#Tire",
             "rpcmethod": "UpdateTire"
           },
           {
             "name": "tire.front_right",
             "display_name": "front_right",
-            "topic": "up:/chassis/1/tire.front_right123Tire",
+            "topic": "up:/chassis/1/tire.front_right#Tire",
             "rpcmethod": "UpdateTire"
           },
           {
             "name": "tire.rear_left",
             "display_name": "rear_left",
-            "topic": "up:/chassis/1/tire.rear_left123Tire",
+            "topic": "up:/chassis/1/tire.rear_left#Tire",
             "rpcmethod": "UpdateTire"
           },
           {
             "name": "tire.rear_right",
             "display_name": "rear_right",
-            "topic": "up:/chassis/1/tire.rear_right123Tire",
+            "topic": "up:/chassis/1/tire.rear_right#Tire",
             "rpcmethod": "UpdateTire"
           },
           {
             "name": "tire.rear_left_inner",
             "display_name": "rear_left_inner",
-            "topic": "up:/chassis/1/tire.rear_left_inner123Tire",
+            "topic": "up:/chassis/1/tire.rear_left_inner#Tire",
             "rpcmethod": "UpdateTire"
           },
           {
             "name": "tire.rear_right_inner",
             "display_name": "rear_right_inner",
-            "topic": "up:/chassis/1/tire.rear_right_inner123Tire",
+            "topic": "up:/chassis/1/tire.rear_right_inner#Tire",
             "rpcmethod": "UpdateTire"
           }
         ],
@@ -1562,25 +1562,25 @@
           {
             "name": "air_filter",
             "display_name": "air_filter",
-            "topic": "up:/propulsion.engine/1/air_filter123AirFilter",
+            "topic": "up:/propulsion.engine/1/air_filter#AirFilter",
             "rpcmethod": "ResetHealth"
           },
           {
             "name": "oil",
             "display_name": "oil",
-            "topic": "up:/propulsion.engine/1/oil123Oil",
+            "topic": "up:/propulsion.engine/1/oil#Oil",
             "rpcmethod": "ResetHealth"
           },
           {
             "name": "coolant",
             "display_name": "coolant",
-            "topic": "up:/propulsion.engine/1/coolant123Coolant",
+            "topic": "up:/propulsion.engine/1/coolant#Coolant",
             "rpcmethod": "ResetHealth"
           },
           {
             "name": "engine_state",
             "display_name": "engine_state",
-            "topic": "up:/propulsion.engine/1/engine_state123EngineState",
+            "topic": "up:/propulsion.engine/1/engine_state#EngineState",
             "rpcmethod": "ResetHealth"
           }
         ],
@@ -1600,13 +1600,13 @@
           {
             "name": "trip_meter.trip_1",
             "display_name": "trip_1",
-            "topic": "up:/vehicle/1/trip_meter.trip_1123TripMeter",
+            "topic": "up:/vehicle/1/trip_meter.trip_1#TripMeter",
             "rpcmethod": "ResetTripMeter"
           },
           {
             "name": "trip_meter.trip_2",
             "display_name": "trip_2",
-            "topic": "up:/vehicle/1/trip_meter.trip_2123TripMeter",
+            "topic": "up:/vehicle/1/trip_meter.trip_2#TripMeter",
             "rpcmethod": "ResetTripMeter"
           }
         ],

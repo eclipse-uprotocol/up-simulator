@@ -206,7 +206,7 @@ function onRbChanged(label, data, entity, typeTab) {
     var executebtn = document.getElementById('execute')
     executebtn.innerText = typeTab
     executebtn.setAttribute("class", "btn btn-primary")
-    fetch("/getuiconfiguration?resource=" + label + "&service=" + JSON.stringify(data))
+    fetch("/getuiconfiguration?resource=" + label + "&service=" + encodeURIComponent(JSON.stringify(data)))
         .then((res) => res.json())
         .then((data) => {
             if (JSON.stringify(data).length > 2) {
@@ -442,7 +442,7 @@ function execute_subscribe(topic) {
             }
             if (!topic.includes("dynamic_topic")) {
                 showSpinner();
-                var json_subscribe = { "topic": topic.replace("#", "123") }
+                var json_subscribe = { "topic": topic }
                 socket.emit('subscribe', json_subscribe);
             }
         }
@@ -609,11 +609,11 @@ function executePublish_Set(typeButton, json_data) {
             setmaskfield(json_data, methodname, serviceclass, typeButton, topic)
         } else {
             showSpinner();
-            callSendRPCApi(JSON.stringify(json_data).replace("#", "123"), methodname, serviceclass, [])
+            callSendRPCApi(JSON.stringify(json_data), methodname, serviceclass, [])
         }
     } else if (typeButton == "PUB") {
         showSpinner();
-        callPublishApi(JSON.stringify(json_data).replace("#", "123"), topic.replace("#", "123"), serviceclass)
+        callPublishApi(JSON.stringify(json_data), topic, serviceclass)
     } else if (typeButton == 'AddRPC') {
         if (['body.access', 'body.cabin_climate', 'body.lighting.interior', 'body.lighting.exterior']
             .includes(serviceclass)) {
@@ -638,7 +638,7 @@ function sendRpcFromMask() {
     dialog.style.display = 'none';
     if (type_button == 'RPC') {
         showSpinner();
-        callSendRPCApi(JSON.stringify(rpc_json_data).replace("#", "123"), method_name, service_class, checkedItems)
+        callSendRPCApi(JSON.stringify(rpc_json_data), method_name, service_class, checkedItems)
     } else {
         addRpcToRow(rpc_json_data, per_topic, method_name, service_class, checkedItems)
         $('#modal-lg').modal('hide');

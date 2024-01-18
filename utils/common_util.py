@@ -72,7 +72,7 @@ def get_class(full_name):
         try:
             module = import_module(module_path)
         except ImportError:
-            module = import_module("protofiles." + module_path)
+            module = import_module("core.protofiles." + module_path)
         return getattr(module, class_name)
     except (ImportError, AttributeError) as e:
         raise ImportError(full_name)

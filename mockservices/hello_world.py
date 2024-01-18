@@ -32,7 +32,7 @@ from google.protobuf.text_format import MessageToString
 from google.type.timeofday_pb2 import TimeOfDay
 
 from core.abstract_service import CovesaService
-from protofiles.example.hello_world.v1.hello_world_topics_pb2 import Timer
+from core.protofiles.example.hello_world.v1.hello_world_topics_pb2 import Timer
 
 
 class HelloWorldService(CovesaService):

@@ -34,10 +34,9 @@ from uprotocol.transport.ulistener import UListener
 
 from core.abstract_service import CovesaService
 from core.exceptions import ValidationError
-from protofiles.common.health_state_pb2 import HealthState
-from protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import (ResetHealthRequest,
-                                                                       ManageHealthMonitoringRequest)
-from protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import (BrakePads)
+from core.protofiles.common.health_state_pb2 import HealthState
+from core.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, ManageHealthMonitoringRequest
+from core.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
 
 
 class BrakingService(CovesaService):
@@ -58,7 +57,7 @@ class BrakingService(CovesaService):
         super().__init__("chassis.braking", portal_callback)
         self.init_state()
         self.subscribe(["ultifi:/chassis.braking/1/brake_pads.front#BrakePads",
-            "ultifi:/chassis.braking/1/brake_pads.rear#BrakePads", ], BrakingPreconditions)
+                        "ultifi:/chassis.braking/1/brake_pads.rear#BrakePads", ], BrakingPreconditions)
 
     def init_state(self):
         """

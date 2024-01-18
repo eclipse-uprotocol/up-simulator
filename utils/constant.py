@@ -31,7 +31,7 @@ TOPIC_PROTO_SUFFIX = '_topics.proto'
 SERVICES_JSON_FILE_PATH = "../simulatorui/services.json"
 REPO_URL = "https://github.com/COVESA/uservices.git"
 PROTO_REPO_DIR = "protos"
-PROTO_OUTPUT_DIR = "../protofiles"
+PROTO_OUTPUT_DIR = "../core/protofiles"
 RESOURCE_CATALOG_CSV_NAME = "ResourceCatalog.csv"
 RESOURCE_CATALOG_JSON_NAME = "ResourceCatalog.json"
 
