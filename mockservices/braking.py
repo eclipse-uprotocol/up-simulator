@@ -49,7 +49,7 @@ class BrakingService(CovesaService):
     timeout = 9  # timeout time in seconds for discovery service
     state = {}
 
-    def __init__(self, portal_callback=None, discovery=False):
+    def __init__(self, portal_callback=None):
         """
         BrakingService constructor
         """
