@@ -96,4 +96,4 @@ def set_reset_flag():
 
 if __name__ == '__main__':
     # Run the server
-    socketio.run(app, debug=debug)
+    socketio.run(app,allow_unsafe_werkzeug=True, debug=debug)

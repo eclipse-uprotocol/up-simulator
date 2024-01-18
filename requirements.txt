@@ -6,3 +6,5 @@ Flask-SocketIO
 gitpython
 protobuf
 googleapis-common-protos
+temporary_wheel/uprotocol_python-1.0.0-py3-none-any.whl
+temporary_wheel/uprotocol_zenoh_python-1.0.0-py3-none-any.whl
