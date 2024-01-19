@@ -149,8 +149,8 @@ class BrakingService(CovesaService):
 
         # Manage Health Monitoring Request
         if type(request) == ManageHealthMonitoringRequest:
-            if request.name != 'brake_pads':
-                raise ValidationError(12, f"Unsupported bake name: {request.name}")
+            if request.name not in ['brake_pads.front', 'brake_pads.rear']:
+                raise ValidationError(12, f"Unsupported brake name: {request.name}")
 
             elif self.state['brake_pads.front']['health']['state'] == HealthState.State.Value("S_UNSUPPORTED") and \
                     self.state['brake_pads.rear']['health']['state'] == HealthState.State.Value("S_UNSUPPORTED"):
