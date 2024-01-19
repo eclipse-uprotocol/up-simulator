@@ -6,5 +6,5 @@
 **/.DS_Store
 .vscode
 .coverage
-tools/protos
+simulator/tools/protos
 *.txt
