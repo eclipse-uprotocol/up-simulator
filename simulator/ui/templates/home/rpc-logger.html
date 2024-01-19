@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} RPC Logger {% endblock %}
+{% block title %} RPC Calls {% endblock %}
 
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -67,23 +67,15 @@
                         </div>
 
 
-                        <div class="rpcdashboard-secondRow">
-                            <div class="col-xl-6 dashboardTitle">
-                                RPC Calls
-                            </div>
-                            <div class="col-xl-5 dashboardTitle">
-                                Rpc Response Window
-                            </div>
-                            <div class="col-xl-1">
-                                <a>
-                                    <div onclick="exportRPCReport()"><i class="fa fa-download statusIcon"></i></div>
-                                </a>
-                            </div>
-                        </div>
-
                         <div class="row">
                             <div class="col-xl-12 rpcdashboard-thirdRow">
-                                <div class="col-xl-6">
+                                <div class="col-xl-6 rpcdashboard-TRsubone">
+
+                                    <div class="col-xl-6"
+                                        style="font-weight: 700;font-size: 16px;line-height: 150%;color: #FFFFFF; padding:1rem">
+                                        RPC Calls
+                                    </div>
+
                                     <div>
                                         <div id="table_rpc">
 
@@ -92,8 +84,20 @@
                                 </div>
 
                                 <div class="col-xl-6">
+                                    <div style="display: flex;padding: 1rem; justify-content: space-between">
+                                        <div class="col-xl-5"
+                                            style="font-weight: 700;font-size: 16px;line-height: 150%;color: #FFFFFF;">
+                                            Rpc Response Window
+                                        </div>
+                                        <div class="col-xl-1" style="display:flex; justify-content: flex-end">
+                                            <a>
+                                                <div onclick="exportRPCReport()"><i
+                                                        class="fa fa-download statusIcon"></i></div>
+                                            </a>
+                                        </div>
+                                    </div>
 
-                                    <div class="box-content-data">
+                                    <div class="box-content-data" style="height: 680px;overflow:auto;">
                                         <div id="rpcselected">
                                             Rpc selected
                                         </div>
@@ -101,8 +105,8 @@
                                             style="display: none;width:100%;font-weight: 500;font-size: 16px;margin-bottom:10px;line-height: 150%;color: #F0B323;">
                                         </div>
 
-                                        <div style="display:flex; margin-left:1.2rem">
-                                            <div id="requestHeading">
+                                        <div style="display:flex; margin-left:1.2rem;overflow:auto;">
+                                            <div id="requestHeading" style="overflow: auto">
                                                 Request
                                                 <div id="request">
                                                 </div>

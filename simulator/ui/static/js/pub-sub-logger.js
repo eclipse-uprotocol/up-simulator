@@ -61,11 +61,14 @@ function setPubSubDataInUi(json_data) {
   tr.appendChild(td)
 
   td = document.createElement("div")
+  seeMoreIcon = document.createElement("i")
+  seeMoreIcon.setAttribute('class', "fa-solid fa-angles-right")
   td.setAttribute("class", "col-xl-2")
+  td.setAttribute("style", "display: flex; align-items: center;")
   h6 = document.createElement("h6")
   h6.setAttribute("class", "seeMore")
-  h6.innerText = 'See More'
-  h6.setAttribute("style", "text-decoration: underline;font-weight: 400;font-size: 16px;line-height: 26px;display: flex;align-items: center;text-align: center;color:  #39A0F1;;width:100%;border:none;background:none;margin-top:15px")
+  h6.appendChild(seeMoreIcon)
+  h6.setAttribute("style", "text-decoration: underline;font-weight: 400;font-size: 16px;line-height: 26px;display: flex;align-items: center;text-align: center;color:  #39A0F1;;width:100%;border:none;background:none;justify-content:end;margin-left:-10px;")
   h6.addEventListener("click", function () {
     var boxcontent = document.getElementById("box-content")
     boxcontent.style.display = "none"
@@ -158,6 +161,5 @@ function addColorToKeys(obj, parentKey = '') {
 
   return jsonString;
 }
-
 
 

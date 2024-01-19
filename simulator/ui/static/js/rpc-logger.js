@@ -47,11 +47,14 @@ function setDataInUi(json_data) {
   tr.appendChild(td)
 
   td = document.createElement("div")
-  td.setAttribute("class", "col-xl-3")
+  seeMoreIcon = document.createElement("i")
+  seeMoreIcon.setAttribute('class', "fa-solid fa-angles-right")
+  td.setAttribute("class", "col-xl-2")
+  td.setAttribute("style", "display:flex; justify-content: center;")
   h6 = document.createElement("h6")
   h6.setAttribute("class", "seeMore")
-  h6.innerText = 'See More'
-  h6.setAttribute("style", "text-decoration: underline;font-weight: 400;font-size: 16px;line-height: 26px;display: flex;align-items: center;text-align: center;color:  #39A0F1;;width:100%;border:none;background:none;margin-top:15px")
+  h6.appendChild(seeMoreIcon)
+  h6.setAttribute("style", "text-decoration: underline;font-weight: 400;font-size: 16px;line-height: 26px;display: flex;align-items: center;text-align: center;color:  #39A0F1;;width:100%;border:none;background:none;justify-content:flex-end")
   h6.addEventListener("click", function () {
     var boxcontent = document.getElementById("box-content")
     boxcontent.style.display = "none"
@@ -199,4 +202,3 @@ function addColorToKeys(obj, parentKey = '') {
 
   return jsonString;
 }
-

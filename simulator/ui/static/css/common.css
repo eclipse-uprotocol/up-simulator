@@ -1065,14 +1065,6 @@ input[type="radio"]:checked {
   border-color: #219FFB !important;
 }
 
-#table_pub_sub div:nth-child(1) {
-  border-top: 1px solid var(--boxShadowColor);
-}
-
-#table_rpc div:nth-child(1) {
-  border-top: 1px solid var(--boxShadowColor);
-
-}
 
 #emulator_status {
   text-align: center;

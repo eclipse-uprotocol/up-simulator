@@ -78,31 +78,6 @@
   float: left;
 }
 
-.pubsubdashboard-thirdRow>div:nth-child(2)>div:first-child {
-  height: 680px;
-}
-
-.pubsubdashboard-thirdRow>div:nth-child(2)>div:first-child>div#topicSelected {
-  display: none;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 150%;
-  color: #FFFFFF;
-  margin: 20px;
-  width: 100%;
-  max-width: 80%;
-  overflow: auto;
-}
-
-.pubsubdashboard-thirdRow>div:nth-child(2)>div:first-child>div:nth-child(2) {
-  width: 100%;
-  margin: 20px;
-}
-
-.pubsubdashboard-thirdRow>div:nth-child(2)>div:first-child>p:nth-child(3) {
-  display: block;
-  margin-top: 300px;
-}
 
 .pubsubdashboard-thirdRow>div:nth-child(2)>div:first-child>div:nth-child(2)>div:nth-child(1) {
   width: 100%;
