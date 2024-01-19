@@ -55,11 +55,11 @@ logger = logging.getLogger('Simulator')
 
 def start_service(entity, callback):
     if entity == "body.cabin_climate":
-        from simulator.mockservices import CabinClimateService
+        from simulator.mockservices.cabin_climate import CabinClimateService
         CabinClimateService(callback).start()
 
     elif entity == "chassis.braking":
-        from simulator.mockservices import BrakingService
+        from simulator.mockservices.braking import BrakingService
         BrakingService(callback).start()
     elif entity == "example.hello_world":
         from simulator.mockservices.hello_world import HelloWorldService
