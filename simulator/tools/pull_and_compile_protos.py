@@ -85,12 +85,12 @@ def process_python_protofiles(directory):
         for file in files:
             if file.endswith('.py'):
                 file_path = os.path.join(root, file)
-                replace_in_file(file_path, r'from vehicle', 'from simulator.core.protofiles.vehicle')
-                replace_in_file(file_path, r'from example', 'from simulator.core.protofiles.example')
-                replace_in_file(file_path, r'from common', 'from simulator.core.protofiles.common')
-                replace_in_file(file_path, r'import uservices_options_pb2', 'import simulator.core.protofiles.uservices_options_pb2')
-                replace_in_file(file_path, r'import units_pb2', 'import simulator.core.protofiles.units_pb2')
-                replace_in_file(file_path, r'import uprotocol_options_pb2', 'import simulator.core.protofiles.uprotocol_options_pb2')
+                replace_in_file(file_path, r'from vehicle', 'from target.protofiles.vehicle')
+                replace_in_file(file_path, r'from example', 'from target.protofiles.example')
+                replace_in_file(file_path, r'from common', 'from target.protofiles.common')
+                replace_in_file(file_path, r'import uservices_options_pb2', 'import target.protofiles.uservices_options_pb2')
+                replace_in_file(file_path, r'import units_pb2', 'import target.protofiles.units_pb2')
+                replace_in_file(file_path, r'import uprotocol_options_pb2', 'import target.protofiles.uprotocol_options_pb2')
 
 
 def create_init_py(directory):

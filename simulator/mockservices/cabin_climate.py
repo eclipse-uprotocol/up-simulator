@@ -28,7 +28,7 @@ import re
 
 from simulator.core.abstract_service import CovesaService
 from simulator.core.exceptions import ValidationError
-from simulator.core.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
+from target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
 
 
 class CabinClimateService(CovesaService):

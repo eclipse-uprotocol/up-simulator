@@ -34,9 +34,9 @@ from uprotocol.transport.ulistener import UListener
 
 from simulator.core.abstract_service import CovesaService
 from simulator.core.exceptions import ValidationError
-from simulator.core.protofiles.common.health_state_pb2 import HealthState
-from simulator.core.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, ManageHealthMonitoringRequest
-from simulator.core.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
+from target.protofiles.common.health_state_pb2 import HealthState
+from target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, ManageHealthMonitoringRequest
+from target.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
 
 
 class BrakingService(CovesaService):

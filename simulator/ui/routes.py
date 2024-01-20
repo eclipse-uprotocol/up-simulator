@@ -32,7 +32,7 @@ from flask import redirect, url_for, render_template, request
 
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
-from simulator.utils.constant import FILENAME_RPC_LOGGER, FILENAME_PUBSUB_LOGGER
+import simulator.utils.constant as CONSTANTS
 
 
 @blueprint.route('/')
@@ -68,12 +68,12 @@ def route_configuration():
 
 @blueprint.route('/pub-sub.html')
 def route_pubsub():
-    services_json_path = os.path.join(os.getcwd(), "simulator", "ui", "ui_json", "services.json")
+    services_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
     pubsub_json_path = os.path.join(os.getcwd(), "simulator", "ui", "ui_json", "pub-sub.json")
 
     if 'ui_json' in os.getcwd():
         pubsub_json_path = os.sep + "pub-sub.json"
-        services_json_path = os.sep + "services.json"
+        services_json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
     f = open(pubsub_json_path)
     pubsub = json.load(f)
     f.close()
@@ -88,7 +88,7 @@ def route_pubsub():
 @blueprint.route('/rpc-logger.html')
 def start_rpc_dashboard():
     try:
-        f = open(os.path.join(os.getcwd(), FILENAME_RPC_LOGGER))
+        f = open(os.path.join(os.getcwd(), CONSTANTS.FILENAME_RPC_LOGGER))
         data = f.read()
         f.close()
     except:
@@ -99,7 +99,7 @@ def start_rpc_dashboard():
 @blueprint.route('/pub-sub-logger.html')
 def pub_dashboard():
     try:
-        f = open(os.path.join(os.getcwd(), FILENAME_PUBSUB_LOGGER))
+        f = open(os.path.join(os.getcwd(), CONSTANTS.FILENAME_PUBSUB_LOGGER))
         data = f.read()
         f.close()
     except:
@@ -110,11 +110,11 @@ def pub_dashboard():
 @blueprint.route('/send-rpc.html')
 def route_sendrpc():
     rpc_json_path = os.path.join(os.getcwd(), "simulator", "ui", "ui_json", "rpc.json")
-    services_json_path = os.path.join(os.getcwd(), "simulator", "ui", "ui_json", "services.json")
+    services_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
 
     if 'ui_json' in os.getcwd():
         rpc_json_path = os.sep + "rpc.json"
-        services_json_path = os.sep + "services.json"
+        services_json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
 
     f = open(rpc_json_path)
     rpcs = json.load(f)
@@ -165,9 +165,9 @@ def getconfiguration():
 def get_mock_services():
     mockservice_pkgs = []
     running_services = []
-    json_path = os.path.join(os.getcwd(), "simulator", "ui", "ui_json", "services.json")
+    json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
     if 'ui_json' in os.getcwd():
-        json_path = os.sep + "services.json"
+        json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
     f = open(json_path)
     mockservices = json.load(f)
     f.close()

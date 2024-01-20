@@ -29,13 +29,16 @@ NAMESPACE = "/simulator"
 
 SERVICE_PROTO_SUFFIX = '_service.proto'
 TOPIC_PROTO_SUFFIX = '_topics.proto'
-SERVICES_JSON_FILE_PATH = os.path.join("..", "ui", "ui_json","services.json")
+UI_JSON_DIR = os.path.join("target", "ui_json")
+SERVICES_JSON_FILE_NAME = "services.json"
 
 REPO_URL = "https://github.com/COVESA/uservices.git"
-PROTO_REPO_DIR = "protos"
-PROTO_OUTPUT_DIR = os.path.join("..", "core", "protofiles")
-RESOURCE_CATALOG_CSV_NAME = "ResourceCatalog.csv"
-RESOURCE_CATALOG_JSON_NAME = "ResourceCatalog.json"
+PROTO_REPO_DIR = os.path.join("..", "..", "target", "protos")
+PROTO_OUTPUT_DIR = os.path.join("..", "..", "target", "protofiles")
+RESOURCE_CATALOG_DIR = os.path.join("..", "..", "target", "resource_catalog")
+
+RESOURCE_CATALOG_CSV_NAME = "resource_catalog.csv"
+RESOURCE_CATALOG_JSON_NAME = "resource_catalog.json"
 
 FILENAME_RPC_LOGGER = "rpc_logger.txt"
 FILENAME_SERVICE_RUNNING_STATUS = "service_status.txt"
