@@ -35,10 +35,12 @@ from uprotocol.transport.ulistener import UListener
 from uprotocol_zenoh.zenoh_utransport import Zenoh
 
 utransport = "ZENOH"
+ZENOH_IP = '10.0.0.33'
+ZENOH_PORT =9090
 
 
 class TransportLayer:
-    ZENOH = Zenoh()
+    ZENOH = Zenoh(ZENOH_IP, ZENOH_PORT)
 
     def __init__(self):
         if utransport == "ZENOH":

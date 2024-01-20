@@ -40,7 +40,11 @@ if (localStorage.getItem("ip_multicast") == null || localStorage.getItem("ip_mul
 }
 if (localStorage.getItem("zenoh_router_ip") == null || localStorage.getItem("zenoh_router_ip") == "" ||
     localStorage.getItem("zenoh_router_ip") == 'undefined') {
-    localStorage.setItem("zenoh_router_ip", "127.0.0.1")
+    localStorage.setItem("zenoh_router_ip", "10.0.0.33")
+}
+if (localStorage.getItem("zenoh_router_port") == null || localStorage.getItem("zenoh_router_port") == "" ||
+    localStorage.getItem("zenoh_router_port") == 'undefined') {
+    localStorage.setItem("zenoh_router_port", "9090")
 }
 
 
@@ -83,11 +87,15 @@ function setupSocket() {
 
         socket.emit("set_transport", localStorage.getItem("utransportConfig"))
         socket.emit("set_someip_config", localStorage.getItem("ip_local"), localStorage.getItem("ip_multicast"))
-        socket.emit("set_zenoh_config", localStorage.getItem("zenoh_router_ip"))
+        console.log('zenoh before emit')
+        console.log(localStorage.getItem("zenoh_router_port"))
+
+        socket.emit("set_zenoh_config", localStorage.getItem("zenoh_router_ip"),localStorage.getItem("zenoh_router_port"))
         if (segment.includes('configuration')) {
             document.getElementById("localip").value = localStorage.getItem("ip_local")
             document.getElementById("multicastip").value = localStorage.getItem("ip_multicast")
             document.getElementById("zenohrouterip").value = localStorage.getItem("zenoh_router_ip")
+            document.getElementById("zenohrouterport").value = localStorage.getItem("zenoh_router_port")
 
         }
         socket.emit('reset')

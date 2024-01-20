@@ -30,8 +30,13 @@ function saveConfig() {
             socket.emit("set_someip_config", document.getElementById("localip").value, document.getElementById("multicastip").value)
         } else if (document.querySelector('#utransportConfig').value == "ZENOH") {
             localStorage.setItem("zenoh_router_ip", document.getElementById("zenohrouterip").value)
+            localStorage.setItem("zenoh_router_port", document.getElementById("zenohrouterport").value)
+
             console.log('before zenoh router ip')
-            socket.emit("set_zenoh_config", document.getElementById("zenohrouterip").value)
+             console.log('zenoh before emit')
+             console.log(document.getElementById("zenohrouterport").value)
+
+            socket.emit("set_zenoh_config", document.getElementById("zenohrouterip").value, document.getElementById("zenohrouterport").value)
         }
 
     }
@@ -59,6 +64,13 @@ function validateConfig() {
             return false
         } else {
             document.getElementById("zenohrouterip").style.border = '1px solid #ced4da';
+        }
+        var zenohrouterport = document.getElementById("zenohrouterport").value
+        if (zenohrouterport == "") {
+            document.getElementById("zenohrouterport").style.border = '1px solid #F0B323';
+            return false
+        } else {
+            document.getElementById("zenohrouterport").style.border = '1px solid #ced4da';
         }
     }
     return true

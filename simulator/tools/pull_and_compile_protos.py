@@ -88,9 +88,11 @@ def process_python_protofiles(directory):
                 replace_in_file(file_path, r'from vehicle', 'from target.protofiles.vehicle')
                 replace_in_file(file_path, r'from example', 'from target.protofiles.example')
                 replace_in_file(file_path, r'from common', 'from target.protofiles.common')
-                replace_in_file(file_path, r'import uservices_options_pb2', 'import target.protofiles.uservices_options_pb2')
+                replace_in_file(file_path, r'import uservices_options_pb2',
+                                'import target.protofiles.uservices_options_pb2')
                 replace_in_file(file_path, r'import units_pb2', 'import target.protofiles.units_pb2')
-                replace_in_file(file_path, r'import uprotocol_options_pb2', 'import target.protofiles.uprotocol_options_pb2')
+                replace_in_file(file_path, r'import uprotocol_options_pb2',
+                                'import target.protofiles.uprotocol_options_pb2')
 
 
 def create_init_py(directory):
@@ -101,18 +103,17 @@ def create_init_py(directory):
         # Create an empty __init__.py file
         with open(init_file_path, "w"):
             pass
-        print(f"Added __init__.py file to {directory}")
 
 
-if __name__ == "__main__":
-    # if os.path.exists(PROTO_OUTPUT_DIR):
-    #     print(f"Deleting existing protofiles in {PROTO_OUTPUT_DIR}")
-    #     shutil.rmtree(PROTO_OUTPUT_DIR)
-    # os.makedirs(PROTO_OUTPUT_DIR)
-
+def execute():
     clone_or_pull(REPO_URL, PROTO_REPO_DIR)
-    shutil.copy('uprotocol_options.proto', os.path.join(PROTO_REPO_DIR, 'src', 'main', 'proto'))
+    shutil.copy(os.path.join('simulator', 'tools', 'uprotocol_options.proto'),
+                os.path.join(PROTO_REPO_DIR, 'src', 'main', 'proto'))
 
     # Execute mvn compile-python
     maven_command = ['mvn', "protobuf:compile-python"]
     execute_maven_command(PROTO_REPO_DIR, maven_command)
+
+
+if __name__ == "__main__":
+    execute()

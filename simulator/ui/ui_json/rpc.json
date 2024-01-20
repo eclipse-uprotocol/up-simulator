@@ -26,37 +26,37 @@
           {
             "name": "zone.row1_left",
             "display_name": "row1_left",
-            "topic": "up:/body.cabin_climate/1/zone.row1_left#Zone",
+            "topic": "up:/body.cabin_climate/1/row1_left#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row1_right",
             "display_name": "row1_right",
-            "topic": "up:/body.cabin_climate/1/zone.row1_right#Zone",
+            "topic": "up:/body.cabin_climate/1/row1_right#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row2_left",
             "display_name": "row2_left",
-            "topic": "up:/body.cabin_climate/1/zone.row2_left#Zone",
+            "topic": "up:/body.cabin_climate/1/row2_left#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row2_right",
             "display_name": "row2_right",
-            "topic": "up:/body.cabin_climate/1/zone.row2_right#Zone",
+            "topic": "up:/body.cabin_climate/1/row2_right#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row3_left",
             "display_name": "row3_left",
-            "topic": "up:/body.cabin_climate/1/zone.row3_left#Zone",
+            "topic": "up:/body.cabin_climate/1/row3_left#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row3_right",
             "display_name": "row3_right",
-            "topic": "up:/body.cabin_climate/1/zone.row3_right#Zone",
+            "topic": "up:/body.cabin_climate/1/row3_right#Zone",
             "rpcmethod": "ExecuteClimateCommand"
           }
         ],

@@ -34,9 +34,11 @@ import simulator.utils.constant as CONSTANTS
 def process_proto(directory):
     data = []
     for root, dirs, files in os.walk(directory):
-        service_file_path = next((os.path.join(root, file) for file in files if file.endswith(CONSTANTS.SERVICE_PROTO_SUFFIX)),
-                                 None)
-        topic_file_path = next((os.path.join(root, file) for file in files if file.endswith(CONSTANTS.TOPIC_PROTO_SUFFIX)), None)
+        service_file_path = next(
+            (os.path.join(root, file) for file in files if file.endswith(CONSTANTS.SERVICE_PROTO_SUFFIX)),
+            None)
+        topic_file_path = next(
+            (os.path.join(root, file) for file in files if file.endswith(CONSTANTS.TOPIC_PROTO_SUFFIX)), None)
         if service_file_path and topic_file_path:
             service_content, topic_content = read_proto_files(service_file_path, topic_file_path)
             extract_proto_info(data, service_content, topic_content)
@@ -71,13 +73,16 @@ def append_to_data(data, uprotocol_name_match, service_name_match, rpcs, message
     data.append(json_obj)
 
 
-if __name__ == "__main__":
+def execute():
     result_data = process_proto(CONSTANTS.PROTO_REPO_DIR)
     # Create the directory if it doesn't exist
-    json_dir = os.path.join('..','..',CONSTANTS.UI_JSON_DIR)
-    if not os.path.exists(json_dir):
-        os.makedirs(json_dir)
-    SERVICES_JSON_FILE_PATH = os.path.join(json_dir,CONSTANTS.SERVICES_JSON_FILE_NAME)
+    if not os.path.exists(CONSTANTS.UI_JSON_DIR):
+        os.makedirs(CONSTANTS.UI_JSON_DIR)
+    SERVICES_JSON_FILE_PATH = os.path.join(CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
     # Write JSON data to the services.json
     with open(SERVICES_JSON_FILE_PATH, 'w') as json_file:
         json.dump(result_data, json_file, indent=2)
+
+
+if __name__ == "__main__":
+    execute()

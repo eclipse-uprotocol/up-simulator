@@ -155,12 +155,17 @@ def write_topics_to_csv_file():
 
 def write_nodes_to_json_file(resource_catalog_json):
     # Write JSON data to the services.json
+    if not os.path.exists(RESOURCE_CATALOG_DIR):
+        os.makedirs(RESOURCE_CATALOG_DIR)
     json_file_path = os.path.join(RESOURCE_CATALOG_DIR, RESOURCE_CATALOG_JSON_NAME)
     with open(json_file_path, 'w') as json_file:
         json.dump(resource_catalog_json, json_file, indent=2)
 
 
-if __name__ == "__main__":
+def execute():
     write_nodes_to_json_file(get_protobuf_descriptor_data())
-
     write_topics_to_csv_file()
+
+
+if __name__ == "__main__":
+    execute()
