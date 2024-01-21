@@ -1,7 +1,6 @@
 = Eclipse up Simulator
 :toc:
 
-
 == Overview
 
 The `up-simulator` is a web-based tool that facilitates the testing of publish/subscribe (pub/sub) and Remote Procedure Call (RPC) transactions. It is designed to support the testing of various `up-client` libraries such as `up-client-zenoh`, `up-client-someip`, `up-client-android`, etc. Please note that the development is currently in progress.
@@ -74,9 +73,7 @@ $ python run.py
 Note: Ensure that you have started the Zenoh router using the `zenohd` command before configuring the uP Simulator.
 
 6. To use the publish and subscribe functionality, click on the "Publish-Subscribe" menu. There, you will see a list of covesa services.
-
-![Publish-Subscribe Menu](screenshots/pub-sub.png)
-[caption]#Screenshot: Publish-Subscribe Menu#
+image::screenshots/pub-sub.png
 
 7. Select the service that you want to test subscribe or publish. You can either scroll down the list or use the search box to find your service.
 
