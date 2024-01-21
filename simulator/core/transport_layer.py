@@ -36,7 +36,7 @@ from uprotocol_zenoh.zenoh_utransport import Zenoh
 
 utransport = "ZENOH"
 ZENOH_IP = '10.0.0.33'
-ZENOH_PORT =9090
+ZENOH_PORT = 9090
 
 
 class TransportLayer:

@@ -1,0 +1,117 @@
+= Eclipse up Simulator
+:toc:
+
+
+== Overview
+
+The `up-simulator` is a web-based tool that facilitates the testing of publish/subscribe (pub/sub) and Remote Procedure Call (RPC) transactions. It is designed to support the testing of various `up-client` libraries such as `up-client-zenoh`, `up-client-someip`, `up-client-android`, etc. Please note that the development is currently in progress.
+
+== Features
+
+The `up-simulator` provides mock services that simulate real vehicle services on a PC, replicating the interface and behavior of actual vehicle services. It captures all pub/sub and RPC transactions occurring between mock services and apps under development.
+
+== How to Setup the Simulator
+
+To set up the simulator, follow the steps below:
+
+1. Clone the code from the GitHub repository:
+
+[source]
+----
+$ git clone https://github.com/eclipse-uprotocol/up-simulator.git
+$ cd up-simulator
+----
+
+2. Install the required dependencies using pip:
+[source]
+----
+$ pip install -r requirements.txt
+----
+
+3. Execute the `setup_simulator.py` script using the following command:
+[source]
+----
+$ python setup_simulator.py
+----
+
+This script performs the following tasks:
+
+a. Clones the `covesa` protos, compiles it, and generates Python protofiles in the target folder.
+
+b. Iterates through all protofiles and generates a resource catalog in the target folder.
+
+c. Iterates through the protos again and generates a `services.json` file. This file is responsible for the UI of the simulator. At runtime, it parses the JSON to get a list of services, RPC, and messages and displays them in the UI.
+
+Running this script will generate all the mandatory files needed by the simulator to function.
+
+
+== How to Start and Use the uP Simulator
+
+To start and use the `up-simulator`, follow the steps below:
+
+1. Execute the following command to start the simulator:
+[source]
+----
+$ python run.py
+----
+2. On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it supports only Zenoh. Choose "Zenoh" from the dropdown.
+
+![uP Client Selection](screenshots/configuration.png)
+[caption]#Screenshot: uP Client Selection#
+
+3. Go to the configuration page on the uP Simulator interface and provide your Zenoh router's IP address and port in the respective fields on the configuration page.
+
+![Configuration Page](screenshots/zenoh_config.png)
+[caption]#Screenshot: Configuration Page#
+
+4. Provide your Zenoh router's IP address and port in the respective fields on the configuration page.
+
+- **Zenoh Router IP:** [Your Zenoh Router IP]
+- **Zenoh Router Port:** [Your Zenoh Router Port]
+
+5. Click on the "Save" button to save the Zenoh router configuration.
+
+Note: Ensure that you have started the Zenoh router using the `zenohd` command before configuring the uP Simulator.
+
+6. To use the publish and subscribe functionality, click on the "Publish-Subscribe" menu. There, you will see a list of covesa services.
+
+![Publish-Subscribe Menu](screenshots/pub-sub.png)
+[caption]#Screenshot: Publish-Subscribe Menu#
+
+7. Select the service that you want to test subscribe or publish. You can either scroll down the list or use the search box to find your service.
+
+![Select Service](screenshots/pub-sub-service.png)
+[caption]#Screenshot: Select Service#
+
+8. Once you select the service, the simulator will show the list of all supported messages.
+
+9. Select the message for which you want to test subscribe and publish.
+![Supported Messages](screenshots/pub-sub-resource.png)
+[caption]#Screenshot: Supported Messages#
+
+10. Click on the "Subscribe" button to listen for the message data.
+
+![Subscribe Button](screenshots/subscribe.png)
+[caption]#Screenshot: Subscribe Button#
+
+11. Select the values you want to publish.
+
+12. Click on the "Publish" button to send the selected values.
+
+![Publish Button](screenshots/publish.png)
+[caption]#Screenshot: Publish Button#
+
+
+== Additional Notes
+
+- The script assumes that Python is installed on your system.
+- The `requirements.txt` file contains a list of dependencies that will be installed using pip.
+- The simulator is designed to be independent of the specific client configuration during the setup phase.
+
+Feel free to explore and contribute to the development of the `up-simulator`!
+
+[NOTE]
+This project is currently under development, and further enhancements and features are expected in future.
+
+
+
