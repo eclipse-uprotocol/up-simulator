@@ -1,4 +1,4 @@
-= Eclipse up Simulator
+= Eclipse up-Simulator
 :toc:
 
 == Overview
@@ -99,12 +99,30 @@ image::screenshots/subscribe.png[]
 +
 image::screenshots/publish.png[]
 
+. To test RPC, go to the mock service page and start the service for which you want to trigger an RPC request.
++
+image::screenshots/covesa-services.png[]
+image::screenshots/start-service.png[]
+
+. To send an RPC request, select the "Remote Procedure Calls" menu. You will see a list of Covesa services. Choose the service you want to test.
++
+image::screenshots/hello_world_service.png[]
+
+. The list of available RPCs for the selected service will be displayed. Select the RPC you want to test.
+
+. Provide your input and click on the "Send RPC" button.
++
+image::screenshots/rpc-test.png[]
+
+. You can now see the RPC request and response logs in the logs window.
+
+
 
 == Additional Notes
 
 - The script assumes that Python is installed on your system.
 - The `requirements.txt` file contains a list of dependencies that will be installed using pip.
-- The simulator is designed to be independent of the specific client configuration during the setup phase.
+- The simulator is designed to be independent of the specific up client configuration during the setup phase.
 
 Feel free to explore and contribute to the development of the `up-simulator`!
 
