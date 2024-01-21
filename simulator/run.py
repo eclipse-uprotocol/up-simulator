@@ -51,11 +51,10 @@ transport_layer = TransportLayer()
 socket_utility = SocketUtility(socketio, request, transport_layer)
 
 
-
 @socketio.on(CONSTANTS.API_SET_UTRANSPORT, namespace=CONSTANTS.NAMESPACE)
 def set_transport(selected_utransport):
     print(selected_utransport)
-    transport_layer.utransport = selected_utransport.upper()
+    transport_layer.set_utransport(selected_utransport.upper())
 
 
 @socketio.on(CONSTANTS.API_SET_SOMEIP_CONFIG, namespace=CONSTANTS.NAMESPACE)
@@ -66,8 +65,7 @@ def set_someip_config(localip, multicastip):
 @socketio.on(CONSTANTS.API_SET_ZENOH_CONFIG, namespace=CONSTANTS.NAMESPACE)
 def set_zenoh_config(routerip, port):
     print(routerip, port)
-    transport_layer.ZENOH_IP = routerip
-    transport_layer.ZENOH_PORT = port
+    transport_layer.update_zenoh_instance(routerip, port)
 
 
 @socketio.on(CONSTANTS.API_SUBSCRIBE, namespace=CONSTANTS.NAMESPACE)

@@ -174,7 +174,7 @@ class SocketUtility:
 
                 attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
                 status = self.transport_layer.send(new_topic, payload, attributes)
-                Handlers.publish_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.utransport, topic,
+                Handlers.publish_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_utransport(), topic,
                                                 status.code, status.message, self.last_published_data)
 
                 published_data = MessageToDict(message)
@@ -212,13 +212,13 @@ class SocketUtility:
                 #     self.bus_obj_subscribe.unsubscribe(self.oldtopic, self.common_unsubscribe_status_handler)
                 new_topic = LongUriSerializer().deserialize(topic)
                 status = self.transport_layer.register_listener(new_topic, SubscribeUListener(self.socketio,
-                                                                                              self.transport_layer.utransport,
+                                                                                              self.transport_layer.get_utransport(),
                                                                                               self.lock_pubsub))
                 if status is None:
-                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.utransport,
+                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_utransport(),
                                                       topic, 0, "Ok")
                 else:
-                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.utransport,
+                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_utransport(),
                                                       topic, status.code, status.message)
 
             else:

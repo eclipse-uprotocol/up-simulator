@@ -40,13 +40,42 @@ ZENOH_PORT = 9090
 
 
 class TransportLayer:
-    ZENOH = Zenoh(ZENOH_IP, ZENOH_PORT)
-
     def __init__(self):
+        self.instance = None
+        global utransport
         if utransport == "ZENOH":
-            self.instance = self.ZENOH
+            self.update_zenoh_instance()
         else:
             raise ValueError("Unimplemented")
+
+    def update_instance(self):
+        print('set update instance')
+        global utransport
+
+        if utransport == "ZENOH":
+            self.update_zenoh_instance()
+        else:
+            print("Unimplemented")
+
+    def set_utransport(self, transport):
+        print('set utransport ' + transport)
+        global utransport
+        utransport = transport
+        self.update_instance()
+
+    def get_utransport(self):
+        global utransport
+        return utransport
+
+    def update_zenoh_instance(self, ip=None, port=None):
+        global ZENOH_IP, ZENOH_PORT
+        if ip is not None:
+            ZENOH_IP = ip
+        if port is not None:
+            ZENOH_PORT = port
+        print('update zenoh instance', ZENOH_IP, ZENOH_PORT)
+
+        self.instance = Zenoh(ZENOH_IP, ZENOH_PORT)
 
     def invoke_method(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> Future:
         return self.instance.invoke_method(topic, payload, attributes)
