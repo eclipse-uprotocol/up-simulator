@@ -62,30 +62,27 @@ $ python run.py
 +
 image::screenshots/configuration.png[]
 
-. Go to the configuration page on the uP Simulator interface and provide your Zenoh router's IP address and port in the respective fields on the configuration page.
-+
-image::screenshots/zenoh_config.png[]
-
-. Provide your Zenoh router's IP address and port in the respective fields on the configuration page.
+. Go to the configuration page and provide your Zenoh router's IP address and port in the respective fields on the configuration page.
 
 - **Zenoh Router IP:** [Your Zenoh Router IP]
 - **Zenoh Router Port:** [Your Zenoh Router Port]
++
+image::screenshots/zenoh_config.png[]
 
 . Click on the "Save" button to save the Zenoh router configuration.
 +
 [NOTE]
 Ensure that you have started the Zenoh router using the `zenohd` command before configuring the uP Simulator.
 
-. To use the publish and subscribe functionality, click on the "Publish-Subscribe" menu. There, you will see a list of covesa services.
+. To use the publish and subscribe functionality, click on the "Publish-Subscribe" menu. Within this menu, you will find a list of Covesa services.
 +
 image::screenshots/pub-sub.png[]
-. Select the service that you want to test subscribe or publish. You can either scroll down the list or use the search box to find your service.
+. Choose the service you want to test for either subscribing or publishing. You can scroll through the list or use the search box to find your service. Once you've selected the service, the simulator will display a list of all supported messages.
+
 +
 image::screenshots/pub-sub-service.png[]
 
-. Once you select the service, the simulator will show the list of all supported messages.
-
-. Select the message for which you want to test subscribe and publish.
+. Choose the specific message for which you want to test both subscribing or publishing
 +
 image::screenshots/pub-sub-resource.png[]
 
@@ -99,16 +96,16 @@ image::screenshots/subscribe.png[]
 +
 image::screenshots/publish.png[]
 
-. To test RPC, go to the mock service page and start the service for which you want to trigger an RPC request.
+. To test RPC, go to the mock service page, and start the mock service you wish to use for triggering the RPC request.
 +
 image::screenshots/covesa-services.png[]
 image::screenshots/start-service.png[]
 
-. To send an RPC request, select the "Remote Procedure Calls" menu. You will see a list of Covesa services. Choose the service you want to test.
+. To initiate an RPC request, navigate to the "Remote Procedure Calls" menu. Within this menu, you'll find a list of Covesa services. Select the particular service you wish to test. Once the service is chosen, a list of available RPCs for that specific service will be displayed. From this list, choose the specific RPC you intend to test.
+
 +
 image::screenshots/hello_world_service.png[]
 
-. The list of available RPCs for the selected service will be displayed. Select the RPC you want to test.
 
 . Provide your input and click on the "Send RPC" button.
 +
