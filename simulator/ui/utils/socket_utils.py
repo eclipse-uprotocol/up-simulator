@@ -105,24 +105,9 @@ def stop_service(name):
             break
 
 
-class SocketUtility:
-
-    def __init__(self, socket_io, req, transport_layer):
-        self.socketio = socket_io
-        self.oldtopic = ''
-        self.vin = None
-        self.last_published_data = None
-        self.request = req
-        self.sender = None
-        self.transport_layer = transport_layer
-        self.retry_rpc = 0
-        self.retry_pub = 0
-        self.retry_sub = 0
-        self.lock_pubsub = threading.Lock()
-        self.lock_rpc = threading.Lock()
-
-    @staticmethod
-    def entity_name_file(entity, filename):
+def entity_name_file(lock, entity, filename):
+    try:
+        lock.acquire()
         if os.path.isfile(filename):
             with open(filename, 'r+') as f:
                 lines = f.read()
@@ -143,6 +128,27 @@ class SocketUtility:
 
             except IOError as exc:
                 pass
+    except:
+        pass
+    finally:
+        lock.release()
+
+
+class SocketUtility:
+
+    def __init__(self, socket_io, req, transport_layer):
+        self.socketio = socket_io
+        self.oldtopic = ''
+        self.vin = None
+        self.last_published_data = None
+        self.request = req
+        self.sender = None
+        self.transport_layer = transport_layer
+
+        self.lock_pubsub = threading.Lock()
+        self.lock_rpc = threading.Lock()
+        self.lock_pubsub = threading.Lock()
+        self.lock_service = threading.Lock()
 
     def execute_send_rpc(self, json_sendrpc):
         try:
@@ -234,7 +240,7 @@ class SocketUtility:
         try:
             start_service(json_service['entity'], handler)
             time.sleep(1)
-            self.entity_name_file(json_service['entity'], CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS)
+            entity_name_file(self.lock_service, json_service['entity'], CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS)
             self.socketio.emit(CONSTANTS.CALLBACK_START_SERVICE, json_service['entity'], namespace=CONSTANTS.NAMESPACE)
         except Exception as ex:
             logger.error(f'Exception:', exc_info=ex)

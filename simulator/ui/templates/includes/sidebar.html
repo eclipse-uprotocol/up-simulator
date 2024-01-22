@@ -122,16 +122,16 @@
                         </a>
                     </li>
 
+
+                    <li class="nav-item pcoded-menu-caption">
+                        <label class="sidebarHeading"> <u>Features</u></label>
+                    </li>
                     <li class="nav-item {% if 'mockservice' in segment %} active {% endif %}">
                         <a class="nav-link " href="{{ url_for('simulator_blueprint.route_mockservices')}}">
                             Mock Service
                         </a>
                     </li>
 
-
-                    <li class="nav-item pcoded-menu-caption">
-                        <label class="sidebarHeading"> <u>Features</u></label>
-                    </li>
                     <li class="nav-item {% if 'pub-sub' in segment %} active {% endif %}">
                         <a class="nav-link" href="{{ url_for('simulator_blueprint.route_pubsub')}}">
                             Publish-Subscribe</a>
@@ -140,24 +140,20 @@
                     <li class="nav-item {% if 'send-rpc' in segment %} active {% endif %}">
                         <a class="nav-link" href="/send-rpc.html">Remote Procedure Calls</a>
                     </li>
-                    <li class="nav-item pcoded-hasmenu">
-                        <a class="nav-link " href="javascript:">
-
-                            Logger
-                        </a>
-                        <ul class="pcoded-submenu">
-
-                            <li class="nav-item {% if 'pub-sub-logger' in segment %} active {% endif %}">
-                                <a class="nav-link" href="/pub-sub-logger.html">Pub-Sub Logger</a>
-                            </li>
 
 
-                            <li class="nav-item {% if 'rpc-logger' in segment %} active {% endif %}">
-                                <a class="nav-link" href="/rpc-logger.html">RPC Logger</a>
-                            </li>
+                    <li class="nav-item pcoded-menu-caption">
+                        <label class="sidebarHeading"> <u>Logger</u></label>
+                    </li>
 
+                    <li class="nav-item {% if 'pubsub-logger' in segment %} active {% endif %}">
+                        <a class="nav-link" href="{{ url_for('simulator_blueprint.route_pubsub_logger')}}">
+                            Pub-Sub Logger</a>
+                    </li>
 
-                        </ul>
+                    <li class="nav-item {% if 'rpc-logger' in segment %} active {% endif %}">
+                        <a class="nav-link" href="{{ url_for('simulator_blueprint.route_rpc_logger')}}">
+                            RPC Logger</a>
                     </li>
 
 
@@ -170,8 +166,8 @@
                 </div>
                 <div>
                     <u>
-                    <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">
-                    Content is subject to the Apache License, Version 2.0</a></u>
+                        <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">
+                            Content is subject to the Apache License, Version 2.0</a></u>
                 </div>
 
 

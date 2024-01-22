@@ -90,7 +90,7 @@ def route_pubsub():
 
 
 @blueprint.route('/rpc-logger.html')
-def start_rpc_dashboard():
+def route_rpc_logger():
     try:
         f = open(os.path.join(os.getcwd(), CONSTANTS.FILENAME_RPC_LOGGER))
         data = f.read()
@@ -101,8 +101,8 @@ def start_rpc_dashboard():
     return render_template('home/rpc-logger.html', rpc_calls=data, segment=get_segment(request))
 
 
-@blueprint.route('/pub-sub-logger.html')
-def pub_dashboard():
+@blueprint.route('/pubsub-logger.html')
+def route_pubsub_logger():
     try:
         f = open(os.path.join(os.getcwd(), CONSTANTS.FILENAME_PUBSUB_LOGGER))
         data = f.read()
