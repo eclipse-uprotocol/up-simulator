@@ -55,9 +55,9 @@ def rpc_response_handler(socketio, message):
 def rpc_logger_handler(socketio, lock_rpc, rpc_request, method_name, json_data, rpcdata):
     global total_rpc, success_rpc
     try:
-        rpc_response = MessageToDict(json_data, preserving_proto_field_name=True, including_default_value_fields=False)
+        rpc_response = MessageToDict(json_data, preserving_proto_field_name=True, including_default_value_fields=True)
         rpc_method_name = method_name
-        rpc_request = MessageToDict(rpc_request, preserving_proto_field_name=True, including_default_value_fields=False)
+        rpc_request = MessageToDict(rpc_request, preserving_proto_field_name=True, including_default_value_fields=True)
 
         publishedData = ''
         if len(rpcdata) > 0:
@@ -69,7 +69,9 @@ def rpc_logger_handler(socketio, lock_rpc, rpc_request, method_name, json_data, 
                 "OK") or rpc_response.__contains__(CONSTANTS.KEY_CODE) and rpc_response[
                 CONSTANTS.KEY_CODE] == 0 or rpc_response.__contains__(CONSTANTS.KEY_STATUS) and type(
             rpc_response[CONSTANTS.KEY_STATUS]) is dict and rpc_response[CONSTANTS.KEY_STATUS][
-                CONSTANTS.KEY_MESSAGE].__contains__("OK")) or method_name == "SayHello":
+                CONSTANTS.KEY_MESSAGE].__contains__("OK") or rpc_response.__contains__(CONSTANTS.KEY_CODE) and type(
+            rpc_response[CONSTANTS.KEY_CODE]) is dict and rpc_response[CONSTANTS.KEY_CODE][
+            CONSTANTS.KEY_MESSAGE].__contains__("OK")) or method_name == "SayHello":
             success_rpc = success_rpc + 1
             isfailed = False
         failed_rpc = total_rpc - success_rpc

@@ -47,9 +47,17 @@ from simulator.core.transport_layer import TransportLayer
 from simulator.utils import common_util
 from simulator.core import protobuf_autoloader
 
+covesa_services = []
+
+
+def get_instance(entity):
+    for entity_dict in covesa_services:
+        if entity_dict.get('name') == entity:
+            return entity_dict.get('entity')
+
 
 class CovesaService(object):
-    instance = None
+    # instance = None
 
     def __init__(self, service_name=None, portal_callback=None, use_signal_handler=True):
 
@@ -72,15 +80,6 @@ class CovesaService(object):
 
         self.load_state()
 
-    def set_instance(self):
-        global instance
-        instance = self
-
-    @staticmethod
-    def get_instance():
-        global instance
-        return instance
-
     def RequestListener(func):
         class wrapper:
             @staticmethod
@@ -94,21 +93,20 @@ class CovesaService(object):
                 any_message = any_pb2.Any()
                 any_message.ParseFromString(payload.value)
                 req = RpcMapper.unpack_payload(any_message, req)
-                response = func(CovesaService.get_instance(), req, res)
+                response = func(get_instance(entity), req, res)
                 any_obj = any_pb2.Any()
                 any_obj.Pack(response)
                 payload_res = UPayload(value=any_obj.SerializeToString(), format=payload.format)
                 attributes = UAttributesBuilder.response(attributes.priority, attributes.sink, attributes.id).build()
-                if CovesaService.get_instance().portal_callback is not None:
-                    CovesaService.get_instance().portal_callback(req, method, response,
-                                                                 CovesaService.get_instance().publish_data)
+                if get_instance(entity).portal_callback is not None:
+                    get_instance(entity).portal_callback(req, method, response,
+                                                         get_instance(entity).publish_data)
                 return TransportLayer().send(topic, payload_res, attributes)
 
         return wrapper
 
     def start_rpc_service(self):
-
-        self.set_instance()
+        covesa_services.append({'name': self.service, 'entity': self})
         for attr in dir(self):
             if callable(getattr(self, attr)) and isinstance(getattr(self, attr), type):
                 for attr1 in dir(getattr(self, attr)):
