@@ -157,7 +157,8 @@ class CovesaService(object):
         return self
 
     def disconnect(self):
-        time.sleep(5)
+        # todo write logic to unregister the rpc listener
+        time.sleep(2)
 
     def print(self, protobuf_obj):
 

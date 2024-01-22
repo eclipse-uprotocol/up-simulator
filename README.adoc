@@ -7,7 +7,7 @@ The `up-simulator` is a user-friendly web tool designed to make developing uProt
 
 == Architecture Overview
 
-. up-Simulator:
+.  **up-Simulator **:
 +
 .Description:
 
@@ -18,7 +18,7 @@ The up-Simulator operates as a web-based tool on PCs, establishing connections w
 
 Simulates COVESA services (COVESA mock Service): These services replicate real vehicle services on the PC, emulating the interface and behavior of actual services.
 
-. Mock Services:
+.  **Mock Services **:
 +
 .Description:
 COVESA mock services mirror real COVESA vehicle services on the PC, replicating both interface and behavior.
@@ -28,7 +28,7 @@ COVESA mock services mirror real COVESA vehicle services on the PC, replicating 
 Eliminates the need for real services: Developers can perform testing without requiring real hardware, enhancing the development environment.
 Ensures consistent testing: Simulated services mirror real-world scenarios, providing reliable testing conditions.
 
-. Simulation Portal:
+.  **Simulation Portal **:
 +
 .Description:
 The simulation portal offers a web-based user interface for initiating pub/sub and RPC transactions using mock services.
@@ -38,7 +38,7 @@ The simulation portal offers a web-based user interface for initiating pub/sub a
 Allows developers to trigger and monitor transactions: Developers can efficiently manage transactions through an accessible and user-friendly interface.
 Streamlines testing: The portal serves as a centralized control point, simplifying the testing of applications.
 
-. uLogging (Dashboard):
+.  **uLogging (Dashboard) **:
 +
 .Description:
 The uLogging component captures all pub/sub and RPC transactions between mock services and apps/services under development.

@@ -31,77 +31,75 @@ import simulator.utils.constant as CONSTANTS
 
 
 def save_rpc_data(socketio, lock_rpc, json_res):
-    if os.path.isfile(CONSTANTS.FILENAME_RPC_LOGGER):
-        try:
-            with open(CONSTANTS.FILENAME_RPC_LOGGER, 'r') as f:
-                lines = f.read()
-        except IOError as exc:
-            print(exc)
-        if len(lines) > 0:
-            rpc_Calls = json.loads(lines)
-        else:
-            rpc_Calls = []
-        rpc_Calls.append(json_res)
-        lock_rpc.acquire()
-        try:
-            with open(CONSTANTS.FILENAME_RPC_LOGGER, 'w') as f:
-                f.write(json.dumps(rpc_Calls, indent=2))
-        except IOError as exc:
-            print(exc)
-        lock_rpc.release()
-    else:
-        rpc_Calls = [json_res]
-        lock_rpc.acquire()
-        try:
-            with open(CONSTANTS.FILENAME_RPC_LOGGER, 'w') as fp:
-                fp.write(json.dumps(rpc_Calls, indent=2))
-        except IOError as exc:
-            print(exc)
+    rpc_file = CONSTANTS.FILENAME_RPC_LOGGER
+    lock_rpc.acquire()
+    try:
+        with open(rpc_file, 'a') as f:
+            if os.path.getsize(rpc_file) > 0:
+                f.write(',')
+                f.write('\n')
+
+            f.write(json.dumps(json_res, indent=2))  # Add a newline after each JSON object
+    except IOError as exc:
+        print(exc)
+    finally:
         lock_rpc.release()
 
     try:
         with open(CONSTANTS.FILENAME_RPC_LOGGER, 'r') as fp:
             data = fp.read()
             if data:
+                # Append square brackets to make it a valid JSON array
+                data = f'[{data}]'
                 socketio.emit(CONSTANTS.CALLBACK_RPCLOGGER, data, namespace=CONSTANTS.NAMESPACE)
     except IOError as exc:
         print(exc)
 
 
 def save_pub_sub_data(socketio, lock_pubsub, json_res):
-    if os.path.isfile(CONSTANTS.FILENAME_PUBSUB_LOGGER):
-        try:
-            with open(CONSTANTS.FILENAME_PUBSUB_LOGGER, 'r') as f:
-                lines = f.read()
-        except IOError as exc:
-            print(exc)
+    pubsub_file = CONSTANTS.FILENAME_PUBSUB_LOGGER
+    lock_pubsub.acquire()
+    try:
+        with open(pubsub_file, 'a') as f:
+            if os.path.getsize(pubsub_file) > 0:
+                f.write(',')
+                f.write('\n')
 
-        if len(lines) > 0:
-            pubsubData = json.loads(lines)
-        else:
-            pubsubData = []
-        pubsubData.append(json_res)
-        lock_pubsub.acquire()
-        try:
-            with open(CONSTANTS.FILENAME_PUBSUB_LOGGER, 'w') as f:
-                f.write(json.dumps(pubsubData, indent=2))
-        except IOError as exc:
-            print(exc)
-        lock_pubsub.release()
-    else:
-        pubsubData = [json_res]
-        lock_pubsub.acquire()
-        try:
-            with open(CONSTANTS.FILENAME_PUBSUB_LOGGER, 'w') as fp:
-                fp.write(json.dumps(pubsubData, indent=2))
-        except IOError as exc:
-            print(exc)
+            f.write(json.dumps(json_res, indent=2))  # Add a newline after each JSON object
+    except IOError as exc:
+        print(exc)
+    finally:
         lock_pubsub.release()
 
     try:
-        with open(CONSTANTS.FILENAME_PUBSUB_LOGGER, 'r') as fp:
+        with open(pubsub_file, 'r') as fp:
             data = fp.read()
             if data:
+                # Append square brackets to make it a valid JSON array
+                data = f'[{data}]'
                 socketio.emit(CONSTANTS.CALLBACK_PUBSUB_LOGGER, data, namespace=CONSTANTS.NAMESPACE)
     except IOError as exc:
         print(exc)
+
+
+def update_running_service_data(lock_service, service_file, entity_to_remove):
+    lock_service.acquire()
+    try:
+        if os.path.isfile(service_file):
+            with open(service_file, 'r+') as f:
+                try:
+                    running_services = json.load(f)
+                except json.JSONDecodeError:
+                    # Handle the case where the file is empty or not valid JSON
+                    running_services = []
+
+                # Remove the entity if it exists
+                running_services = [service for service in running_services if service != entity_to_remove]
+
+                f.seek(0)
+                f.truncate()
+                f.write(json.dumps(running_services))
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        lock_service.release()

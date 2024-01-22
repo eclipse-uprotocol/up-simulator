@@ -52,18 +52,32 @@ from simulator.utils.common_util import verify_all_checks
 
 logger = logging.getLogger('Simulator')
 
+mock_entity = []
+
 
 def start_service(entity, callback):
+    global service
     if entity == "body.cabin_climate":
-        from simulator.mockservices.cabin_climate import CabinClimateService
-        CabinClimateService(callback).start()
+        pass
 
     elif entity == "chassis.braking":
         from simulator.mockservices.braking import BrakingService
-        BrakingService(callback).start()
+        service = BrakingService(callback)
     elif entity == "example.hello_world":
         from simulator.mockservices.hello_world import HelloWorldService
-        HelloWorldService(callback).start()
+        service = HelloWorldService(callback)
+
+    if service is not None:
+        service.start()
+        mock_entity.append({'name': entity, 'entity': service})
+
+
+def stop_service(name):
+    for index, entity_dict in enumerate(mock_entity):
+        if entity_dict.get('name') == name:
+            entity_dict.get('entity').disconnect()
+            mock_entity.pop(index)
+            break
 
 
 class SocketUtility:
@@ -174,7 +188,8 @@ class SocketUtility:
 
                 attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
                 status = self.transport_layer.send(new_topic, payload, attributes)
-                Handlers.publish_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_utransport(), topic,
+                Handlers.publish_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_utransport(),
+                                                topic,
                                                 status.code, status.message, self.last_published_data)
 
                 published_data = MessageToDict(message)
@@ -215,10 +230,12 @@ class SocketUtility:
                                                                                               self.transport_layer.get_utransport(),
                                                                                               self.lock_pubsub))
                 if status is None:
-                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_utransport(),
+                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub,
+                                                      self.transport_layer.get_utransport(),
                                                       topic, 0, "Ok")
                 else:
-                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_utransport(),
+                    Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub,
+                                                      self.transport_layer.get_utransport(),
                                                       topic, status.code, status.message)
 
             else:

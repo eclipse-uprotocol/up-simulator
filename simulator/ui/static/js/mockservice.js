@@ -21,22 +21,22 @@ function getMockServices() {
         .then((data) => {
             if (data.result) {
                 console.log(data);
-                document.getElementById('apksdialog').setAttribute("style", "display:block")
-                design_apk_list_layoutMock(data)
+                document.getElementById('servicesdialog').setAttribute("style", "display:block")
+                design_mock_services_list_layout(data)
             } else {
-                document.getElementById('apksdialog').setAttribute("style", "display:none")
+                document.getElementById('servicesdialog').setAttribute("style", "display:none")
             }
 
         })
 }
 
-function design_apk_list_layoutMock(data) {
+function design_mock_services_list_layout(data) {
     removeAllChildNodes(document.getElementById('tableMockService'))
     var service_status = document.getElementById('box-content');
     let running_services = data.running
     document.getElementById("startAll").setAttribute("tagpkg", JSON.stringify(data.pkgs_mock))
     for (let i in data.pkgs_mock) {
-        document.getElementById('tableMockService').appendChild(createUIApksMock(data.pkgs_mock, i))
+        document.getElementById('tableMockService').appendChild(create_ui_for_service(data.pkgs_mock, i))
         for (let k in running_services) {
 
             if (running_services[k] == data.pkgs_mock[i].entity) {
@@ -53,7 +53,7 @@ function design_apk_list_layoutMock(data) {
     }
 }
 const box_content_list = []
-function createUIApksMock(pkgs, i) {
+function create_ui_for_service(pkgs, i) {
     let input = document.createElement('input')
     let litag = document.createElement('li')
     let divtag = document.createElement('div')

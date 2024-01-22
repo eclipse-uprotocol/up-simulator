@@ -26,6 +26,7 @@
 
 import json
 import os
+import threading
 from urllib.parse import unquote
 
 from flask import redirect, url_for, render_template, request
@@ -33,6 +34,9 @@ from flask import redirect, url_for, render_template, request
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
 import simulator.utils.constant as CONSTANTS
+from simulator.ui.utils.file_utils import update_running_service_data
+
+lock_service = threading.Lock()
 
 
 @blueprint.route('/')
@@ -91,6 +95,7 @@ def start_rpc_dashboard():
         f = open(os.path.join(os.getcwd(), CONSTANTS.FILENAME_RPC_LOGGER))
         data = f.read()
         f.close()
+        data = f'[{data}]'
     except:
         data = ''
     return render_template('home/rpc-logger.html', rpc_calls=data, segment=get_segment(request))
@@ -102,7 +107,9 @@ def pub_dashboard():
         f = open(os.path.join(os.getcwd(), CONSTANTS.FILENAME_PUBSUB_LOGGER))
         data = f.read()
         f.close()
+        data = f'[{data}]'
     except:
+
         data = ''
     return render_template('home/pub-sub-logger.html', data=data, segment=get_segment(request))
 
@@ -181,3 +188,20 @@ def get_mock_services():
             running_services = json.loads(lines)
 
     return {'result': True, 'pkgs_mock': mockservice_pkgs, 'running': running_services}
+
+
+@blueprint.route('/updateservicestatus')
+def update_service_status():
+    entity_to_remove = request.args['entity']
+    file = request.args['file']
+    print(entity_to_remove)
+    try:
+        from simulator.ui.utils.socket_utils import stop_service
+        stop_service(entity_to_remove)
+    except:
+        pass
+
+    global lock_service
+    update_running_service_data(lock_service, file, entity_to_remove)
+
+    return {'result': True, 'entity': entity_to_remove}
