@@ -667,7 +667,7 @@ function setmaskfield(json_data, methodname, serviceclass, typeButton, topic) {
             input.innerText = i
             li.appendChild(input)
             const label = document.createElement('label');
-            label.setAttribute("class", "containercheck")
+            label.setAttribute("class", "containercheck containerCheck-singleLine")
             label.style.fontSize = '16px';
             const span = document.createElement('span');
             span.setAttribute("class", "checkmark")

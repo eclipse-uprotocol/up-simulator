@@ -53,12 +53,11 @@ class BrakingService(CovesaService):
         """
         BrakingService constructor
         """
-        # from sdv_simulation import adb
-        # adb.uninstall("ChassisService")
+
         super().__init__("chassis.braking", portal_callback)
         self.init_state()
-        self.subscribe(["ultifi:/chassis.braking/1/brake_pads.front#BrakePads",
-                        "ultifi:/chassis.braking/1/brake_pads.rear#BrakePads", ], BrakingPreconditions(self))
+        self.subscribe(["up:/chassis.braking/1/brake_pads.front#BrakePads",
+                        "up:/chassis.braking/1/brake_pads.rear#BrakePads", ], BrakingPreconditions(self))
 
     def init_state(self):
         """
@@ -81,7 +80,7 @@ class BrakingService(CovesaService):
 
         Args:
             uri (str): String to identify specific car component eg.
-            ultifi:/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus
+            up:/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus
             message (str): Message object
         """
         # parse topic name from uri

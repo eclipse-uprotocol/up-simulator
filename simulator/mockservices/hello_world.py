@@ -101,8 +101,8 @@ class HelloWorldService(CovesaService):
         """
         # Create a TimeOfDay instance
         time_of_day = TimeOfDay()
-        one_sec_topic = "ultifi:/example.hello_world/1/one_second#Timer"
-        one_min_topic = "ultifi:/example.hello_world/1/one_minute#Timer"
+        one_sec_topic = "up:/example.hello_world/1/one_second#Timer"
+        one_min_topic = "up:/example.hello_world/1/one_minute#Timer"
 
         while True:
             # Get current time

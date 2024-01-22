@@ -57,15 +57,40 @@ mock_entity = []
 
 def start_service(entity, callback):
     global service
-    if entity == "body.cabin_climate":
-        pass
 
-    elif entity == "chassis.braking":
+    if entity == "chassis.braking":
         from simulator.mockservices.braking import BrakingService
         service = BrakingService(callback)
+    elif entity == "body.cabin_climate":
+        from simulator.mockservices.cabin_climate import CabinClimateService
+        service = CabinClimateService(callback)
+    elif entity == "chassis":
+        from simulator.mockservices.chassis import ChassisService
+        service = ChassisService(callback)
+    elif entity == "propulsion.engine":
+        from simulator.mockservices.engine import EngineService
+        service = EngineService(callback)
+    elif entity == "vehicle.exterior":
+        from simulator.mockservices.exterior import VehicleExteriorService
+        service = VehicleExteriorService(callback)
     elif entity == "example.hello_world":
         from simulator.mockservices.hello_world import HelloWorldService
         service = HelloWorldService(callback)
+    elif entity == "body.horn":
+        from simulator.mockservices.horn import HornService
+        service = HornService(callback)
+    elif entity == "body.mirrors":
+        from simulator.mockservices.mirrors import BodyMirrorsService
+        service = BodyMirrorsService(callback)
+    elif entity == "chassis.suspension":
+        from simulator.mockservices.suspension import SuspensionService
+        service = SuspensionService(callback)
+    elif entity == "propulsion.transmission":
+        from simulator.mockservices.transmission import TransmissionService
+        service = TransmissionService(callback)
+    elif entity == "vehicle":
+        from simulator.mockservices.vehicle import VehicleService
+        service = VehicleService(callback)
 
     if service is not None:
         service.start()
@@ -189,8 +214,7 @@ class SocketUtility:
                 attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
                 status = self.transport_layer.send(new_topic, payload, attributes)
                 Handlers.publish_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_utransport(),
-                                                topic,
-                                                status.code, status.message, self.last_published_data)
+                                                topic, status.code, status.message, self.last_published_data)
 
                 published_data = MessageToDict(message)
                 self.socketio.emit(CONSTANTS.CALLBACK_PUBLISH_STATUS_SUCCESS,
@@ -231,12 +255,11 @@ class SocketUtility:
                                                                                               self.lock_pubsub))
                 if status is None:
                     Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub,
-                                                      self.transport_layer.get_utransport(),
-                                                      topic, 0, "Ok")
+                                                      self.transport_layer.get_utransport(), topic, 0, "Ok")
                 else:
                     Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub,
-                                                      self.transport_layer.get_utransport(),
-                                                      topic, status.code, status.message)
+                                                      self.transport_layer.get_utransport(), topic, status.code,
+                                                      status.message)
 
             else:
                 self.socketio.emit(CONSTANTS.CALLBACK_GENERIC_ERROR, status, namespace=CONSTANTS.NAMESPACE)
