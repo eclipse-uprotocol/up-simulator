@@ -36,9 +36,11 @@
   letter-spacing: -0.432733px;
   color: #F8F8F8;
   margin-left: 20px;
+  display: inline;
 }
 
 .rpcdashboard-firstRow>div:nth-child(2)>div>div:nth-child(3) {
+  display: inline;
   font-weight: 400;
   font-size: 24px;
   line-height: 150%;
@@ -62,9 +64,11 @@
   letter-spacing: -0.432733px;
   color: #F8F8F8;
   margin-left: 20px;
+  display: inline;
 }
 
 .rpcdashboard-firstRow>div:nth-child(3)>div>div:nth-child(3) {
+  display: inline;
   font-weight: 400;
   font-size: 24px;
   line-height: 150%;

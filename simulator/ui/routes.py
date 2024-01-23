@@ -29,7 +29,7 @@ import os
 import threading
 from urllib.parse import unquote
 
-from flask import redirect, url_for, render_template, request
+from flask import redirect, url_for, render_template, request, send_file
 
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
@@ -99,6 +99,24 @@ def route_rpc_logger():
     except:
         data = ''
     return render_template('home/rpc-logger.html', rpc_calls=data, segment=get_segment(request))
+
+
+@blueprint.route('/downloadPubSubReport')
+def download_Pub_file():
+    filename = os.getcwd() + "/pubsub_logger.txt"
+    if os.path.isfile(filename):
+        return send_file(filename, as_attachment=True)
+    else:
+        return ''
+
+
+@blueprint.route('/downloadRPCReport')
+def download_RPC_file():
+    filename = os.getcwd() + "/rpc_logger.txt"
+    if os.path.isfile(filename):
+        return send_file(filename, as_attachment=True)
+    else:
+        return ''
 
 
 @blueprint.route('/pubsub-logger.html')
