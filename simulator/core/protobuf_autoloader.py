@@ -464,7 +464,7 @@ def find_request_by_type(service, message_type):
         service = "app.bev"
     # hacky way to look for messages which are not apart of an rpc method (ie subpub)
     for (message, module) in message_to_module.items():
-        if service in message and message_type in message:
+        if service in message and message_type == message.split('.')[-1]:
             return find_message(message)
 
 

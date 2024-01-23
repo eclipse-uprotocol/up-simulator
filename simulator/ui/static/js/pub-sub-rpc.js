@@ -1088,7 +1088,10 @@ function design_layout(data, resource, servicename) {
             iDiv.setAttribute("style", "margin-bottom: 15px");
         var iInput = document.createElement('input');
         iInput.setAttribute("isconfig", "yes")
-        iInput.setAttribute("topic", data['Configuration'][i].topic)
+        if (data['Configuration'][i].hasOwnProperty('topic'))
+            iInput.setAttribute("topic", data['Configuration'][i].topic)
+        else
+            iInput.setAttribute("topic", '')
         if (data['Configuration'][i].hasOwnProperty('rpcmethod'))
             iInput.setAttribute("rpc", data['Configuration'][i].rpcmethod)
         iInput.setAttribute("serviceclass", servicename)

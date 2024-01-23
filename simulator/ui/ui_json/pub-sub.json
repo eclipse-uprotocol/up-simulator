@@ -376,7 +376,7 @@
           {
             "name": "cabin_hvac",
             "display_name": "cabin_hvac",
-            "topic": "up:/body.cabin_climate/1/cabin_hvac#Zone"
+            "topic": "up:/body.cabin_climate/1/cabin_hvac#Zones"
           }
         ],
         "uidetails": [
@@ -631,7 +631,7 @@
           {
             "name": "side_mirror",
             "display_name": "side_mirror",
-            "topic": "up:/body.horn/1/side_mirror#HeatedSideMirror"
+            "topic": "up:/body.mirrors/1/side_mirror#HeatedSideMirror"
           }
         ],
         "uidetails": [
@@ -646,7 +646,7 @@
           {
             "name": "side_mirror",
             "display_name": "side_mirror",
-            "topic": "up:/body.horn/1/side_mirror#SideMirrorMovementSettings"
+            "topic": "up:/body.mirrors/1/settings.side_mirror#SideMirrorMovementSettings"
           }
         ],
         "uidetails": [
@@ -665,7 +665,7 @@
           {
             "name": "side_mirror",
             "display_name": "side_mirror",
-            "topic": "up:/body.horn/1/side_mirror#HeatedSideMirrorSettings"
+            "topic": "up:/body.mirrors/1/settings.side_mirror#HeatedSideMirrorSettings"
           }
         ],
         "uidetails": [
@@ -681,7 +681,7 @@
             "name": "left",
             "name_key": "id",
             "display_name": "left",
-            "topic": "up:/body.horn/1/left#SideExteriorSideMirror"
+            "topic": "up:/body.mirrors/1/left#ExteriorSideMirror"
           },
           {
             "name": "right",
@@ -1631,12 +1631,12 @@
           {
             "name": "trip_meter.trip_1",
             "display_name": "trip_1",
-            "topic": "up:/vehicle/1/trip_meter.trip_1#TripMeter"
+            "topic": "up:/vehicle/1/trip_1#TripMeter"
           },
           {
             "name": "trip_meter.trip_2",
             "display_name": "trip_2",
-            "topic": "up:/vehicle/1/trip_meter.trip_2#TripMeter"
+            "topic": "up:/vehicle/1/trip_2#TripMeter"
           }
         ],
         "uidetails": [
