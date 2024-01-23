@@ -111,7 +111,7 @@ def execute():
                 os.path.join(PROTO_REPO_DIR, 'src', 'main', 'proto'))
 
     # Execute mvn compile-python
-    maven_command = ['mvn', "protobuf:compile-python"]
+    maven_command = "mvn protobuf:compile-python"
     execute_maven_command(PROTO_REPO_DIR, maven_command)
 
 
