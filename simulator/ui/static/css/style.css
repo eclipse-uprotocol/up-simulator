@@ -72,7 +72,7 @@ File: style.css
 
 body {
   font-family: "Georgia", Serif;
-  !important;
+
   font-size: 16px;
   color: #3F3F4E;
   font-weight: 400;
@@ -8162,7 +8162,8 @@ body.layout-8 .card:hover {
 
 
 .customtable tr {
-  width: 100% border-bottom: 1px solid #eaeaea;
+  width: 100%;
+  border-bottom: 1px solid #eaeaea;
   padding-top: 20px;
   padding-left: 10px;
 }
@@ -9377,8 +9378,8 @@ a.btn-theme.active {
 /* Alternate buttons */
 .btn-primary {
   color: #fff;
-  text-align: "center"
-    background-color: #04a9f5;
+  text-align: "center";
+  background-color: #04a9f5;
   border-color: #04a9f5;
 
 }
@@ -13202,7 +13203,8 @@ div.code-toolbar>.toolbar span:hover {
 }
 
 #display_csv_data_pubsubdata tr {
-  max-height: 7px border: 0.865466px solid #3D3935;
+  max-height: 7px;
+  border: 0.865466px solid #3D3935;
   box-shadow: 0px 0px 3px 1px #5EB1F3;
   border-radius: 22.5021px;
 }
@@ -13220,7 +13222,8 @@ div.code-toolbar>.toolbar span:hover {
 }
 
 #display_csv_data_rpc tr {
-  max-height: 7px border: 0.865466px solid #3D3935;
+  max-height: 7px;
+  border: 0.865466px solid #3D3935;
   box-shadow: 0px 0px 3px 1px #5EB1F3;
   border-radius: 22.5021px;
 }
@@ -13239,7 +13242,8 @@ div.code-toolbar>.toolbar span:hover {
 }
 
 #display_csv_data_rpcpubsub tr {
-  max-height: 7px border: 0.865466px solid #3D3935;
+  max-height: 7px;
+  border: 0.865466px solid #3D3935;
   box-shadow: 0px 0px 3px 1px #5EB1F3;
   border-radius: 22.5021px;
 }
@@ -13257,11 +13261,7 @@ div.code-toolbar>.toolbar span:hover {
 
 }
 
-#display_csv_data_cpu tr {
-  max-height: 7px border: 0.865466px solid #3D3935;
-  box-shadow: 0px 0px 3px 1px #5EB1F3;
-  border-radius: 22.5021px;
-}
+
 
 #display_csv_data {
   border-collapse: separate;
@@ -13295,7 +13295,8 @@ div.code-toolbar>.toolbar span:hover {
 }
 
 #display_csv_data_pubsub tr {
-  max-height: 7px border: 0.865466px solid #3D3935;
+  max-height: 7px;
+  border: 0.865466px solid #3D3935;
   box-shadow: 0px 0px 3px 1px #5EB1F3;
   border-radius: 22.5021px;
 }

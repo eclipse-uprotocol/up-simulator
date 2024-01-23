@@ -43,9 +43,8 @@ from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
 from simulator.core.exceptions import SimulationError
-from simulator.core.transport_layer import TransportLayer
 from simulator.utils import common_util
-from simulator.core import protobuf_autoloader
+from simulator.core import protobuf_autoloader, transport_layer
 
 covesa_services = []
 
@@ -61,7 +60,6 @@ class CovesaService(object):
 
     def __init__(self, service_name=None, portal_callback=None, use_signal_handler=True):
 
-        self.transport = TransportLayer()
         self.service = service_name
         self.subscriptions = {}
         self.portal_callback = portal_callback
@@ -101,7 +99,7 @@ class CovesaService(object):
                 if get_instance(entity).portal_callback is not None:
                     get_instance(entity).portal_callback(req, method, response,
                                                          get_instance(entity).publish_data)
-                return TransportLayer().send(topic, payload_res, attributes)
+                return transport_layer.send(topic, payload_res, attributes)
 
         return wrapper
 
@@ -113,7 +111,7 @@ class CovesaService(object):
                     if attr1 == 'on_receive':
                         func = getattr(self, attr)
                         method_uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, attr)
-                        self.transport.register_listener(LongUriSerializer().deserialize(method_uri), func)
+                        transport_layer.register_listener(LongUriSerializer().deserialize(method_uri), func)
                         break
 
     def publish(self, uri, params={}):
@@ -125,7 +123,7 @@ class CovesaService(object):
         payload_data = any_obj.SerializeToString()
         payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
         attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
-        status = self.transport.send(LongUriSerializer().deserialize(uri), payload, attributes)
+        status = transport_layer.send(LongUriSerializer().deserialize(uri), payload, attributes)
         common_util.print_publish_status(uri, status.code, status.message)
         self.publish_data.clear()
         self.publish_data.append(message)
@@ -139,7 +137,7 @@ class CovesaService(object):
                 print(f"Warning: there already exists an object subscribed to {uri}")
                 print(f"Skipping subscription for {uri}")
             self.subscriptions[uri] = listener
-            self.transport.register_listener(LongUriSerializer().deserialize(uri), listener.on_receive)
+            transport_layer.register_listener(LongUriSerializer().deserialize(uri), listener.on_receive)
             common_util.print_subscribe_status(uri, 0, "OK")
             time.sleep(1)
 

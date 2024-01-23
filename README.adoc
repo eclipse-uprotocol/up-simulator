@@ -153,8 +153,12 @@ image::screenshots/hello_world_service.png[]
 +
 image::screenshots/rpc-test.png[]
 
-. You can now see the RPC request and response logs in the logs window.
+. You can now see the RPC request, response and publish, subscribe logs in the logger screen.
++
+image::screenshots/rpc-logger.png[]
 
++
+image::screenshots/pub-sub-logger.png[]
 
 
 == Additional Notes

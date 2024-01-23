@@ -161,7 +161,7 @@ function onTopicUpdate(json_proto, json_proto_original, topic) {
             console.log('ontopicupdate2')
 
         if (topic == selectedTopic) {
-            createspan("Received topic update from Bus Service" + "\n", true, true, "logsdesc")
+            createspan("Received topic update from Vehicle Service" + "\n", true, true, "logsdesc")
             createspan(JSON.stringify(json_proto_original, null, 2) + "\n\n", true, false, "logsdesc")
             updateui_ontopicupdate(json_proto)
         }

@@ -136,15 +136,13 @@ def entity_name_file(lock, entity, filename):
 
 class SocketUtility:
 
-    def __init__(self, socket_io, req, transport_layer):
+    def __init__(self, socket_io, req):
         self.socketio = socket_io
         self.oldtopic = ''
         self.vin = None
         self.last_published_data = None
         self.request = req
         self.sender = None
-        self.transport_layer = transport_layer
-
         self.lock_pubsub = threading.Lock()
         self.lock_rpc = threading.Lock()
         self.lock_pubsub = threading.Lock()
@@ -178,7 +176,7 @@ class SocketUtility:
                 attributes = UAttributesBuilder.request(UPriority.UPRIORITY_CS4, method_uri,
                                                         CallOptions.TIMEOUT_DEFAULT).build()
 
-                res_future = self.transport_layer.invoke_method(method_uri, payload, attributes)
+                res_future = transport_layer.invoke_method(method_uri, payload, attributes)
                 sent_data = MessageToDict(message)
 
                 message = "Successfully send rpc request for " + methodname
@@ -218,8 +216,8 @@ class SocketUtility:
                 payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
 
                 attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
-                status = self.transport_layer.send(new_topic, payload, attributes)
-                Handlers.publish_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_utransport(),
+                status = transport_layer.send(new_topic, payload, attributes)
+                Handlers.publish_status_handler(self.socketio, self.lock_pubsub, transport_layer.utransport,
                                                 topic, status.code, status.message, self.last_published_data)
 
                 published_data = MessageToDict(message)
@@ -256,15 +254,15 @@ class SocketUtility:
                 # if self.oldtopic != '':
                 #     self.bus_obj_subscribe.unsubscribe(self.oldtopic, self.common_unsubscribe_status_handler)
                 new_topic = LongUriSerializer().deserialize(topic)
-                status = self.transport_layer.register_listener(new_topic, SubscribeUListener(self.socketio,
-                                                                                              self.transport_layer.get_utransport(),
+                status = transport_layer.register_listener(new_topic, SubscribeUListener(self.socketio,
+                                                                                              transport_layer.utransport,
                                                                                               self.lock_pubsub))
                 if status is None:
                     Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub,
-                                                      self.transport_layer.get_utransport(), topic, 0, "Ok")
+                                                      transport_layer.utransport, topic, 0, "Ok")
                 else:
                     Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub,
-                                                      self.transport_layer.get_utransport(), topic, status.code,
+                                                      transport_layer.utransport, topic, status.code,
                                                       status.message)
 
             else:

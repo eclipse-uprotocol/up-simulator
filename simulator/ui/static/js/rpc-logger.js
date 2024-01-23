@@ -13,7 +13,7 @@ function setDataInUi(json_data) {
 
   td = document.createElement("div")
   td.setAttribute("class", "col-xl-6")
-  td.setAttribute("style", "border:none")
+  td.setAttribute("style", "border:none; overflow: auto;")
 
   h6 = document.createElement("h6")
   h6.setAttribute("class", "green-label")
@@ -42,7 +42,7 @@ function setDataInUi(json_data) {
     h6.classList.add("para-light")
   }
   h6.innerText = json_data['time']
-  h6.setAttribute("style", "font-weight: 400;font-size: 16px;line-height: 26px;display: flex;align-items: center;text-align: center;color: #fff;width:100%;margin-top:15px")
+  h6.setAttribute("style", "font-weight: 400;font-size: 16px;line-height: 18px;display: flex;align-items: center;text-align: center;color: #fff;width:100%;margin-top:1rem")
   td.appendChild(h6)
   tr.appendChild(td)
 

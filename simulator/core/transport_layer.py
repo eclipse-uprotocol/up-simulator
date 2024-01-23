@@ -38,58 +38,31 @@ utransport = "ZENOH"
 ZENOH_IP = '10.0.0.33'
 ZENOH_PORT = 9090
 
+instance = None
 
-class TransportLayer:
-    def __init__(self):
-        self.instance = None
-        if utransport == "ZENOH":
-            self.instance = Zenoh(ZENOH_IP, ZENOH_PORT)
-        else:
-            print("Unimplemented")
+if utransport == "ZENOH":
+    instance = Zenoh(ZENOH_IP, ZENOH_PORT)
 
-    def update_instance(self):
-        print('set update instance')
-        global utransport
 
-        if utransport == "ZENOH":
-            self.update_zenoh_instance()
-        else:
-            print("Unimplemented")
+def invoke_method(topic: UUri, payload: UPayload, attributes: UAttributes) -> Future:
+    return instance.invoke_method(topic, payload, attributes)
 
-    def set_utransport(self, transport=None):
-        global utransport
-        if transport is not None and utransport != transport:
-            utransport = transport
-            print('update utransport', utransport)
-            self.update_instance()
 
-    def get_utransport(self):
-        global utransport
-        return utransport
+def authenticate(u_entity: UEntity) -> UStatus:
+    return instance.authenticate(u_entity)
 
-    def update_zenoh_instance(self, ip=None, port=None):
-        global ZENOH_IP, ZENOH_PORT
-        if (ip is not None and ip != ZENOH_IP) or (port is not None and port != ZENOH_PORT):
-            print('update zenoh instance', ZENOH_IP, ZENOH_PORT)
-            self.instance = Zenoh(ZENOH_IP, ZENOH_PORT)
-            ZENOH_PORT = port
-            ZENOH_IP = ip
 
-    def invoke_method(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> Future:
-        return self.instance.invoke_method(topic, payload, attributes)
+def send(topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
+    return instance.send(topic, payload, attributes)
 
-    def authenticate(self, u_entity: UEntity) -> UStatus:
-        return self.instance.authenticate(u_entity)
 
-    def send(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
-        return self.instance.send(topic, payload, attributes)
+def register_listener(topic: UUri, listener: UListener) -> UStatus:
+    return instance.register_listener(topic, listener)
 
-    def register_listener(self, topic: UUri, listener: UListener) -> UStatus:
-        return self.instance.register_listener(topic, listener)
 
-    def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
-        return self.instance.unregister_listener(topic, listener)
+def unregister_listener(topic: UUri, listener: UListener) -> UStatus:
+    return instance.unregister_listener(topic, listener)
 
 
 if __name__ == "__main__":
-    TransportLayer().authenticate(UEntity.EMPTY)
+    authenticate(UEntity.EMPTY)

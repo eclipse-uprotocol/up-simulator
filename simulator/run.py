@@ -31,7 +31,7 @@ from flask import request
 from flask_socketio import SocketIO
 
 import simulator.utils.constant as CONSTANTS
-from simulator.core.transport_layer import TransportLayer
+from simulator.core import transport_layer
 from simulator.ui import create_app
 from simulator.ui.config import config_dict
 from simulator.ui.utils.socket_utils import SocketUtility
@@ -47,13 +47,12 @@ socketio = SocketIO(app)
 
 is_reset = True
 
-transport_layer = TransportLayer()
-socket_utility = SocketUtility(socketio, request, transport_layer)
+socket_utility = SocketUtility(socketio, request)
 
 
 @socketio.on(CONSTANTS.API_SET_UTRANSPORT, namespace=CONSTANTS.NAMESPACE)
 def set_transport(selected_utransport):
-    transport_layer.set_utransport(selected_utransport.upper())
+    transport_layer.utransport = selected_utransport.upper()
 
 
 @socketio.on(CONSTANTS.API_SET_SOMEIP_CONFIG, namespace=CONSTANTS.NAMESPACE)
@@ -63,7 +62,8 @@ def set_someip_config(localip, multicastip):
 
 @socketio.on(CONSTANTS.API_SET_ZENOH_CONFIG, namespace=CONSTANTS.NAMESPACE)
 def set_zenoh_config(routerip, port):
-    transport_layer.update_zenoh_instance(routerip, port)
+    transport_layer.ZENOH_IP = routerip
+    transport_layer.ZENOH_PORT = port
 
 
 @socketio.on(CONSTANTS.API_SUBSCRIBE, namespace=CONSTANTS.NAMESPACE)
