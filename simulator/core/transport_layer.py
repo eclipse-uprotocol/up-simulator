@@ -34,7 +34,10 @@ from uprotocol.proto.ustatus_pb2 import UStatus
 from uprotocol.transport.ulistener import UListener
 from uprotocol_zenoh.zenoh_utransport import Zenoh
 
-utransport = "ZENOH"
+from simulator.core.binder_utransport import AndroidBinder
+
+
+utransport = "BINDER"
 ZENOH_IP = '10.0.0.33'
 ZENOH_PORT = 9090
 
@@ -42,6 +45,8 @@ instance = None
 
 if utransport == "ZENOH":
     instance = Zenoh(ZENOH_IP, ZENOH_PORT)
+else:
+    instance = AndroidBinder()
 
 
 def invoke_method(topic: UUri, payload: UPayload, attributes: UAttributes) -> Future:
