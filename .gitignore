@@ -8,3 +8,6 @@
 .coverage
 *.txt
 target
+simulator/tools/mock_service_generator
+*.sh
+Dockerfile
