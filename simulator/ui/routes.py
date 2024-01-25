@@ -47,7 +47,7 @@ def route_default():
 @blueprint.route('/configuration.html')
 def route_configuration():
     deviceInfo = {'Image': "", 'Build_date': "", 'Build_id': "", 'Model': ""}
-    emu_status = 'Emulator is not running'
+    emu_status = 'Emulator is not running..'
     try:
         device = adb_utils.get_emulator_device()
         if device is not None:

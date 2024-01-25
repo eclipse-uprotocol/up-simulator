@@ -56,7 +56,7 @@ def verify_all_checks():
                 message = 'Emulator is loading..'
 
         else:
-            message = 'Emulator is not running..Please launch the gas emulator'
+            message = 'Emulator is not running..'
 
         return message
 
