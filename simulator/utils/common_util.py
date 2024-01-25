@@ -26,27 +26,40 @@
 
 import logging
 from importlib import import_module
-
+from simulator.ui.utils import adb_utils
 from simulator.core.transport_layer import TransportLayer
 
 logger = logging.getLogger("CommonUtil")
 reg_id = []
 
-
 def verify_all_checks():
-    global is_by_pass
+    is_by_pass = False
     env = TransportLayer().get_transport()
 
-    if env != "Binder":
+    if env != "BINDER":
         is_by_pass = True
 
     if is_by_pass:
         return ''
     else:
-        # todo for aidl binder- make sure that the tck proxy apk is installed
-        pass
+        # check emulator is running or not
+        device = adb_utils.get_emulator_device()
+        message = ''
+        if device is not None:
+            try:
+                status = device.shell("getprop init.svc.bootanim")
+                if status.__contains__('stopped'):
+                    adb_utils.install_apk()
+                else:
+                    message = 'Emulator is loading..'
+            except Exception:
+                message = 'Emulator is loading..'
 
-        return None
+        else:
+            message = 'Emulator is not running..Please launch the gas emulator'
+
+        return message
+
 
 
 def flatten_dict(in_dict, prefix=''):
