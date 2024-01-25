@@ -101,7 +101,7 @@ class CovesaService(object):
                 if get_instance(entity).portal_callback is not None:
                     get_instance(entity).portal_callback(req, method, response,
                                                          get_instance(entity).publish_data)
-                return transport_layer.send(topic, payload_res, attributes)
+                return TransportLayer().send(topic, payload_res, attributes)
 
         return wrapper
 
@@ -113,7 +113,7 @@ class CovesaService(object):
                     if attr1 == 'on_receive':
                         func = getattr(self, attr)
                         method_uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, attr)
-                        transport_layer.register_listener(LongUriSerializer().deserialize(method_uri), func)
+                        self.transport_layer.register_listener(LongUriSerializer().deserialize(method_uri), func)
                         break
 
     def publish(self, uri, params={}):
@@ -125,7 +125,7 @@ class CovesaService(object):
         payload_data = any_obj.SerializeToString()
         payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
         attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
-        status = transport_layer.send(LongUriSerializer().deserialize(uri), payload, attributes)
+        status = self.transport_layer.send(LongUriSerializer().deserialize(uri), payload, attributes)
         common_util.print_publish_status(uri, status.code, status.message)
         self.publish_data.clear()
         self.publish_data.append(message)
@@ -139,7 +139,7 @@ class CovesaService(object):
                 print(f"Warning: there already exists an object subscribed to {uri}")
                 print(f"Skipping subscription for {uri}")
             self.subscriptions[uri] = listener
-            transport_layer.register_listener(LongUriSerializer().deserialize(uri), listener.on_receive)
+            self.transport_layer.register_listener(LongUriSerializer().deserialize(uri), listener.on_receive)
             common_util.print_subscribe_status(uri, 0, "OK")
             time.sleep(1)
 

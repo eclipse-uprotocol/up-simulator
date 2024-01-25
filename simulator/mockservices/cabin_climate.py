@@ -27,6 +27,8 @@
 
 import re
 
+from google.protobuf.json_format import MessageToDict
+
 from simulator.core.abstract_service import CovesaService
 from simulator.core.exceptions import ValidationError
 from target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
@@ -60,8 +62,8 @@ class CabinClimateService(CovesaService):
         Initializes internal data structures for keeping track of the current state of the cabin climate service
         """
 
-        self.zone_names = ['zone.row1', 'zone.row1_left', 'zone.row1_right', 'zone.row2', 'zone.row2_left',
-                           'zone.row2_right', 'zone.row3', 'zone.row3_left', 'zone.row3_right']
+        self.zone_names = ['row1', 'row1_left', 'row1_right', 'row2', 'row2_left',
+                           'row2_right', 'row3', 'row3_left', 'row3_right']
         self.max = 31
         self.min = 16
 
@@ -69,7 +71,7 @@ class CabinClimateService(CovesaService):
         self.number_of_zones = 0
         for zone in self.zone_names:
             self.state[zone] = self.init_message_state(cabin_climate_topics_pb2.Zone)
-            self.state[zone]['name'] = zone
+            self.state[zone]['id'] = zone
         self.calc_number_of_zones()
         self.zone_names = set(self.zone_names)
         self.settings_state = self.init_message_state(cabin_climate_topics_pb2.SystemSettings)
@@ -86,8 +88,11 @@ class CabinClimateService(CovesaService):
         """
         Handles ExecuteClimateCommand RPC calls
         """
+        # check zone id
+        req_dict = MessageToDict(request.zone, including_default_value_fields=True)
+        zone_str = req_dict['id']
         try:
-            self.validate_zone_req(request)
+            self.validate_zone_req(request,zone_str)
         except ValidationError as e:
             response.code = e.code
             response.message = e.message
@@ -97,8 +102,8 @@ class CabinClimateService(CovesaService):
         response.code = 0
         response.message = "OK"
         # publish message from request data
-        self.publish_synced_fields(request)
-        self.publish_zone(request.zone.name)
+        self.publish_synced_fields(request,zone_str)
+        self.publish_zone(zone_str)
 
         return response
 
@@ -170,7 +175,7 @@ class CabinClimateService(CovesaService):
         response.status.message = "OK"
         return response
 
-    def normalize_field_mask(self, request):
+    def normalize_field_mask(self, request,zone_str):
         """
         Normalizes the field mask and returns a new one
         """
@@ -180,7 +185,7 @@ class CabinClimateService(CovesaService):
             field_mask = []
         if len(field_mask) == 0:
             # update all fields by adding them to the field mask
-            for field in self.state[request.zone.name].keys():
+            for field in self.state[zone_str].keys():
                 # add "zone." prefix. this gets removed later, but services send this prefix
                 field_mask.append("zone." + str(field))
 
@@ -192,30 +197,30 @@ class CabinClimateService(CovesaService):
 
         return field_mask_normalized
 
-    def publish_synced_fields(self, request):
+    def publish_synced_fields(self, request,zone_str):
         """
         If "blower_level", "air_distribution", "air_distribution_auto_state", or "auto_on" fields
         are sent with a resource of rowX_left, we need to publish on rowX_right as well.
         """
-        groups = re.search(r"(row\d)_(left|right)", request.zone.name)
+        groups = re.search(r"(row\d)_(left|right)", zone_str)
         if not groups:
             # if row is not _left or _right, exit
             return None
         row = groups.group(1)
         side = groups.group(2)
-        mask = set(self.normalize_field_mask(request))
-        synced_fields = set(["blower_level", "air_distribution", "air_distribution_auto_state", "auto_on", "power_on"])
+        mask = set(self.normalize_field_mask(request,zone_str))
+        synced_fields = set(["blower_level", "air_distribution", "air_distribution_auto_state", "auto_on", "is_power_on"])
         fields_to_update = mask & synced_fields
         if fields_to_update:
             if side == "right":
-                new_row = "zone." + row + "_left"
+                new_row =   row + "_left"
             elif side == "left":
-                new_row = "zone." + row + "_right"
+                new_row =   row + "_right"
             for field in mask & synced_fields:
-                self.state[new_row][field] = self.state[request.zone.name][field]
+                self.state[new_row][field] = self.state[zone_str][field]
             self.publish_zone(new_row)
 
-    def validate_zone_req(self, request):
+    def validate_zone_req(self, request,zone_str):
         """
         Validates incoming ExecuteClimateCommand requests. Raises an exception upon failure
         """
@@ -228,22 +233,22 @@ class CabinClimateService(CovesaService):
         max_blower_level = 100
         min_blower_level = 0
 
-        # check zone name
-        if request.zone.name not in self.zone_names:
-            raise ValidationError(2, "Unsupported zone name.")
 
-        field_mask_normalized = self.normalize_field_mask(request)
+        if zone_str not in self.zone_names:
+            raise ValidationError(2, "Unsupported zone id.")
+
+        field_mask_normalized = self.normalize_field_mask(request,zone_str)
 
         # loop through the field mask
         for field in field_mask_normalized:
 
-            if self.state[request.zone.name]['power_on'] == False:
+            if self.state[zone_str]['is_power_on'] == False:
                 # power is currently off
-                fields_that_need_power_on = list(self.state[request.zone.name].keys())
-                fields_that_need_power_on.remove("power_on")
-                if field in fields_that_need_power_on:
+                fields_that_need_is_power_on = list(self.state[zone_str].keys())
+                fields_that_need_is_power_on.remove("is_power_on")
+                if field in fields_that_need_is_power_on:
                     # if not turning power on and using a field which needs the power on, fail
-                    if not (('power_on' in field_mask_normalized) and (request.zone.power_on == True)):
+                    if not (('is_power_on' in field_mask_normalized) and (request.zone.is_power_on == True)):
                         raise ValidationError(9, f"Unable to set {field} when zone power is off.")
 
             # air_distribution_auto_state can only be AM_OFF or AM_AUTO when power is on. 
@@ -276,11 +281,11 @@ class CabinClimateService(CovesaService):
                     raise ValidationError(2, "Blower level out of range.")
 
             # update state
-            self.state[request.zone.name][field] = getattr(request.zone, field)
+            self.state[zone_str][field] = getattr(request.zone, field)
 
             # blower level needs a calculation
             if field == "blower_level":
-                self.state[request.zone.name][field] = self.get_blower_level(self.state[request.zone.name][field])
+                self.state[zone_str][field] = self.get_blower_level(self.state[zone_str][field])
 
         return True
 
@@ -299,7 +304,7 @@ class CabinClimateService(CovesaService):
         temp_sum = 0
         for zone in self.state.keys():
             # loop through all zones which have power on
-            if self.state[zone]["power_on"]:
+            if self.state[zone]["is_power_on"]:
                 temp_sum += self.state[zone]["temperature_setpoint"]
         return temp_sum / len(self.state.keys())
 

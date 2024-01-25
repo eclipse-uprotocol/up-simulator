@@ -186,10 +186,6 @@ function onbackClicked() {
 }
 function onRbChanged(label, data, entity, typeTab) {
 
-    if (typeTab != "Publish"){
-       document.getElementById("sub_utransport").hidden = true
-    }
-
     setupAllSockets()
     alert = document.getElementById('error')
     alert.setAttribute("style", "display:none")
