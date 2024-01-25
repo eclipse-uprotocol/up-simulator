@@ -186,13 +186,10 @@ function onbackClicked() {
 }
 function onRbChanged(label, data, entity, typeTab) {
 
-    if (typeTab == "Publish") {
-        if (localStorage.getItem("utransportConfig") == "SOME/IP" || localStorage.getItem("utransportConfig") == "ZENOH") {
-            document.getElementById("sub_utransport").hidden = false
-        } else {
-            document.getElementById("sub_utransport").hidden = true
-        }
+    if (typeTab != "Publish"){
+       document.getElementById("sub_utransport").hidden = true
     }
+
     setupAllSockets()
     alert = document.getElementById('error')
     alert.setAttribute("style", "display:none")
@@ -259,9 +256,9 @@ function onConfigClick(rb) {
     if (rb.checked) {
         setvalues({}, 'true')
         selectedTopic = rb.getAttribute("topic")
-        if (localStorage.getItem("utransportConfig") in ["BINDER", "VEHICLE"]) {
-            execute_subscribe(rb.getAttribute("topic"))
-        }
+//        if (localStorage.getItem("utransportConfig") in ["BINDER", "VEHICLE"]) {
+//            execute_subscribe(rb.getAttribute("topic"))
+//        }
 
 
         if (rb.hasAttribute("rpc")) {

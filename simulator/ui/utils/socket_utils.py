@@ -47,7 +47,7 @@ from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
 import simulator.ui.utils.common_handlers as Handlers
 import simulator.utils.constant as CONSTANTS
-from simulator.core import transport_layer, protobuf_autoloader
+from simulator.core import  protobuf_autoloader
 from simulator.utils.common_util import verify_all_checks
 
 logger = logging.getLogger('Simulator')
@@ -136,13 +136,11 @@ def entity_name_file(lock, entity, filename):
 
 class SocketUtility:
 
-    def __init__(self, socket_io, req):
+    def __init__(self, socket_io,transport_layer):
         self.socketio = socket_io
         self.oldtopic = ''
-        self.vin = None
         self.last_published_data = None
-        self.request = req
-        self.sender = None
+        self.transport_layer = transport_layer
         self.lock_pubsub = threading.Lock()
         self.lock_rpc = threading.Lock()
         self.lock_pubsub = threading.Lock()
@@ -176,11 +174,11 @@ class SocketUtility:
                 attributes = UAttributesBuilder.request(UPriority.UPRIORITY_CS4, method_uri,
                                                         CallOptions.TIMEOUT_DEFAULT).build()
 
-                res_future = transport_layer.invoke_method(method_uri, payload, attributes)
+                res_future = self.transport_layer.invoke_method(method_uri, payload, attributes)
                 sent_data = MessageToDict(message)
 
                 message = "Successfully send rpc request for " + methodname
-                if transport_layer.utransport == "Zenoh":
+                if self.transport_layer.get_transport() == "Zenoh":
                     message = "Successfully send rpc request for " + methodname + " to Zenoh"
                 res = {'msg': message, 'data': sent_data}
                 self.socketio.emit(CONSTANTS.CALLBACK_SENDRPC, res, namespace=CONSTANTS.NAMESPACE)
@@ -216,8 +214,8 @@ class SocketUtility:
                 payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
 
                 attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
-                status = transport_layer.send(new_topic, payload, attributes)
-                Handlers.publish_status_handler(self.socketio, self.lock_pubsub, transport_layer.utransport,
+                status = self.transport_layer.send(new_topic, payload, attributes)
+                Handlers.publish_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_transport(),
                                                 topic, status.code, status.message, self.last_published_data)
 
                 published_data = MessageToDict(message)
@@ -249,20 +247,19 @@ class SocketUtility:
 
             status = verify_all_checks()
             if status == '':
-                # self.bus_obj_subscribe = BusManager(url=self.proxy_url, proxy_enable=self.is_proxy_enable,
-                # vin=self.vin)
+
                 # if self.oldtopic != '':
                 #     self.bus_obj_subscribe.unsubscribe(self.oldtopic, self.common_unsubscribe_status_handler)
                 new_topic = LongUriSerializer().deserialize(topic)
-                status = transport_layer.register_listener(new_topic, SubscribeUListener(self.socketio,
-                                                                                              transport_layer.utransport,
+                status = self.transport_layer.register_listener(new_topic, SubscribeUListener(self.socketio,
+                                                                                              self.transport_layer.get_transport(),
                                                                                               self.lock_pubsub))
                 if status is None:
                     Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub,
-                                                      transport_layer.utransport, topic, 0, "Ok")
+                                                      self.transport_layer.get_transport(), topic, 0, "Ok")
                 else:
                     Handlers.subscribe_status_handler(self.socketio, self.lock_pubsub,
-                                                      transport_layer.utransport, topic, status.code,
+                                                      self.transport_layer.get_transport(), topic, status.code,
                                                       status.message)
 
             else:
@@ -274,13 +271,23 @@ class SocketUtility:
 
 
 class SubscribeUListener(UListener):
+    _instance = None
+    _initialized = False
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
     def __init__(self, socketio: SocketIO, utransport: str, lock_pubsub: threading.Lock):
-        self.socketio = socketio
-        self.utransport = utransport
-        self.lock_pubsub = lock_pubsub
+        if not self._initialized:
+            self.__socketio = socketio
+            self.__utransport = utransport
+            self.__lock_pubsub = lock_pubsub
+            self._initialized = True
+
 
     def on_receive(self, topic: UUri, payload: UPayload, attributes: UAttributes):
         print("onreceive")
-        Handlers.on_receive_event_handler(self.socketio, self.lock_pubsub, self.utransport,
+        Handlers.on_receive_event_handler(self.__socketio, self.__lock_pubsub, self.__utransport,
                                           LongUriSerializer().serialize(topic), payload)

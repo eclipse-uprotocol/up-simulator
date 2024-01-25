@@ -37,37 +37,57 @@ from uprotocol_zenoh.zenoh_utransport import Zenoh
 from simulator.core.binder_utransport import AndroidBinder
 
 
-utransport = "BINDER"
-ZENOH_IP = '10.0.0.33'
-ZENOH_PORT = 9090
+class TransportLayer:
+    _instance = None
+    _initialized = False
 
-instance = None
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
-if utransport == "ZENOH":
-    instance = Zenoh(ZENOH_IP, ZENOH_PORT)
-else:
-    instance = AndroidBinder()
+    def __init__(self):
+        if not self._initialized:
+            # Initialize the singleton instance
+            self._initialized = True
+            self.__instance = None
+            self.__ZENOH_IP = '10.0.3.3'
+            self.__ZENOH_PORT = 9090
+            self.__utransport = "ZENOH"
+            self._update_instance()
 
+    def set_transport(self, transport: str):
+        if self.__utransport != transport:
+            print('set transport, previous is', self.__utransport , 'current is',transport)
+            self.__utransport = transport
+            self._update_instance()
 
-def invoke_method(topic: UUri, payload: UPayload, attributes: UAttributes) -> Future:
-    return instance.invoke_method(topic, payload, attributes)
+    def get_transport(self):
+        return self.__utransport
 
+    def set_zenoh_config(self, ip, port):
+        if self.__ZENOH_PORT != port or self.__ZENOH_IP != ip:
+            self.__ZENOH_PORT = port
+            self.__ZENOH_IP = ip
+            self._update_instance()
 
-def authenticate(u_entity: UEntity) -> UStatus:
-    return instance.authenticate(u_entity)
+    def _update_instance(self):
+        if self.__utransport == "ZENOH" and self.__ZENOH_IP is not None and self.__ZENOH_PORT is not None:
+            self.__instance = Zenoh(self.__ZENOH_IP, self.__ZENOH_PORT)
+        elif self.__utransport == "BINDER":
+            self.__instance = AndroidBinder()
 
+    def invoke_method(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> Future:
+        return self.__instance.invoke_method(topic, payload, attributes)
 
-def send(topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
-    return instance.send(topic, payload, attributes)
+    def authenticate(self, u_entity: UEntity) -> UStatus:
+        return self.__instance.authenticate(u_entity)
 
+    def send(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
+        return self.__instance.send(topic, payload, attributes)
 
-def register_listener(topic: UUri, listener: UListener) -> UStatus:
-    return instance.register_listener(topic, listener)
+    def register_listener(self, topic: UUri, listener: UListener) -> UStatus:
+        return self.__instance.register_listener(topic, listener)
 
-
-def unregister_listener(topic: UUri, listener: UListener) -> UStatus:
-    return instance.unregister_listener(topic, listener)
-
-
-if __name__ == "__main__":
-    authenticate(UEntity.EMPTY)
+    def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
+        return self.__instance.unregister_listener(topic, listener)

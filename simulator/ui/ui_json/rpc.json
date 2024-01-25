@@ -24,31 +24,37 @@
         "Configuration": [
           {
             "name": "zone.row1_left",
+            "name_key": "zone.id",
             "display_name": "row1_left",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row1_right",
             "display_name": "row1_right",
+            "name_key": "zone.id",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row2_left",
             "display_name": "row2_left",
+            "name_key": "zone.id",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row2_right",
             "display_name": "row2_right",
+            "name_key": "zone.id",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row3_left",
             "display_name": "row3_left",
+            "name_key": "zone.id",
             "rpcmethod": "ExecuteClimateCommand"
           },
           {
             "name": "zone.row3_right",
+            "name_key": "zone.id",
             "display_name": "row3_right",
             "rpcmethod": "ExecuteClimateCommand"
           }

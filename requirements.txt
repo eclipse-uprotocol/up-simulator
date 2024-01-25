@@ -6,5 +6,6 @@ Flask-SocketIO==5.3.6
 protobuf==4.25.2
 googleapis-common-protos==1.62.0
 gitpython==3.1.41
+pyaxmlparser==0.3.30
 temporary_wheel/uprotocol_python-1.0.0-py3-none-any.whl
 temporary_wheel/up_client_zenoh_python-1.0.0-py3-none-any.whl

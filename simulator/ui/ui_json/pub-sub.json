@@ -30,32 +30,32 @@
         "Configuration": [
           {
             "name": "row1_left",
-            "display_name": "row1_left",
+            "name_key": "id",
             "topic": "up:/body.cabin_climate/1/row1_left#Zone"
           },
           {
-            "name": "zone.row1_right",
-            "display_name": "row1_right",
+            "name": "row1_right",
+            "name_key": "id",
             "topic": "up:/body.cabin_climate/1/row1_right#Zone"
           },
           {
-            "name": "zone.row2_left",
-            "display_name": "row2_left",
+            "name": "row2_left",
+            "name_key": "id",
             "topic": "up:/body.cabin_climate/1/row2_left#Zone"
           },
           {
-            "name": "zone.row2_right",
-            "display_name": "row2_right",
+            "name": "row2_right",
+            "name_key": "id",
             "topic": "up:/body.cabin_climate/1/row2_right#Zone"
           },
           {
-            "name": "zone.row3_left",
-            "display_name": "row3_left",
+            "name": "row3_left",
+            "name_key": "id",
             "topic": "up:/body.cabin_climate/1/row3_left#Zone"
           },
           {
-            "name": "zone.row3_right",
-            "display_name": "row3_right",
+            "name": "row3_right",
+            "name_key": "id",
             "topic": "up:/body.cabin_climate/1/row3_right#Zone"
           }
         ],

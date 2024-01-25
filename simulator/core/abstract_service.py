@@ -43,8 +43,9 @@ from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
 from simulator.core.exceptions import SimulationError
+from simulator.core.transport_layer import TransportLayer
 from simulator.utils import common_util
-from simulator.core import protobuf_autoloader, transport_layer
+from simulator.core import protobuf_autoloader
 
 covesa_services = []
 
@@ -63,6 +64,7 @@ class CovesaService(object):
         self.service = service_name
         self.subscriptions = {}
         self.portal_callback = portal_callback
+        self.transport_layer = TransportLayer()
         self.publish_data = []
         self.state = {}  # default variable to keep track of the mock service's state
         self.state_dir = os.path.join(str(Path.home()), ".sdv")  # location of serialized state

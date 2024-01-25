@@ -27,7 +27,7 @@
 import logging
 from importlib import import_module
 
-from simulator.core import transport_layer
+from simulator.core.transport_layer import TransportLayer
 
 logger = logging.getLogger("CommonUtil")
 reg_id = []
@@ -35,7 +35,7 @@ reg_id = []
 
 def verify_all_checks():
     global is_by_pass
-    env = transport_layer.utransport
+    env = TransportLayer().get_transport()
 
     if env != "Binder":
         is_by_pass = True
