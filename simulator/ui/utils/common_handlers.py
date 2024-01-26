@@ -26,6 +26,7 @@
 
 
 import logging
+import time
 from datetime import datetime
 
 from google.protobuf import any_pb2
@@ -142,7 +143,7 @@ def on_receive_event_handler(socketio, lock_pubsub, utransport, topic, payload: 
                     "status": "Success", "message": original_members}
         save_pub_sub_data(socketio, lock_pubsub, json_res)
         from run import app
-
+        time.sleep(0.3)
         socketio.emit(CONSTANTS.CALLBACK_ONEVENT_RECEIVE,
                       {"json_data": members, "original_json_data": original_members, "topic": topic},
                       namespace=CONSTANTS.NAMESPACE)

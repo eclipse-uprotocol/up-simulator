@@ -106,15 +106,17 @@ class CovesaService(object):
         return wrapper
 
     def start_rpc_service(self):
-        covesa_services.append({'name': self.service, 'entity': self})
-        for attr in dir(self):
-            if callable(getattr(self, attr)) and isinstance(getattr(self, attr), type):
-                for attr1 in dir(getattr(self, attr)):
-                    if attr1 == 'on_receive':
-                        func = getattr(self, attr)
-                        method_uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, attr)
-                        self.transport_layer.register_listener(LongUriSerializer().deserialize(method_uri), func)
-                        break
+        if self.transport_layer.start_service(self.service):
+            time.sleep(1)
+            covesa_services.append({'name': self.service, 'entity': self})
+            for attr in dir(self):
+                if callable(getattr(self, attr)) and isinstance(getattr(self, attr), type):
+                    for attr1 in dir(getattr(self, attr)):
+                        if attr1 == 'on_receive':
+                            func = getattr(self, attr)
+                            method_uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, attr)
+                            self.transport_layer.register_listener(LongUriSerializer().deserialize(method_uri), func)
+                            break
 
     def publish(self, uri, params={}):
 
@@ -130,7 +132,7 @@ class CovesaService(object):
         self.publish_data.clear()
         self.publish_data.append(message)
         time.sleep(0.25)
-        return message
+        return message, status
 
     def subscribe(self, uris, listener):
 
@@ -139,7 +141,7 @@ class CovesaService(object):
                 print(f"Warning: there already exists an object subscribed to {uri}")
                 print(f"Skipping subscription for {uri}")
             self.subscriptions[uri] = listener
-            self.transport_layer.register_listener(LongUriSerializer().deserialize(uri), listener.on_receive)
+            self.transport_layer.register_listener(LongUriSerializer().deserialize(uri), listener)
             common_util.print_subscribe_status(uri, 0, "OK")
             time.sleep(1)
 

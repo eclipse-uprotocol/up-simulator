@@ -56,8 +56,12 @@ class BrakingService(CovesaService):
 
         super().__init__("chassis.braking", portal_callback)
         self.init_state()
-        self.subscribe(["up:/chassis.braking/1/brake_pads.front#BrakePads",
-                        "up:/chassis.braking/1/brake_pads.rear#BrakePads", ], BrakingPreconditions(self))
+
+    def start_rpc_service(self):
+        super().start_rpc_service()
+        self.subscribe(
+            ["up:/chassis.braking/1/brake_pads.front#BrakePads", "up:/chassis.braking/1/brake_pads.rear#BrakePads", ],
+            BrakingPreconditions(self))
 
     def init_state(self):
         """
@@ -198,11 +202,11 @@ class BrakingPreconditions(UListener):
         self.covesa_Service = covesa_service
 
     def on_receive(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
-        print('on recieve called')
+        print('on receive braking called')
         print(payload)
         print(topic)
         print(attributes)
-        #parse data from here and pass it to onevent method
+        # parse data from here and pass it to onevent method
         pass
 
     def onEvent(self, uri, message):

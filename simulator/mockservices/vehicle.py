@@ -30,9 +30,13 @@ class VehicleService(CovesaService):
 
         super().__init__("vehicle", portal_callback, )
         self.init_state()
+
+    def start_rpc_service(self):
+        super().start_rpc_service()
         self.subscribe(
             ["up:/vehicle/1/trip_meter.trip_1#TripMeter", "up:/vehicle/1/trip_meter.trip_2#TripMeter",
              "up:/vehicle/1/vehicle_usage.transport_mode#VehicleUsage", ], VehiclePreconditions(self))
+
 
     def init_state(self):
         """

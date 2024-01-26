@@ -32,6 +32,7 @@ from simulator.core.transport_layer import TransportLayer
 logger = logging.getLogger("CommonUtil")
 reg_id = []
 
+
 def verify_all_checks():
     is_by_pass = False
     env = TransportLayer().get_transport()
@@ -59,7 +60,6 @@ def verify_all_checks():
             message = 'Emulator is not running..'
 
         return message
-
 
 
 def flatten_dict(in_dict, prefix=''):

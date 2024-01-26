@@ -47,7 +47,7 @@ from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
 import simulator.ui.utils.common_handlers as Handlers
 import simulator.utils.constant as CONSTANTS
-from simulator.core import  protobuf_autoloader
+from simulator.core import protobuf_autoloader
 from simulator.utils.common_util import verify_all_checks
 
 logger = logging.getLogger('Simulator')
@@ -105,6 +105,13 @@ def stop_service(name):
             break
 
 
+def get_service_instance_from_entity(name):
+    for index, entity_dict in enumerate(mock_entity):
+        if entity_dict.get('name') == name:
+            return entity_dict.get('entity')
+    return None
+
+
 def entity_name_file(lock, entity, filename):
     try:
         lock.acquire()
@@ -136,7 +143,7 @@ def entity_name_file(lock, entity, filename):
 
 class SocketUtility:
 
-    def __init__(self, socket_io,transport_layer):
+    def __init__(self, socket_io, transport_layer):
         self.socketio = socket_io
         self.oldtopic = ''
         self.last_published_data = None
@@ -200,27 +207,38 @@ class SocketUtility:
                 service_class = json_publish['service_class']
 
                 json_data = json.loads(data)
+                service_instance = get_service_instance_from_entity(service_class)
+                if service_instance is not None:
+                    message, status = service_instance.publish(topic, json_data)
+                    self.last_published_data = MessageToDict(message)
+                    Handlers.publish_status_handler(self.socketio, self.lock_pubsub,
+                                                    self.transport_layer.get_transport(),
+                                                    topic, status.code, status.message, self.last_published_data)
 
-                req_cls = protobuf_autoloader.get_request_class_from_topic_uri(topic)
+                    self.socketio.emit(CONSTANTS.CALLBACK_PUBLISH_STATUS_SUCCESS,
+                                       {'msg': "Publish Data  ", 'data': self.last_published_data},
+                                       namespace=CONSTANTS.NAMESPACE)
 
-                message = protobuf_autoloader.populate_message(service_class, req_cls, json_data)
+                else:
+                    self.socketio.emit(CONSTANTS.CALLBACK_GENERIC_ERROR,
+                                       "Service is not running. Please start mock service.",
+                                       namespace=CONSTANTS.NAMESPACE)
 
-                self.last_published_data = MessageToDict(message, preserving_proto_field_name=True,
-                                                         including_default_value_fields=True)
-                new_topic = LongUriSerializer().deserialize(topic)
-                any_obj = any_pb2.Any()
-                any_obj.Pack(message)
-                payload_data = any_obj.SerializeToString()
-                payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
-
-                attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
-                status = self.transport_layer.send(new_topic, payload, attributes)
-                Handlers.publish_status_handler(self.socketio, self.lock_pubsub, self.transport_layer.get_transport(),
-                                                topic, status.code, status.message, self.last_published_data)
-
-                published_data = MessageToDict(message)
-                self.socketio.emit(CONSTANTS.CALLBACK_PUBLISH_STATUS_SUCCESS,
-                                   {'msg': "Publish Data  ", 'data': published_data}, namespace=CONSTANTS.NAMESPACE)
+                #
+                # req_cls = protobuf_autoloader.get_request_class_from_topic_uri(topic)
+                #
+                # message = protobuf_autoloader.populate_message(service_class, req_cls, json_data)
+                #
+                # self.last_published_data = MessageToDict(message, preserving_proto_field_name=True,
+                #                                          including_default_value_fields=True)
+                # new_topic = LongUriSerializer().deserialize(topic)
+                # any_obj = any_pb2.Any()
+                # any_obj.Pack(message)
+                # payload_data = any_obj.SerializeToString()
+                # payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
+                #
+                # attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
+                # status = self.transport_layer.send(new_topic, payload, attributes)
 
             else:
                 self.socketio.emit(CONSTANTS.CALLBACK_GENERIC_ERROR, status, namespace=CONSTANTS.NAMESPACE)
@@ -230,16 +248,20 @@ class SocketUtility:
             self.socketio.emit(CONSTANTS.CALLBACK_EXCEPTION_PUBLISH, log, namespace=CONSTANTS.NAMESPACE)
 
     def start_mock_service(self, json_service):
-        def handler(rpc_request, method_name, json_data, rpcdata):
-            Handlers.rpc_logger_handler(self.socketio, self.lock_rpc, rpc_request, method_name, json_data, rpcdata)
+        status = verify_all_checks()
+        if status == '':
+            def handler(rpc_request, method_name, json_data, rpcdata):
+                Handlers.rpc_logger_handler(self.socketio, self.lock_rpc, rpc_request, method_name, json_data, rpcdata)
 
-        try:
-            start_service(json_service['entity'], handler)
-            time.sleep(1)
-            entity_name_file(self.lock_service, json_service['entity'], CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS)
-            self.socketio.emit(CONSTANTS.CALLBACK_START_SERVICE, json_service['entity'], namespace=CONSTANTS.NAMESPACE)
-        except Exception as ex:
-            logger.error(f'Exception:', exc_info=ex)
+            try:
+                start_service(json_service['entity'], handler)
+                time.sleep(1)
+                entity_name_file(self.lock_service, json_service['entity'], CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS)
+                self.socketio.emit(CONSTANTS.CALLBACK_START_SERVICE, json_service['entity'], namespace=CONSTANTS.NAMESPACE)
+            except Exception as ex:
+                logger.error(f'Exception:', exc_info=ex)
+        else:
+            print(status)
 
     def execute_subscribe(self, json_subscribe):
         topic = json_subscribe['topic']
@@ -285,7 +307,6 @@ class SubscribeUListener(UListener):
             self.__utransport = utransport
             self.__lock_pubsub = lock_pubsub
             self._initialized = True
-
 
     def on_receive(self, topic: UUri, payload: UPayload, attributes: UAttributes):
         print("onreceive")

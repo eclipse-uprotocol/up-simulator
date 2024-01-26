@@ -106,12 +106,15 @@ def reset():
     global is_reset
     if is_reset:
         print('reset called')
-        if os.path.isfile(CONSTANTS.FILENAME_RPC_LOGGER):
-            os.remove(CONSTANTS.FILENAME_RPC_LOGGER)
-        if os.path.isfile(CONSTANTS.FILENAME_PUBSUB_LOGGER):
-            os.remove(CONSTANTS.FILENAME_PUBSUB_LOGGER)
-        if os.path.isfile(CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS):
-            os.remove(CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS)
+        try:
+            if os.path.isfile(CONSTANTS.FILENAME_RPC_LOGGER):
+                os.remove(CONSTANTS.FILENAME_RPC_LOGGER)
+            if os.path.isfile(CONSTANTS.FILENAME_PUBSUB_LOGGER):
+                os.remove(CONSTANTS.FILENAME_PUBSUB_LOGGER)
+            if os.path.isfile(CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS):
+                os.remove(CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS)
+        except:
+            pass
 
 
 def set_reset_flag():

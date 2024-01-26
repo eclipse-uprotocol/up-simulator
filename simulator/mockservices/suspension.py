@@ -33,6 +33,10 @@ class SuspensionService(CovesaService):
 
         super().__init__("chassis.suspension", portal_callback)
         self.init_state()
+
+
+    def start_rpc_service(self):
+        super().start_rpc_service()
         self.subscribe(["up:/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus", ],
                        SuspensionPreconditions(self))
 

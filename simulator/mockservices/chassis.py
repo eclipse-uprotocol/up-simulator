@@ -53,11 +53,13 @@ class ChassisService(CovesaService):
 
         super().__init__("chassis", portal_callback)
         self.init_state()
+
+    def start_rpc_service(self):
+        super().start_rpc_service()
         self.subscribe(["up:/chassis/1/tire.front_left#Tire", "up:/chassis/1/tire.front_right#Tire",
                         "up:/chassis/1/tire.rear_right#Tire", "up:/chassis/1/tire.rear_left#Tire",
                         "up:/chassis/1/tire.rear_left_inner#Tire",
                         "up:/chassis/1/tire.rear_right_inner#Tire", ], ChassisPreconditions(self))
-
     def init_state(self):
         """
         Initializes internal data structures for keeping track of the current state of the tire update service

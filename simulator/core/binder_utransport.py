@@ -86,7 +86,6 @@ class SocketClient:
             self._subscribe_callbacks = {}
 
     def connect(self):
-        print('connect method called')
         try:
             if not self.connected:
                 self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -155,10 +154,9 @@ class SocketClient:
 
     def send_data(self, message):
 
-        print(self.client_socket)
-        print(self.connected)
         try:
             self.client_socket.sendall(message.encode('utf-8'))
+            return True
 
         except:
             print('exception in send_data method')
@@ -169,9 +167,10 @@ class SocketClient:
                 print(self.client_socket)
                 print(self.connected)
                 self.client_socket.sendall(message.encode('utf-8'))
+                return True
             except:
                 print('exception in send_data method second time')
-                pass
+                return False
 
     def disconnect(self):
         # close socket
@@ -192,6 +191,12 @@ class AndroidBinder(UTransport):
         self.client = SocketClient()
 
         # Start a separate thread for receiving
+
+    def start_service(self, entity) -> bool:
+        # write data to socket, this action will start the android mock service and create all topics
+        json_map = {"action": "start_service", "data": entity}
+        message_to_send = json.dumps(json_map) + '\n'
+        return self.client.send_data(message_to_send)
 
     def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
         pass
@@ -251,18 +256,21 @@ class AndroidBinder(UTransport):
             return UStatus(message="Invalid attributes type")
 
     def register_listener(self, uri: UUri, listener: UListener) -> UStatus:
-        self.client.connect()
-        uri_str = Base64ProtobufSerializer().deserialize(uri.SerializeToString())
-        try:
-            self.__add_subscribe_callback(LongUriSerializer().serialize(uri), listener)
-            # write data to socket
-            json_map = {"action": "subscribe", "data": uri_str}
-            message_to_send = json.dumps(json_map) + '\n'
-            self.client.send_data(message_to_send)
-            return UStatus(message="successfully subscribe value to ")
-        except Exception as e:
-            print('register listener failed')
-            return UStatus(message=str(e), code=UCode.UNKNOWN)
+        if UriValidator.validate_rpc_method(uri).is_success():
+            pass
+        else:
+            self.client.connect()
+            uri_str = Base64ProtobufSerializer().deserialize(uri.SerializeToString())
+            try:
+                self.__add_subscribe_callback(LongUriSerializer().serialize(uri), listener)
+                # write data to socket
+                json_map = {"action": "subscribe", "data": uri_str}
+                message_to_send = json.dumps(json_map) + '\n'
+                self.client.send_data(message_to_send)
+                return UStatus(message="successfully subscribe value to ")
+            except Exception as e:
+                print('register listener failed')
+                return UStatus(message=str(e), code=UCode.UNKNOWN)
 
     def __add_subscribe_callback(self, topic: str, callback: UListener):
         """

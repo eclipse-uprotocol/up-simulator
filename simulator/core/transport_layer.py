@@ -91,3 +91,7 @@ class TransportLayer:
 
     def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
         return self.__instance.unregister_listener(topic, listener)
+
+    def start_service(self, entity) ->bool:
+        if self.__utransport=="BINDER":
+            return self.__instance.start_service(entity)
