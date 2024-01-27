@@ -56,22 +56,22 @@ To set up the simulator, follow the steps below:
 +
 [source]
 ----
-$ git clone https://github.com/eclipse-uprotocol/up-simulator.git
-$ cd up-simulator
+git clone https://github.com/eclipse-uprotocol/up-simulator.git
+cd up-simulator
 ----
 
 . Install the required dependencies using pip:
 +
 [source]
 ----
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ----
 
 . Execute the `setup_simulator.py` script using the following command:
 +
 [source]
 ----
-$ python setup_simulator.py
+python setup_simulator.py
 ----
 
 This script automates the following tasks:
@@ -96,8 +96,7 @@ To start and use the `up-simulator`, follow the steps below:
 +
 [source]
 ----
-$ cd simulator
-$ python run.py
+python run.py
 ----
 
 . On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it supports only Zenoh. Choose "Zenoh" from the dropdown.

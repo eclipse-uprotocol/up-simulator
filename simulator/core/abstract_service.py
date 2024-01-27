@@ -115,7 +115,10 @@ class CovesaService(object):
                         if attr1 == 'on_receive':
                             func = getattr(self, attr)
                             method_uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, attr)
-                            self.transport_layer.register_listener(LongUriSerializer().deserialize(method_uri), func)
+                            status = self.transport_layer.register_listener(LongUriSerializer().deserialize(method_uri),
+                                                                            func)
+                            common_util.print_register_rpc_status(method_uri, status.code, status.message)
+
                             break
 
     def publish(self, uri, params={}):
@@ -141,8 +144,8 @@ class CovesaService(object):
                 print(f"Warning: there already exists an object subscribed to {uri}")
                 print(f"Skipping subscription for {uri}")
             self.subscriptions[uri] = listener
-            self.transport_layer.register_listener(LongUriSerializer().deserialize(uri), listener)
-            common_util.print_subscribe_status(uri, 0, "OK")
+            status = self.transport_layer.register_listener(LongUriSerializer().deserialize(uri), listener)
+            common_util.print_subscribe_status(uri, status.code, status.message)
             time.sleep(1)
 
     def start(self):

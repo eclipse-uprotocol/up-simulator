@@ -109,3 +109,12 @@ def print_publish_status(topic, status_code, status_message):
     else:
         logger.error(f"Unsuccessful publish for {topic} as the status code is {status_code} with status message "
                      f"{status_message}")
+
+def print_register_rpc_status(methoduri, status_code, status_message):
+    logger.debug('register_rpc_status: contents...')
+    logger.debug(f"Method uri: {methoduri}, Status Code: {status_code}, Status Message: {status_message}")
+    if status_code == 0:
+        logger.debug(f"Successfully subscribed for {methoduri}")
+    else:
+        logger.error(f"Unsuccessful subscription for {methoduri} as the status code is {status_code} with status message "
+                     f"{status_message}")

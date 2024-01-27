@@ -39,16 +39,16 @@ from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.uri_pb2 import UEntity, UUri
 from uprotocol.proto.ustatus_pb2 import UStatus, UCode
+from uprotocol.rpc.rpcclient import RpcClient
 from uprotocol.transport.ulistener import UListener
 from uprotocol.transport.utransport import UTransport
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 from uprotocol.uri.validator.urivalidator import UriValidator
+from uprotocol.uuid.serializer.longuuidserializer import LongUuidSerializer
 
 # Dictionary to store requests
 m_requests = {}
-m_requests_query = {}
 subscribers = {}  # remove element when ue unregister it
-register_rpc_querable = {}  # remove element when ue unregister it
 MAX_MESSAGE_SIZE = 32767
 
 
@@ -82,6 +82,7 @@ class SocketClient:
             self.connected = False
             self.initialized = True
             self._subscribe_callbacks = {}
+            self._rpc_request_callbacks = {}
             self.receive_lock = threading.Lock()
             self.received_data = None
 
@@ -100,7 +101,6 @@ class SocketClient:
     def handle_received_data(self, data):
         with self.receive_lock:
             self.received_data = data
-            print('receive data set')
 
     def connect(self):
         try:
@@ -115,7 +115,6 @@ class SocketClient:
         except:
             log = traceback.format_exc()
             print('connect method exception', log)
-
             pass
 
     def __receive_data(self):
@@ -139,28 +138,43 @@ class SocketClient:
                         json_data = json.loads(data)
                         if 'action' in json_data:
                             action = json_data['action']
-                            if action == "topic_update":
-                                print('topic update')
-                                serialized_data = Base64ProtobufSerializer().serialize(json_data['data'])
+                            serialized_data = Base64ProtobufSerializer().serialize(json_data['data'])
+
+                            if action in ["topic_update", "rpc_request"]:
                                 parsed_message = UMessage()
                                 parsed_message.ParseFromString(serialized_data)
-                                topic = LongUriSerializer().serialize(parsed_message.source)
-                                if topic in self._subscribe_callbacks:
-                                    callbacks = self._subscribe_callbacks[topic]
-                                    for callback in callbacks:
-                                        callback.on_receive(parsed_message.source, parsed_message.payload,
-                                                            parsed_message.attributes)
+                                if action == "topic_update":
+                                    uri_str = LongUriSerializer().serialize(parsed_message.source)
+                                    uri = parsed_message.source
+                                    action_callbacks = self.subscribe_callbacks
                                 else:
-                                    print(f'No callback registered for topic: {topic}. Discarding!')
+                                    uri_str = LongUriSerializer().serialize(parsed_message.attributes.sink)
+                                    uri = parsed_message.attributes.sink
+                                    action_callbacks = self.rpc_request_callbacks
+                                if uri_str in action_callbacks:
+                                    callbacks = action_callbacks[uri_str]
+                                    for callback in callbacks:
+                                        callback.on_receive(uri, parsed_message.payload, parsed_message.attributes)
+                                else:
+                                    print(f'No callback registered for uri: {uri_str}. Discarding!')
 
-                            elif action == "publish_status" or action == "subscribe_status":
-                                serialized_data = Base64ProtobufSerializer().serialize(json_data['data'])
+                            elif action in ["publish_status", "subscribe_status", "register_rpc_status",
+                                            "send_rpc_status"]:
                                 parsed_message = UStatus()
                                 parsed_message.ParseFromString(serialized_data)
-                                print(f'{action} before handle received data')
                                 self.handle_received_data(parsed_message)
+                            elif action == "rpc_response":
+                                parsed_message = UMessage()
+                                parsed_message.ParseFromString(serialized_data)
+                                req_id = LongUuidSerializer.instance().serialize(parsed_message.attributes.reqid)
+                                future_result = m_requests[req_id]
+                                if not future_result.done():
+                                    future_result.set_result(parsed_message.payload)
+                                else:
+                                    print("Future result state is already finished or cancelled")
+                                m_requests.pop(req_id)
 
-                        print(f"Received from server: {data}")
+                        print(f"Received from server: {json_data}")
             except (socket.timeout, OSError):
                 pass
             except json.decoder.JSONDecodeError:
@@ -173,22 +187,16 @@ class SocketClient:
             return True
 
         except:
-            print('exception in send_data method')
             self.disconnect()
-            print('after disconnect before connect')
             self.connect()
             try:
-                print(self.client_socket)
-                print(self.connected)
                 self.client_socket.sendall(message.encode('utf-8'))
                 return True
             except:
-                print('exception in send_data method second time')
                 return False
 
     def disconnect(self):
         # close socket
-        print('disconnect cALLED')
         self.client_socket.close()
         self.connected = False
 
@@ -198,8 +206,16 @@ class SocketClient:
         """
         self.disconnect()
 
+    @property
+    def subscribe_callbacks(self):
+        return self._subscribe_callbacks
 
-class AndroidBinder(UTransport):
+    @property
+    def rpc_request_callbacks(self):
+        return self._rpc_request_callbacks
+
+
+class AndroidBinder(UTransport, RpcClient):
 
     def __init__(self):
         self.client = SocketClient()
@@ -219,80 +235,85 @@ class AndroidBinder(UTransport):
         print("unimplemented, it is not needed in python components.")
 
     def send(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
-        print('binder publish before connect')
+        global json_map
         self.client.connect()
-        print('binder publish after connect')
-
+        umsg = UMessage(source=topic, attributes=attributes, payload=payload)
+        message_str = Base64ProtobufSerializer().deserialize(umsg.SerializeToString())
         # validate attributes
         if attributes.type == UMessageType.UMESSAGE_TYPE_PUBLISH:
             # check uri
             status = UriValidator.validate(topic)
             if status.is_failure():
                 return status
-            # create publish cloudevent
-            umsg = UMessage(source=topic, attributes=attributes, payload=payload)
-            message_str = Base64ProtobufSerializer().deserialize(umsg.SerializeToString())
-            try:
-                # write data to socket
-                json_map = {"action": "publish", "data": message_str}
-                message_to_send = json.dumps(json_map) + '\n'
-                self.client.send_data(message_to_send)
+            json_map = {"action": "publish", "data": message_str}
+
+        elif attributes.type == UMessageType.UMESSAGE_TYPE_REQUEST:
+            # check uri
+            status = UriValidator.validate_rpc_method(topic)
+            if status.is_failure():
+                return status
+            json_map = {"action": "send_rpc", "data": message_str}
+
+        elif attributes.type == UMessageType.UMESSAGE_TYPE_RESPONSE:
+            status = UriValidator.validate_rpc_method(topic)
+            if status.is_failure():
+                return status
+            json_map = {"action": "rpc_response", "data": message_str}
+
+        try:
+            # write data to socket
+            message_to_send = json.dumps(json_map) + '\n'
+            self.client.send_data(message_to_send)
+            received_data = None
+            if attributes.type in [UMessageType.UMESSAGE_TYPE_PUBLISH]:
                 # Wait for data to be received from the socket
-                print('waiting for status')
                 received_data = self.client.receive_data()
-                print('received status, now return it')
-                return received_data
-            except Exception as e:
-                print(' send failed')
-                return UStatus(message=str(e), code=UCode.UNKNOWN)
+            return received_data
 
-        # elif attributes.type == UMessageType.UMESSAGE_TYPE_REQUEST:
-        #     # check uri
-        #     status = UriValidator.validate_rpc_method(topic)
-        #     if status.is_failure():
-        #         return status
-        #
-        #     # create request cloudevent
-        #     ce, serialized_str = ZenohUtils.create_serialized_ce(topic, payload, attributes)
-        #     ZenohUtils().send_rpc_request_zenoh(UCloudEvent.get_sink(ce), serialized_str)
-        #
-        # elif attributes.type == UMessageType.UMESSAGE_TYPE_RESPONSE:
-        #     status = UriValidator.validate_rpc_method(topic)
-        #     if status.is_failure():
-        #         return status
-        #
-        #     # create response cloudevent
-        #     ce, serialized_str = ZenohUtils.create_serialized_ce(topic, payload, attributes)
-        #     print('response ')
-        #     methoduri = ZenohUtils.replace_special_chars(LongUriSerializer().serialize(topic))
-        #     m_requests_query[UCloudEvent.get_request_id(ce)].reply(Sample(methoduri, serialized_str))
-        #     m_requests_query.pop(UCloudEvent.get_request_id(ce))
-        #     return UStatus(message="successfully send rpc response to zenoh")
-
-        else:
-            return UStatus(message="Invalid attributes type")
+        except Exception as e:
+            return UStatus(message=str(e), code=UCode.UNKNOWN)
 
     def register_listener(self, uri: UUri, listener: UListener) -> UStatus:
-        if UriValidator.validate_rpc_method(uri).is_success():
-            pass
-        else:
-            self.client.connect()
-            uri_str = Base64ProtobufSerializer().deserialize(uri.SerializeToString())
-            try:
+        self.client.connect()
+        uri_str = Base64ProtobufSerializer().deserialize(uri.SerializeToString())
+
+        try:
+            if UriValidator.validate_rpc_method(uri).is_success():
+                self.__add_rpc_request_callback(LongUriSerializer().serialize(uri), listener)
+                # write data to socket
+                json_map = {"action": "register_rpc", "data": uri_str}
+                print('register rpc for ', uri)
+
+            else:
                 self.__add_subscribe_callback(LongUriSerializer().serialize(uri), listener)
                 # write data to socket
                 json_map = {"action": "subscribe", "data": uri_str}
-                message_to_send = json.dumps(json_map) + '\n'
-                self.client.send_data(message_to_send)
-                # Wait for data to be received from the socket
-                print('waiting for status')
-                received_data = self.client.receive_data()
-                print('received status, now return it')
-                print(received_data)
-                return received_data
-            except Exception as e:
-                print('register listener failed')
-                return UStatus(message=str(e), code=UCode.UNKNOWN)
+                print('subscribe to ', uri)
+
+            message_to_send = json.dumps(json_map) + '\n'
+            self.client.send_data(message_to_send)
+            # Wait for data to be received from the socket
+            received_data = self.client.receive_data()
+            return received_data
+        except Exception as e:
+            return UStatus(message=str(e), code=UCode.UNKNOWN)
+
+    def invoke_method(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> Future:
+        # check message type,id and ttl
+        req_id = LongUuidSerializer.instance().serialize(attributes.id)
+        if attributes.type != UMessageType.UMESSAGE_TYPE_REQUEST:
+            raise Exception("Event type is invalid")
+        if req_id is None or len(req_id.strip()) == 0:
+            raise Exception("Event id is missing")
+        if attributes.ttl is None or attributes.ttl <= 0:
+            raise Exception("TTl is invalid or missing")
+
+        response_future = add_request(req_id)
+        # # Start a thread to count the timeout
+        # timeout_thread = threading.Thread(target=timeout_counter, args=(response_future, req_id, attributes.ttl))
+        # timeout_thread.start()
+        self.send(topic, payload, attributes)
+        return response_future  # future result to be set by the service.
 
     def __add_subscribe_callback(self, topic: str, callback: UListener):
         """
@@ -303,10 +324,20 @@ class AndroidBinder(UTransport):
         :param topic: A topic name to which subscription is to be made
         :param callback: This is a method that will be invoked upon receiving
         """
-        if topic in self.client._subscribe_callbacks:
-            callbacks = self.client._subscribe_callbacks[topic]
+        if topic in self.client.subscribe_callbacks:
+            callbacks = self.client.subscribe_callbacks[topic]
             if callback not in callbacks:
                 callbacks.append(callback)
         else:
             callbacks = [callback]
-            self.client._subscribe_callbacks[topic] = callbacks
+            self.client.subscribe_callbacks[topic] = callbacks
+
+    def __add_rpc_request_callback(self, method_uri: str, callback: UListener):
+
+        if method_uri in self.client.rpc_request_callbacks:
+            callbacks = self.client.rpc_request_callbacks[method_uri]
+            if callback not in callbacks:
+                callbacks.append(callback)
+        else:
+            callbacks = [callback]
+            self.client.rpc_request_callbacks[method_uri] = callbacks
