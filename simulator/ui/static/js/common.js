@@ -90,7 +90,7 @@ function setupSocket() {
         console.log('zenoh before emit')
         console.log(localStorage.getItem("zenoh_router_port"))
 
-        socket.emit("set_zenoh_config", localStorage.getItem("zenoh_router_ip"),localStorage.getItem("zenoh_router_port"))
+        socket.emit("set_zenoh_config", localStorage.getItem("zenoh_router_ip"), localStorage.getItem("zenoh_router_port"))
         if (segment.includes('configuration')) {
             document.getElementById("localip").value = localStorage.getItem("ip_local")
             document.getElementById("multicastip").value = localStorage.getItem("ip_multicast")
@@ -158,7 +158,7 @@ function setupSocket() {
         onPubException(ex)
     });
     socket.on('onTopicUpdate', function (json_res) {
-        onTopicUpdate(json_res.json_data, json_res.original_json_data,json_res.topic)
+        onTopicUpdate(json_res.json_data, json_res.original_json_data, json_res.topic)
     });
 
 };

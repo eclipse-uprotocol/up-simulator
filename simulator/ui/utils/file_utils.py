@@ -82,24 +82,3 @@ def save_pub_sub_data(socketio, lock_pubsub, json_res):
         print(exc)
 
 
-def update_running_service_data(lock_service, service_file, entity_to_remove):
-    lock_service.acquire()
-    try:
-        if os.path.isfile(service_file):
-            with open(service_file, 'r+') as f:
-                try:
-                    running_services = json.load(f)
-                except json.JSONDecodeError:
-                    # Handle the case where the file is empty or not valid JSON
-                    running_services = []
-
-                # Remove the entity if it exists
-                running_services = [service for service in running_services if service != entity_to_remove]
-
-                f.seek(0)
-                f.truncate()
-                f.write(json.dumps(running_services))
-    except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        lock_service.release()

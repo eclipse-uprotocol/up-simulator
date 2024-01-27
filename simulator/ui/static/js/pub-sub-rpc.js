@@ -155,13 +155,19 @@ function onTopicUpdateSomeIP(json_proto, json_proto_original, topic, port, destp
 }
 
 function onTopicUpdate(json_proto, json_proto_original, topic) {
-        console.log('ontopicupdate1')
+    console.log('ontopicupdate1')
 
     if (JSON.stringify(json_proto, null, 2).length > 2) {
-            console.log('ontopicupdate2')
+        console.log('ontopicupdate2')
 
         if (topic == selectedTopic) {
-            createspan("Received topic update from Vehicle Service" + "\n", true, true, "logsdesc")
+            if (localStorage.getItem("utransportConfig") == "BINDER") {
+                msg = "Received topic update from up-core-android Service"
+            } else {
+                msg = "Received topic update"
+            }
+
+            createspan(msg + "\n", true, true, "logsdesc")
             createspan(JSON.stringify(json_proto_original, null, 2) + "\n\n", true, false, "logsdesc")
             updateui_ontopicupdate(json_proto)
         }
@@ -252,9 +258,9 @@ function onConfigClick(rb) {
     if (rb.checked) {
         setvalues({}, 'true')
         selectedTopic = rb.getAttribute("topic")
-//        if (localStorage.getItem("utransportConfig") in ["BINDER", "VEHICLE"]) {
-//            execute_subscribe(rb.getAttribute("topic"))
-//        }
+        //        if (localStorage.getItem("utransportConfig") in ["BINDER", "VEHICLE"]) {
+        //            execute_subscribe(rb.getAttribute("topic"))
+        //        }
 
 
         if (rb.hasAttribute("rpc")) {

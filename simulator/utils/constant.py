@@ -41,7 +41,6 @@ RESOURCE_CATALOG_CSV_NAME = "resource_catalog.csv"
 RESOURCE_CATALOG_JSON_NAME = "resource_catalog.json"
 
 FILENAME_RPC_LOGGER = "rpc_logger.txt"
-FILENAME_SERVICE_RUNNING_STATUS = "service_status.txt"
 FILENAME_PUBSUB_LOGGER = "pubsub_logger.txt"
 
 API_START_SERVICE = "start-service"

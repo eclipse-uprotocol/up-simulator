@@ -111,34 +111,12 @@ def get_service_instance_from_entity(name):
             return entity_dict.get('entity')
     return None
 
+def get_all_running_service():
+    running_service=[]
+    for index, entity_dict in enumerate(mock_entity):
+        running_service.append(entity_dict.get('name'))
+    return running_service
 
-def entity_name_file(lock, entity, filename):
-    try:
-        lock.acquire()
-        if os.path.isfile(filename):
-            with open(filename, 'r+') as f:
-                lines = f.read()
-                f.seek(0)
-                f.truncate()
-                if len(lines) > 0:
-                    services = json.loads(lines)
-                else:
-                    services = []
-                services.append(entity)
-                f.write(json.dumps(services, indent=2))
-        else:
-            services = []
-            services.append(entity)
-            try:
-                with open(filename, 'a+') as fp:
-                    fp.write(json.dumps(services, indent=2))
-
-            except IOError as exc:
-                pass
-    except:
-        pass
-    finally:
-        lock.release()
 
 
 class SocketUtility:
@@ -256,7 +234,6 @@ class SocketUtility:
             try:
                 start_service(json_service['entity'], handler)
                 time.sleep(1)
-                entity_name_file(self.lock_service, json_service['entity'], CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS)
                 self.socketio.emit(CONSTANTS.CALLBACK_START_SERVICE, json_service['entity'], namespace=CONSTANTS.NAMESPACE)
             except Exception as ex:
                 logger.error(f'Exception:', exc_info=ex)

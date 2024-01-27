@@ -32,9 +32,7 @@ import traceback
 from builtins import str
 from concurrent.futures import Future
 from sys import platform
-from simulator.ui.utils import adb_utils
 
-from google.protobuf.json_format import MessageToDict
 from uprotocol.cloudevent.serialize.base64protobufserializer import Base64ProtobufSerializer
 from uprotocol.proto.uattributes_pb2 import UAttributes, UMessageType
 from uprotocol.proto.umessage_pb2 import UMessage
@@ -84,6 +82,25 @@ class SocketClient:
             self.connected = False
             self.initialized = True
             self._subscribe_callbacks = {}
+            self.receive_lock = threading.Lock()
+            self.received_data = None
+
+    def receive_data(self):
+        start_time = time.time()
+        while True:
+            with self.receive_lock:
+                if self.received_data is not None:
+                    data = self.received_data
+                    self.received_data = None
+                    return data
+            if time.time() - start_time > 30:
+                return UStatus(code=UCode.UNKNOWN, message="Error: Timeout reached")
+            time.sleep(0.1)  # Adjust sleep time as needed to reduce CPU load
+
+    def handle_received_data(self, data):
+        with self.receive_lock:
+            self.received_data = data
+            print('receive data set')
 
     def connect(self):
         try:
@@ -118,7 +135,6 @@ class SocketClient:
                         buffered_data = formatted_data
                     if formatted_data != '':
                         data = formatted_data.decode('utf-8')
-                        print(f'Data {data}')
 
                         json_data = json.loads(data)
                         if 'action' in json_data:
@@ -128,7 +144,6 @@ class SocketClient:
                                 serialized_data = Base64ProtobufSerializer().serialize(json_data['data'])
                                 parsed_message = UMessage()
                                 parsed_message.ParseFromString(serialized_data)
-
                                 topic = LongUriSerializer().serialize(parsed_message.source)
                                 if topic in self._subscribe_callbacks:
                                     callbacks = self._subscribe_callbacks[topic]
@@ -138,13 +153,12 @@ class SocketClient:
                                 else:
                                     print(f'No callback registered for topic: {topic}. Discarding!')
 
-
-                            elif action == "publish_status":
+                            elif action == "publish_status" or action == "subscribe_status":
                                 serialized_data = Base64ProtobufSerializer().serialize(json_data['data'])
                                 parsed_message = UStatus()
                                 parsed_message.ParseFromString(serialized_data)
-
-                                print('publish status')
+                                print(f'{action} before handle received data')
+                                self.handle_received_data(parsed_message)
 
                         print(f"Received from server: {data}")
             except (socket.timeout, OSError):
@@ -222,9 +236,12 @@ class AndroidBinder(UTransport):
                 # write data to socket
                 json_map = {"action": "publish", "data": message_str}
                 message_to_send = json.dumps(json_map) + '\n'
-
                 self.client.send_data(message_to_send)
-                return UStatus(message="successfully publish value to zenoh_up")
+                # Wait for data to be received from the socket
+                print('waiting for status')
+                received_data = self.client.receive_data()
+                print('received status, now return it')
+                return received_data
             except Exception as e:
                 print(' send failed')
                 return UStatus(message=str(e), code=UCode.UNKNOWN)
@@ -267,7 +284,12 @@ class AndroidBinder(UTransport):
                 json_map = {"action": "subscribe", "data": uri_str}
                 message_to_send = json.dumps(json_map) + '\n'
                 self.client.send_data(message_to_send)
-                return UStatus(message="successfully subscribe value to ")
+                # Wait for data to be received from the socket
+                print('waiting for status')
+                received_data = self.client.receive_data()
+                print('received status, now return it')
+                print(received_data)
+                return received_data
             except Exception as e:
                 print('register listener failed')
                 return UStatus(message=str(e), code=UCode.UNKNOWN)

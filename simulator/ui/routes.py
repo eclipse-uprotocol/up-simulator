@@ -26,17 +26,14 @@
 
 import json
 import os
-import threading
 from urllib.parse import unquote
 
 from flask import redirect, url_for, render_template, request, send_file
 
+import simulator.utils.constant as CONSTANTS
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
-import simulator.utils.constant as CONSTANTS
-from simulator.ui.utils.file_utils import update_running_service_data
-
-lock_service = threading.Lock()
+from simulator.ui.utils.socket_utils import get_all_running_service
 
 
 @blueprint.route('/')
@@ -189,7 +186,6 @@ def getconfiguration():
 @blueprint.route('/getmockservices')
 def get_mock_services():
     mockservice_pkgs = []
-    running_services = []
     json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
     if 'ui_json' in os.getcwd():
         json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
@@ -200,10 +196,7 @@ def get_mock_services():
         pkgs = {'entity': m['name'], 'name': m['display_name']}
         mockservice_pkgs.append(pkgs)
 
-    if os.path.isfile("service_status.txt"):
-        with open('service_status.txt', 'r+') as f:
-            lines = f.read()
-            running_services = json.loads(lines)
+    running_services = get_all_running_service()
 
     return {'result': True, 'pkgs_mock': mockservice_pkgs, 'running': running_services}
 
@@ -211,15 +204,10 @@ def get_mock_services():
 @blueprint.route('/updateservicestatus')
 def update_service_status():
     entity_to_remove = request.args['entity']
-    file = request.args['file']
     print(entity_to_remove)
     try:
         from simulator.ui.utils.socket_utils import stop_service
         stop_service(entity_to_remove)
     except:
         pass
-
-    global lock_service
-    update_running_service_data(lock_service, file, entity_to_remove)
-
     return {'result': True, 'entity': entity_to_remove}

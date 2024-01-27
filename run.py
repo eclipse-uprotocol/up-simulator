@@ -48,7 +48,8 @@ socketio = SocketIO(app)
 is_reset = True
 transport_layer = TransportLayer()
 
-socket_utility = SocketUtility(socketio,transport_layer)
+socket_utility = SocketUtility(socketio, transport_layer)
+
 
 @socketio.on(CONSTANTS.API_SET_UTRANSPORT, namespace=CONSTANTS.NAMESPACE)
 def set_transport(selected_utransport):
@@ -62,7 +63,7 @@ def set_someip_config(localip, multicastip):
 
 @socketio.on(CONSTANTS.API_SET_ZENOH_CONFIG, namespace=CONSTANTS.NAMESPACE)
 def set_zenoh_config(routerip, port):
-    transport_layer.set_zenoh_config(routerip,port)
+    transport_layer.set_zenoh_config(routerip, port)
 
 
 @socketio.on(CONSTANTS.API_SUBSCRIBE, namespace=CONSTANTS.NAMESPACE)
@@ -111,8 +112,7 @@ def reset():
                 os.remove(CONSTANTS.FILENAME_RPC_LOGGER)
             if os.path.isfile(CONSTANTS.FILENAME_PUBSUB_LOGGER):
                 os.remove(CONSTANTS.FILENAME_PUBSUB_LOGGER)
-            if os.path.isfile(CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS):
-                os.remove(CONSTANTS.FILENAME_SERVICE_RUNNING_STATUS)
+
         except:
             pass
 

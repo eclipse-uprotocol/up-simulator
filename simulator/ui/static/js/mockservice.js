@@ -187,7 +187,7 @@ function stopMockService(id) {
     activeCheckbox = document.getElementById("cb" + id)
     activeCheckbox.checked = false
 
-    fetch("/updateservicestatus?entity=" + id + "&file=service_status.txt")
+    fetch("/updateservicestatus?entity=" + id )
         .then((res) => res.json())
         .then((data) => {
             if (data.result) {
