@@ -56,6 +56,7 @@ MAX_MESSAGE_SIZE = 32767
 def add_request(req_id: str):
     global m_requests
     future = Future()
+    print('Neel', req_id)
     m_requests[req_id] = future
     return future
 
