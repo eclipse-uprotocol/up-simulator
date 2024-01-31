@@ -36,7 +36,9 @@ from pyaxmlparser import APK as APKParse
 from packaging import version
 
 logger = logging.getLogger("adb_utils")
-apk_path = os.path.join(os.getcwd(), 'simulator', 'core', "uPAndroidProxy-debug.apk")
+apk_folder_path = os.path.join(os.getcwd(), 'simulator', 'apk')
+
+apk_path = os.path.join(apk_folder_path, os.listdir(apk_folder_path)[0])
 package_name = "org.eclipse.uprotocol.service.androidproxy"
 
 

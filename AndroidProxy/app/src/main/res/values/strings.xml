@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AndroidProxy</string>
+    <string name="service_is_running">Android Proxy Service is running</string>
+    <string name="version">"Version : "</string>
+</resources>
