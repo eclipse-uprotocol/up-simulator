@@ -188,13 +188,13 @@ class BrakingService(CovesaService):
 
         if type(request) == ResetHealthRequest:
             topic = topic_prefix + request.name + "#BrakePads"
-            self.publish(topic, self.state[request.name])
+            self.publish(topic, self.state[request.name],True)
         else:
             topic = topic_prefix + "brake_pads.front#BrakePads"
-            self.publish(topic, self.state['brake_pads.front'])
+            self.publish(topic, self.state['brake_pads.front'],True)
 
             topic = topic_prefix + "brake_pads.rear#BrakePads"
-            self.publish(topic, self.state['brake_pads.rear'])
+            self.publish(topic, self.state['brake_pads.rear'],True)
 
 
 class BrakingPreconditions(UListener):

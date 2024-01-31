@@ -184,7 +184,7 @@ class SuspensionService(CovesaService):
         """
         topic = "up:/chassis.suspension/1/ride_height#RideHeight"
 
-        self.publish(topic, self.state["ride_height"])
+        self.publish(topic, self.state["ride_height"],True)
 
 
 class SuspensionPreconditions(UListener):

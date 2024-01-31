@@ -154,7 +154,7 @@ class ChassisService(CovesaService):
         """
         for tire in self.tire_names:
             topic = "up:/chassis/1/" + tire + "#Tire"
-            self.publish(topic, self.state[tire])
+            self.publish(topic, self.state[tire],True)
 
 
 class ChassisPreconditions(UListener):

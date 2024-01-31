@@ -295,7 +295,7 @@ class CabinClimateService(CovesaService):
         """
         # publish zone info based on current state
         topic = "up:/body.cabin_climate/1/" + zone_name + "#Zone"
-        self.publish(topic, self.state[zone_name])
+        self.publish(topic, self.state[zone_name],True)
 
     def get_est_cabin_temp(self):
         """
@@ -356,7 +356,7 @@ class CabinClimateService(CovesaService):
         """
         topic = "up:/body.cabin_climate/1/system_settings#SystemSettings"
         # publish system settings based on current state
-        self.publish(topic, self.settings_state)
+        self.publish(topic, self.settings_state,True)
 
     def get_blower_level(self, number):
         """

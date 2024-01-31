@@ -121,7 +121,7 @@ class CovesaService(object):
 
                             break
 
-    def publish(self, uri, params={}):
+    def publish(self, uri, params={}, is_from_rpc=False):
 
         message_class = protobuf_autoloader.get_request_class_from_topic_uri(uri)
         message = protobuf_autoloader.populate_message(self.service, message_class, params)
@@ -132,8 +132,9 @@ class CovesaService(object):
         attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
         status = self.transport_layer.send(LongUriSerializer().deserialize(uri), payload, attributes)
         common_util.print_publish_status(uri, status.code, status.message)
-        self.publish_data.clear()
-        self.publish_data.append(message)
+        if is_from_rpc:
+            self.publish_data.clear()
+            self.publish_data.append(message)
         time.sleep(0.25)
         return message, status
 

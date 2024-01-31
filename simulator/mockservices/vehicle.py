@@ -146,11 +146,11 @@ class VehicleService(CovesaService):
             # get trip_meter key from value, expecting 0 - trip_1 or 1 - trip_2
             trip_val = list(TripMeter.Resources.keys())[list(TripMeter.Resources.values()).index(request.trip_meter)]
             topic = "up:/vehicle/1/trip_meter." + trip_val + "#TripMeter"
-            self.publish(topic, self.state[trip_val])
+            self.publish(topic, self.state[trip_val],True)
 
         if type(request) == SetTransportModeRequest:
             topic = "up:/vehicle/1/vehicle_usage.transport_mode#VehicleUsage"
-            self.publish(topic, self.state)
+            self.publish(topic, self.state,True)
 
         return True
 

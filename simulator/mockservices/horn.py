@@ -84,4 +84,4 @@ class HornService(CovesaService):
         """
 
         topic = "up:/body.horn/1/horn#HornStatus"
-        self.publish(topic, self.state["horn_status"])
+        self.publish(topic, self.state["horn_status"],True)

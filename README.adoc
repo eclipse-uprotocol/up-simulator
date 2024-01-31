@@ -99,21 +99,12 @@ To start and use the `up-simulator`, follow the steps below:
 python run.py
 ----
 
-. On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it supports only Zenoh. Choose "Zenoh" from the dropdown.
+. On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it  supports only Android.
 +
 image::screenshots/configuration.png[]
 
-. Go to the configuration page and provide your Zenoh router's IP address and port in the respective fields on the configuration page.
-
-- **Zenoh Router IP:** [Your Zenoh Router IP]
-- **Zenoh Router Port:** [Your Zenoh Router Port]
-+
-image::screenshots/zenoh_config.png[]
-
-. Click on the "Save" button to save the Zenoh router configuration.
-+
 [NOTE]
-Ensure that you have started the Zenoh router using the `zenohd` command before configuring the uP Simulator.
+To test pub,sub and rpc with up-android, ensure your emulator is up and the up-core service is running. Please refer to the installation instructions for up-core-service provided https://github.com/mishap4/up-android/blob/v1.5.0/up-core-android/README.adoc[here]..
 
 . To use the publish and subscribe functionality, click on the "Publish-Subscribe" menu. Within this menu, you will find a list of Covesa services.
 +
