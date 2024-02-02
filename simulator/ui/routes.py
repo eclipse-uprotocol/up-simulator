@@ -51,7 +51,6 @@ def route_configuration():
             status = device.shell("getprop init.svc.bootanim")
             if status.__contains__('stopped'):
                 emu_status = 'Emulator is running'
-                os.system("adb forward tcp:6095 tcp:6095")
                 deviceInfo = {'Avd_name': device.shell("getprop ro.boot.qemu.avd_name" ),
                               'Image': device.shell("getprop ro.product.bootimage.name"),
                               'Build_date': device.shell("getprop ro.bootimage.build.date"),

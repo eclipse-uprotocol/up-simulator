@@ -32,7 +32,6 @@ from uprotocol.proto.uri_pb2 import UEntity
 from uprotocol.proto.uri_pb2 import UUri
 from uprotocol.proto.ustatus_pb2 import UStatus
 from uprotocol.transport.ulistener import UListener
-from uprotocol_zenoh.zenoh_utransport import Zenoh
 
 from simulator.core.binder_utransport import AndroidBinder
 
@@ -53,7 +52,7 @@ class TransportLayer:
             self.__instance = None
             self.__ZENOH_IP = '10.0.3.3'
             self.__ZENOH_PORT = 9090
-            self.__utransport = "ZENOH"
+            self.__utransport = "BINDER"
             self._update_instance()
 
     def set_transport(self, transport: str):
@@ -72,9 +71,7 @@ class TransportLayer:
             self._update_instance()
 
     def _update_instance(self):
-        if self.__utransport == "ZENOH" and self.__ZENOH_IP is not None and self.__ZENOH_PORT is not None:
-            self.__instance = Zenoh(self.__ZENOH_IP, self.__ZENOH_PORT)
-        elif self.__utransport == "BINDER":
+        if self.__utransport == "BINDER":
             self.__instance = AndroidBinder()
 
     def invoke_method(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> Future:

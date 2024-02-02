@@ -49,10 +49,9 @@ def verify_all_checks():
         if device is not None:
             try:
                 status = device.shell("getprop init.svc.bootanim")
-                if status.__contains__('stopped'):
-                    adb_utils.install_apk()
-                else:
+                if not status.__contains__('stopped'):
                     message = 'Emulator is loading..'
+
             except Exception:
                 message = 'Emulator is loading..'
 

@@ -7,6 +7,8 @@ The `up-simulator` is a user-friendly web tool designed to make developing uProt
 
 == Architecture Overview
 
+image::screenshots/uSimulator_overview.drawio.svg[]
+
 .  **up-Simulator **:
 +
 .Description:
@@ -64,14 +66,14 @@ cd up-simulator
 +
 [source]
 ----
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ----
 
 . Execute the `setup_simulator.py` script using the following command:
 +
 [source]
 ----
-python setup_simulator.py
+python3 setup_simulator.py
 ----
 
 This script automates the following tasks:
@@ -96,7 +98,7 @@ To start and use the `up-simulator`, follow the steps below:
 +
 [source]
 ----
-python run.py
+python3 run.py
 ----
 
 . On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it  supports only Android.
@@ -104,7 +106,7 @@ python run.py
 image::screenshots/configuration.png[]
 
 [NOTE]
-To test pub,sub and rpc with up-android, ensure your emulator is up and the up-core service is running. Please refer to the installation instructions for up-core-service provided https://github.com/mishap4/up-android/blob/v1.5.0/up-core-android/README.adoc[here]..
+To test pub,sub and rpc with up-android, ensure your emulator is up and the up-core service is running. Please refer to the installation instructions for up-core-service provided https://github.com/eclipse-uprotocol/up-android/blob/main/up-core-android/README.adoc[here]..
 
 . To use the publish and subscribe functionality, click on the "Publish-Subscribe" menu. Within this menu, you will find a list of Covesa services.
 +
