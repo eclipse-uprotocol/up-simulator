@@ -106,13 +106,11 @@ def stop_all_mock_services():
 def reset():
     global is_reset
     if is_reset:
-        print('reset called')
         try:
             if os.path.isfile(CONSTANTS.FILENAME_RPC_LOGGER):
                 os.remove(CONSTANTS.FILENAME_RPC_LOGGER)
             if os.path.isfile(CONSTANTS.FILENAME_PUBSUB_LOGGER):
                 os.remove(CONSTANTS.FILENAME_PUBSUB_LOGGER)
-
         except:
             pass
 
