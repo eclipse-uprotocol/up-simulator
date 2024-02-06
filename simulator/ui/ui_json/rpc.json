@@ -1,0 +1,1565 @@
+{
+  "example.hello_world": [
+    {
+      "SayHello": {
+        "Configuration": [
+          {
+            "name": "N",
+            "display_name": "SayHello",
+            "rpcmethod": "SayHello"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "string",
+            "property": "name"
+          }
+        ]
+      }
+    }
+  ],
+  "body.cabin_climate": [
+    {
+      "ExecuteClimateCommand": {
+        "Configuration": [
+          {
+            "name": "row1_left",
+            "name_key": "zone.id",
+            "rpcmethod": "ExecuteClimateCommand"
+          },
+          {
+            "name": "row1_right",
+            "name_key": "zone.id",
+            "rpcmethod": "ExecuteClimateCommand"
+          },
+          {
+            "name": "row2_left",
+            "name_key": "zone.id",
+            "rpcmethod": "ExecuteClimateCommand"
+          },
+          {
+            "name": "row2_right",
+            "name_key": "zone.id",
+            "rpcmethod": "ExecuteClimateCommand"
+          },
+          {
+            "name": "row3_left",
+            "name_key": "zone.id",
+            "rpcmethod": "ExecuteClimateCommand"
+          },
+          {
+            "name": "row3_right",
+            "name_key": "zone.id",
+            "rpcmethod": "ExecuteClimateCommand"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Zone"
+          },
+          {
+            "type": "float",
+            "rpcproperty": "zone.temperature",
+            "property": "temperature",
+            "minrange": -0,
+            "maxrange": 50
+          },
+          {
+            "type": "dropdown",
+            "property": "fan_auto_state",
+            "rpcproperty": "zone.fan_auto_state",
+            "mode": [
+              {
+                "label": "AM_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "AM_OFF",
+                "value": 1
+              },
+              {
+                "label": "AM_AUTO",
+                "value": 2
+              },
+              {
+                "label": "AM_MANUAL",
+                "value": 3
+              },
+              {
+                "label": "AM_AUTO_LOW",
+                "value": 4
+              },
+              {
+                "label": "AM_AUTO_HIGH",
+                "value": 5
+              }
+            ]
+          },
+          {
+            "type": "int",
+            "rpcproperty": "zone.fan_speed",
+            "property": "fan_speed",
+            "minrange": 0,
+            "maxrange": 100
+          },
+          {
+            "type": "dropdown",
+            "property": "air_distribution",
+            "rpcproperty": "zone.air_distribution",
+            "mode": [
+              {
+                "label": "AD_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "AD_OFF",
+                "value": 1
+              },
+              {
+                "label": "AD_AUTO",
+                "value": 2
+              },
+              {
+                "label": "AD_FLOOR",
+                "value": 3
+              },
+              {
+                "label": "AD_FLOOR_VENT",
+                "value": 4
+              },
+              {
+                "label": "AD_VENT",
+                "value": 5
+              },
+              {
+                "label": "AD_VENT_WINDSHIELD",
+                "value": 6
+              },
+              {
+                "label": "AD_WINDSHIELD",
+                "value": 7
+              },
+              {
+                "label": "AD_FLOOR_WINDSHIELD",
+                "value": 8
+              },
+              {
+                "label": "AD_FLOOR_VENT_WINDSHIELD",
+                "value": 9
+              },
+              {
+                "label": "AD_MAX_DEFROST",
+                "value": 10
+              }
+            ]
+          },
+          {
+            "type": "bool",
+            "property": "is_power_on",
+            "rpcproperty": "zone.is_power_on"
+          },
+          {
+            "type": "bool",
+            "property": "is_auto_on",
+            "rpcproperty": "zone.is_auto_on"
+          },
+          {
+            "type": "bool",
+            "property": "is_zone_locked",
+            "rpcproperty": "zone.is_zone_locked"
+          },
+          {
+            "type": "dropdown",
+            "property": "air_distribution_auto_state",
+            "rpcproperty": "zone.air_distribution_auto_state",
+            "mode": [
+              {
+                "label": "AM_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "AM_OFF",
+                "value": 1
+              },
+              {
+                "label": "AM_AUTO",
+                "value": 2
+              },
+              {
+                "label": "AM_MANUAL",
+                "value": 3
+              },
+              {
+                "label": "AM_AUTO_LOW",
+                "value": 4
+              },
+              {
+                "label": "AM_AUTO_HIGH",
+                "value": 5
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "temperature_auto_state",
+            "rpcproperty": "zone.temperature_auto_state",
+            "mode": [
+              {
+                "label": "AM_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "AM_OFF",
+                "value": 1
+              },
+              {
+                "label": "AM_AUTO",
+                "value": 2
+              },
+              {
+                "label": "AM_MANUAL",
+                "value": 3
+              },
+              {
+                "label": "AM_AUTO_LOW",
+                "value": 4
+              },
+              {
+                "label": "AM_AUTO_HIGH",
+                "value": 5
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "UpdateSystemSettings": {
+        "Configuration": [
+          {
+            "name": "system_settings",
+            "display_name": "system_settings",
+            "rpcmethod": "UpdateSystemSettings"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "System Settings"
+          },
+          {
+            "type": "bool",
+            "property": "sync_all",
+            "rpcproperty": "settings.sync_all"
+          },
+          {
+            "type": "bool",
+            "property": "sync_rear_to_driver",
+            "rpcproperty": "settings.sync_rear_to_driver"
+          },
+          {
+            "type": "bool",
+            "property": "sync_3rdRow_to_driver",
+            "rpcproperty": "settings.sync_3rdRow_to_driver"
+          },
+          {
+            "type": "int",
+            "property": "estimated_cabin_temperature",
+            "rpcproperty": "settings.estimated_cabin_temperature",
+            "minrange": 0,
+            "maxrange": 50
+          },
+          {
+            "type": "bool",
+            "property": "rear_zone_lockout",
+            "rpcproperty": "settings.rear_zone_lockout"
+          },
+          {
+            "type": "bool",
+            "property": "air_recirc_mode",
+            "rpcproperty": "settings.air_recirc_mode"
+          },
+          {
+            "type": "bool",
+            "property": "max_defrost",
+            "rpcproperty": "settings.max_defrost"
+          },
+          {
+            "type": "bool",
+            "property": "rear_window_defog",
+            "rpcproperty": "settings.rear_window_defog"
+          },
+          {
+            "type": "bool",
+            "property": "cabin_conditioning_invalid",
+            "rpcproperty": "settings.cabin_conditioning_invalid"
+          },
+          {
+            "type": "bool",
+            "property": "third_row_zone_lockout",
+            "rpcproperty": "settings.third_row_zone_lockout"
+          },
+          {
+            "type": "dropdown",
+            "property": "ac_compressor_setting",
+            "rpcproperty": "settings.ac_compressor_setting",
+            "mode": [
+              {
+                "label": "CS_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "CS_ON",
+                "value": 1
+              },
+              {
+                "label": "CS_OFF",
+                "value": 2
+              },
+              {
+                "label": "CS_ECONOMY",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "heater_setting",
+            "rpcproperty": "settings.heater_setting",
+            "mode": [
+              {
+                "label": "HS_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "HS_HEAT_ON",
+                "value": 1
+              },
+              {
+                "label": "HS_HEAT_OFF",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "temperature_units",
+            "rpcproperty": "settings.temperature_units",
+            "mode": [
+              {
+                "label": "TU_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "TU_CELSIUS",
+                "value": 1
+              },
+              {
+                "label": "TU_FAHRENHEIT",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "ionizer_status",
+            "rpcproperty": "settings.ionizer_status",
+            "mode": [
+              {
+                "label": "IS_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "IS_OFF",
+                "value": 1
+              },
+              {
+                "label": "IS_ON",
+                "value": 2
+              },
+              {
+                "label": "IS_LOW",
+                "value": 3
+              },
+              {
+                "label": "IS_HIGH",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "type": "bool",
+            "property": "user_controls_interaction",
+            "rpcproperty": "settings.user_controls_interaction"
+          }
+        ]
+      }
+    },
+    {
+      "SetTemperature": {
+        "Configuration": [
+          {
+            "name": "zone.row1_left",
+            "display_name": "row1_left",
+            "name_key": "id",
+            "rpcmethod": "SetTemperature"
+          },
+          {
+            "name": "zone.row1_right",
+            "display_name": "row1_right",
+            "name_key": "id",
+            "rpcmethod": "SetTemperature"
+          },
+          {
+            "name": "zone.row2_left",
+            "display_name": "row2_left",
+            "name_key": "id",
+            "rpcmethod": "SetTemperature"
+          },
+          {
+            "name": "zone.row2_right",
+            "display_name": "row2_right",
+            "rpcmethod": "SetTemperature"
+          },
+          {
+            "name": "zone.row3_left",
+            "display_name": "row3_left",
+            "name_key": "id",
+            "rpcmethod": "SetTemperature"
+          },
+          {
+            "name": "zone.row3_right",
+            "display_name": "row3_right",
+            "name_key": "id",
+            "rpcmethod": "SetTemperature"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "float",
+            "property": "temperature",
+            "minrange": -0,
+            "maxrange": 50
+          },
+          {
+            "type": "dropdown",
+            "property": "temperature_state",
+            "mode": [
+              {
+                "label": "AM_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "AM_OFF",
+                "value": 1
+              },
+              {
+                "label": "AM_AUTO",
+                "value": 2
+              },
+              {
+                "label": "AM_MANUAL",
+                "value": 3
+              },
+              {
+                "label": "AM_AUTO_LOW",
+                "value": 4
+              },
+              {
+                "label": "AM_AUTO_HIGH",
+                "value": 5
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "SetFan": {
+        "Configuration": [
+          {
+            "name": "zone.row1_left",
+            "display_name": "row1_left",
+            "name_key": "id",
+            "rpcmethod": "SetFan"
+          },
+          {
+            "name": "zone.row1_right",
+            "display_name": "row1_right",
+            "name_key": "id",
+            "rpcmethod": "SetFan"
+          },
+          {
+            "name": "zone.row2_left",
+            "display_name": "row2_left",
+            "name_key": "id",
+            "rpcmethod": "SetFan"
+          },
+          {
+            "name": "zone.row2_right",
+            "display_name": "row2_right",
+            "name_key": "id",
+            "rpcmethod": "SetFan"
+          },
+          {
+            "name": "zone.row3_left",
+            "display_name": "row3_left",
+            "name_key": "id",
+            "rpcmethod": "SetFan"
+          },
+          {
+            "name": "zone.row3_right",
+            "display_name": "row3_right",
+            "name_key": "id",
+            "rpcmethod": "SetFan"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "int",
+            "property": "fan_speed",
+            "minrange": 0,
+            "maxrange": 100
+          },
+          {
+            "type": "bool",
+            "property": "is_fan_auto_on"
+          }
+        ]
+      }
+    },
+    {
+      "SetAirDistribution": {
+        "Configuration": [
+          {
+            "name": "zone.row1_left",
+            "display_name": "row1_left",
+            "name_key": "id",
+            "rpcmethod": "SetAirDistribution"
+          },
+          {
+            "name": "zone.row1_right",
+            "display_name": "row1_right",
+            "name_key": "id",
+            "rpcmethod": "SetAirDistribution"
+          },
+          {
+            "name": "zone.row2_left",
+            "display_name": "row2_left",
+            "name_key": "id",
+            "rpcmethod": "SetAirDistribution"
+          },
+          {
+            "name": "zone.row2_right",
+            "display_name": "row2_right",
+            "name_key": "id",
+            "rpcmethod": "SetAirDistribution"
+          },
+          {
+            "name": "zone.row3_left",
+            "display_name": "row3_left",
+            "name_key": "id",
+            "rpcmethod": "SetAirDistribution"
+          },
+          {
+            "name": "zone.row3_right",
+            "display_name": "row3_right",
+            "name_key": "id",
+            "rpcmethod": "SetAirDistribution"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "dropdown",
+            "property": "air_distribution",
+            "mode": [
+              {
+                "label": "AD_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "AD_OFF",
+                "value": 1
+              },
+              {
+                "label": "AD_AUTO",
+                "value": 2
+              },
+              {
+                "label": "AD_FLOOR",
+                "value": 3
+              },
+              {
+                "label": "AD_FLOOR_VENT",
+                "value": 4
+              },
+              {
+                "label": "AD_VENT",
+                "value": 5
+              },
+              {
+                "label": "AD_VENT_WINDSHIELD",
+                "value": 6
+              },
+              {
+                "label": "AD_WINDSHIELD",
+                "value": 7
+              },
+              {
+                "label": "AD_FLOOR_WINDSHIELD",
+                "value": 8
+              },
+              {
+                "label": "AD_FLOOR_VENT_WINDSHIELD",
+                "value": 9
+              },
+              {
+                "label": "AD_MAX_DEFROST",
+                "value": 10
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "temperature_state",
+            "mode": [
+              {
+                "label": "AM_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "AM_OFF",
+                "value": 1
+              },
+              {
+                "label": "AM_AUTO",
+                "value": 2
+              },
+              {
+                "label": "AM_MANUAL",
+                "value": 3
+              },
+              {
+                "label": "AM_AUTO_LOW",
+                "value": 4
+              },
+              {
+                "label": "AM_AUTO_HIGH",
+                "value": 5
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "SetPower": {
+        "Configuration": [
+          {
+            "name": "zone.row1_left",
+            "display_name": "row1_left",
+            "name_key": "id",
+            "rpcmethod": "SetPower"
+          },
+          {
+            "name": "zone.row1_right",
+            "display_name": "row1_right",
+            "name_key": "id",
+            "rpcmethod": "SetPower"
+          },
+          {
+            "name": "zone.row2_left",
+            "display_name": "row2_left",
+            "name_key": "id",
+            "rpcmethod": "SetPower"
+          },
+          {
+            "name": "zone.row2_right",
+            "display_name": "row2_right",
+            "name_key": "id",
+            "rpcmethod": "SetPower"
+          },
+          {
+            "name": "zone.row3_left",
+            "display_name": "row3_left",
+            "name_key": "id",
+            "rpcmethod": "SetPower"
+          },
+          {
+            "name": "zone.row3_right",
+            "display_name": "row3_right",
+            "name_key": "id",
+            "rpcmethod": "SetPower"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "property": "is_power_on"
+          }
+        ]
+      }
+    },
+    {
+      "SetLock": {
+        "Configuration": [
+          {
+            "name": "zone.row1_left",
+            "display_name": "row1_left",
+            "name_key": "id",
+            "rpcmethod": "SetLock"
+          },
+          {
+            "name": "zone.row1_right",
+            "display_name": "row1_right",
+            "name_key": "id",
+            "rpcmethod": "SetLock"
+          },
+          {
+            "name": "zone.row2_left",
+            "display_name": "row2_left",
+            "name_key": "id",
+            "rpcmethod": "SetLock"
+          },
+          {
+            "name": "zone.row2_right",
+            "display_name": "row2_right",
+            "name_key": "id",
+            "rpcmethod": "SetLock"
+          },
+          {
+            "name": "zone.row3_left",
+            "display_name": "row3_left",
+            "name_key": "id",
+            "rpcmethod": "SetLock"
+          },
+          {
+            "name": "zone.row3_right",
+            "display_name": "row3_right",
+            "name_key": "id",
+            "rpcmethod": "SetLock"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "property": "is_zone_locked"
+          }
+        ]
+      }
+    }
+  ],
+  "body.horn": [
+    {
+      "ActivateHorn": {
+        "Configuration": [
+          {
+            "name": "N",
+            "display_name": "ActivateHorn",
+            "rpcmethod": "ActivateHorn"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "dropdown",
+            "property": "mode",
+            "mode": [
+              {
+                "label": "HM_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "HM_UNKNOWN",
+                "value": 1
+              },
+              {
+                "label": "HM_SEQUENCED",
+                "value": 2
+              },
+              {
+                "label": "HM_CONTINUOUS",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "type": "repeated",
+            "class": "HornSequence",
+            "key": "command",
+            "value": [
+              {
+                "type": "repeated",
+                "class": "HornCycle",
+                "key": "horn_cycles",
+                "value": [
+                  {
+                    "type": "int",
+                    "property": "on_time",
+                    "minrange": 30,
+                    "maxrange": 10000
+                  },
+                  {
+                    "type": "int",
+                    "property": "off_time",
+                    "minrange": 30,
+                    "maxrange": 10000
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "DeactivateHorn": {
+        "Configuration": [
+          {
+            "name": "N",
+            "display_name": "DeactivateHorn",
+            "rpcmethod": "DeactivateHorn"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    }
+  ],
+  "body.mirrors": [
+    {
+      "SlideSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "rpcmethod": "SlideSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "rpcmethod": "SlideSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "int",
+            "property": "position",
+            "minrange": 0,
+            "maxrange": 100
+          }
+        ]
+      }
+    },
+    {
+      "FoldSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "rpcmethod": "FoldSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "rpcmethod": "FoldSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "UnfoldSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "rpcmethod": "UnfoldSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "rpcmethod": "UnfoldSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "TiltSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "rpcmethod": "TiltSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "rpcmethod": "TiltSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "UntiltSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "rpcmethod": "UntiltSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "rpcmethod": "UntiltSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "ActivateHeatedSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "rpcmethod": "ActivateHeatedSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "rpcmethod": "ActivateHeatedSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "DeactivateHeatedSideMirror": {
+        "Configuration": [
+          {
+            "name": "left",
+            "name_key": "id",
+            "rpcmethod": "DeactivateHeatedSideMirror"
+          },
+          {
+            "name": "right",
+            "name_key": "id",
+            "rpcmethod": "DeactivateHeatedSideMirror"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "UpdateSideMirrorMovementSettings": {
+        "Configuration": [
+          {
+            "name": "side_mirror",
+            "display_name": "side_mirror",
+            "rpcmethod": "UpdateSideMirrorMovementSettings"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "rpcproperty": "setting.is_auto_tilt_enabled",
+            "property": "is_auto_tilt_enabled"
+          },
+          {
+            "type": "bool",
+            "rpcproperty": "setting.is_auto_fold_enabled",
+            "property": "is_auto_fold_enabled"
+          }
+        ]
+      }
+    },
+    {
+      "UpdateHeatedSideMirrorsSettings": {
+        "Configuration": [
+          {
+            "name": "side_mirror",
+            "display_name": "side_mirror",
+            "rpcmethod": "UpdateHeatedSideMirrorsSettings"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "rpcproperty": "setting.is_auto_heat_on",
+            "property": "is_auto_heat_on"
+          }
+        ]
+      }
+    }
+  ],
+  "chassis.braking": [
+    {
+      "ResetHealth": {
+        "Configuration": [
+          {
+            "name": "brake_pads.front",
+            "display_name": "front",
+            "rpcmethod": "ResetHealth"
+          },
+          {
+            "name": "brake_pads.rear",
+            "display_name": "rear",
+            "rpcmethod": "ResetHealth"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "ManageHealthMonitoring": {
+        "Configuration": [
+          {
+            "name": "brake_pads.front",
+            "display_name": "front",
+            "rpcmethod": "ManageHealthMonitoring"
+          },
+          {
+            "name": "brake_pads.rear",
+            "display_name": "rear",
+            "rpcmethod": "ManageHealthMonitoring"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "property": "is_enabled"
+          }
+        ]
+      }
+    }
+  ],
+  "chassis.suspension": [
+    {
+      "SetRideHeight": {
+        "Configuration": [
+          {
+            "name": "ride_height",
+            "display_name": "ride_height",
+            "rpcmethod": "SetRideHeight"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "dropdown",
+            "property": "command",
+            "propertyText": "command",
+            "mode": [
+              {
+                "label": "RHL_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "RHL_USER_ENTRY_EXIT",
+                "value": 1
+              },
+              {
+                "label": "RHL_ABSOLUTE_LOWEST",
+                "value": 2
+              },
+              {
+                "label": "RHL_LOWEST",
+                "value": 3
+              },
+              {
+                "label": "RHL_LOWER",
+                "value": 4
+              },
+              {
+                "label": "RHL_LOW",
+                "value": 5
+              },
+              {
+                "label": "RHL_NORMAL",
+                "value": 6
+              },
+              {
+                "label": "RHL_HIGH",
+                "value": 7
+              },
+              {
+                "label": "RHL_HIGHER",
+                "value": 8
+              },
+              {
+                "label": "RHL_HIGHEST",
+                "value": 9
+              },
+              {
+                "label": "RHL_FRONT_TO_REAR_MAX_TILT",
+                "value": 10
+              },
+              {
+                "label": "RHL_REAR_LOW",
+                "value": 11
+              },
+              {
+                "label": "RHL_REAR_HIGH",
+                "value": 12
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "motion_speed",
+            "propertyText": "motion_speed",
+            "mode": [
+              {
+                "label": "MSC_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "MSC_SLOW",
+                "value": 1
+              },
+              {
+                "label": "MSC_FAST",
+                "value": 2
+              },
+              {
+                "label": "MSC_MED",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "motion_type",
+            "propertyText": "motion_type",
+            "mode": [
+              {
+                "label": "MTC_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "MTC_CONCURRENT",
+                "value": 1
+              },
+              {
+                "label": "MTC_RATCHET",
+                "value": 2
+              },
+              {
+                "label": "MTC_CAMEL",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "text": "Ride Height"
+          },
+          {
+            "type": "dropdown",
+            "property": "current_height",
+            "propertyText": "current_height",
+            "readonly": "True",
+            "mode": [
+              {
+                "label": "RHL_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "RHL_USER_ENTRY_EXIT",
+                "value": 1
+              },
+              {
+                "label": "RHL_ABSOLUTE_LOWEST",
+                "value": 2
+              },
+              {
+                "label": "RHL_LOWEST",
+                "value": 3
+              },
+              {
+                "label": "RHL_LOWER",
+                "value": 4
+              },
+              {
+                "label": "RHL_LOW",
+                "value": 5
+              },
+              {
+                "label": "RHL_NORMAL",
+                "value": 6
+              },
+              {
+                "label": "RHL_HIGH",
+                "value": 7
+              },
+              {
+                "label": "RHL_HIGHER",
+                "value": 8
+              },
+              {
+                "label": "RHL_HIGHEST",
+                "value": 9
+              },
+              {
+                "label": "RHL_FRONT_TO_REAR_MAX_TILT",
+                "value": 10
+              },
+              {
+                "label": "RHL_REAR_LOW",
+                "value": 11
+              },
+              {
+                "label": "RHL_REAR_HIGH",
+                "value": 12
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "target_height",
+            "propertyText": "target_height",
+            "readonly": "True",
+            "mode": [
+              {
+                "label": "RHL_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "RHL_USER_ENTRY_EXIT",
+                "value": 1
+              },
+              {
+                "label": "RHL_ABSOLUTE_LOWEST",
+                "value": 2
+              },
+              {
+                "label": "RHL_LOWEST",
+                "value": 3
+              },
+              {
+                "label": "RHL_LOWER",
+                "value": 4
+              },
+              {
+                "label": "RHL_LOW",
+                "value": 5
+              },
+              {
+                "label": "RHL_NORMAL",
+                "value": 6
+              },
+              {
+                "label": "RHL_HIGH",
+                "value": 7
+              },
+              {
+                "label": "RHL_HIGHER",
+                "value": 8
+              },
+              {
+                "label": "RHL_HIGHEST",
+                "value": 9
+              },
+              {
+                "label": "RHL_FRONT_TO_REAR_MAX_TILT",
+                "value": 10
+              },
+              {
+                "label": "RHL_REAR_LOW",
+                "value": 11
+              },
+              {
+                "label": "RHL_REAR_HIGH",
+                "value": 12
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "supported_heights",
+            "propertyText": "supported_heights",
+            "readonly": "True",
+            "mode": [
+              {
+                "label": "RHL_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "RHL_USER_ENTRY_EXIT",
+                "value": 1
+              },
+              {
+                "label": "RHL_ABSOLUTE_LOWEST",
+                "value": 2
+              },
+              {
+                "label": "RHL_LOWEST",
+                "value": 3
+              },
+              {
+                "label": "RHL_LOWER",
+                "value": 4
+              },
+              {
+                "label": "RHL_LOW",
+                "value": 5
+              },
+              {
+                "label": "RHL_NORMAL",
+                "value": 6
+              },
+              {
+                "label": "RHL_HIGH",
+                "value": 7
+              },
+              {
+                "label": "RHL_HIGHER",
+                "value": 8
+              },
+              {
+                "label": "RHL_HIGHEST",
+                "value": 9
+              },
+              {
+                "label": "RHL_FRONT_TO_REAR_MAX_TILT",
+                "value": 10
+              },
+              {
+                "label": "RHL_REAR_LOW",
+                "value": 11
+              },
+              {
+                "label": "RHL_REAR_HIGH",
+                "value": 12
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "property": "available_heights",
+            "propertyText": "available_heights",
+            "readonly": "True",
+            "mode": [
+              {
+                "label": "RHL_UNSPECIFIED",
+                "value": 0
+              },
+              {
+                "label": "RHL_USER_ENTRY_EXIT",
+                "value": 1
+              },
+              {
+                "label": "RHL_ABSOLUTE_LOWEST",
+                "value": 2
+              },
+              {
+                "label": "RHL_LOWEST",
+                "value": 3
+              },
+              {
+                "label": "RHL_LOWER",
+                "value": 4
+              },
+              {
+                "label": "RHL_LOW",
+                "value": 5
+              },
+              {
+                "label": "RHL_NORMAL",
+                "value": 6
+              },
+              {
+                "label": "RHL_HIGH",
+                "value": 7
+              },
+              {
+                "label": "RHL_HIGHER",
+                "value": 8
+              },
+              {
+                "label": "RHL_HIGHEST",
+                "value": 9
+              },
+              {
+                "label": "RHL_FRONT_TO_REAR_MAX_TILT",
+                "value": 10
+              },
+              {
+                "label": "RHL_REAR_LOW",
+                "value": 11
+              },
+              {
+                "label": "RHL_REAR_HIGH",
+                "value": 12
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "chassis": [
+    {
+      "UpdateTire": {
+        "Configuration": [
+          {
+            "name": "tire.front_left",
+            "display_name": "front_left",
+            "rpcmethod": "UpdateTire"
+          },
+          {
+            "name": "tire.front_right",
+            "display_name": "front_right",
+            "rpcmethod": "UpdateTire"
+          },
+          {
+            "name": "tire.rear_left",
+            "display_name": "rear_left",
+            "rpcmethod": "UpdateTire"
+          },
+          {
+            "name": "tire.rear_right",
+            "display_name": "rear_right",
+            "rpcmethod": "UpdateTire"
+          },
+          {
+            "name": "tire.rear_left_inner",
+            "display_name": "rear_left_inner",
+            "rpcmethod": "UpdateTire"
+          },
+          {
+            "name": "tire.rear_right_inner",
+            "display_name": "rear_right_inner",
+            "rpcmethod": "UpdateTire"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "property": "is_leak_notification_enabled"
+          },
+          {
+            "type": "bool",
+            "property": "is_leak_present"
+          }
+        ]
+      }
+    }
+  ],
+  "propulsion.engine": [
+    {
+      "ResetHealth": {
+        "Configuration": [
+          {
+            "name": "air_filter",
+            "display_name": "air_filter",
+            "rpcmethod": "ResetHealth"
+          },
+          {
+            "name": "oil",
+            "display_name": "oil",
+            "rpcmethod": "ResetHealth"
+          },
+          {
+            "name": "coolant",
+            "display_name": "coolant",
+            "rpcmethod": "ResetHealth"
+          },
+          {
+            "name": "engine_state",
+            "display_name": "engine_state",
+            "rpcmethod": "ResetHealth"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    }
+  ],
+  "vehicle": [
+    {
+      "ResetTripMeter": {
+        "Configuration": [
+          {
+            "name": "trip_meter.trip_1",
+            "display_name": "trip_1",
+            "rpcmethod": "ResetTripMeter"
+          },
+          {
+            "name": "trip_meter.trip_2",
+            "display_name": "trip_2",
+            "rpcmethod": "ResetTripMeter"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "label",
+            "text": "Type of RPC request is google.protobuf.Empty"
+          }
+        ]
+      }
+    },
+    {
+      "SetTransportMode": {
+        "Configuration": [
+          {
+            "name": "N",
+            "display_name": "SetTransportMode",
+            "rpcmethod": "SetTransportMode"
+          }
+        ],
+        "uidetails": [
+          {
+            "type": "bool",
+            "property": "is_active"
+          }
+        ]
+      }
+    }
+  ]
+}

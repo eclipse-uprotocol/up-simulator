@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %} Pub-Sub {% endblock %}
+
+<!-- Specific CSS goes HER
+E -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container maincontent">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <div class="main-body">
+                    <div class="page-wrapper pubsub-mainContainer">
+                        <div class="configuration">Publish Subscribe</div>
+
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card Services box-content-data">
+                                    <div class="col-xl-12 pubsub-primaryRow">
+                                        <div class="col-xl-10 p_content para">
+                                            Explore the options below to seamlessly publish messages/events on uTransport. Start by selecting a service and then choose specific resources. Adjust values using the provided controls, and when ready, simply click "Publish."<br>
+                                            If your app is subscribed to the uTransport Topic, you'll receive and observe the latest updates.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pubsub-SecondRow">
+                            <div class="col-xl-4">
+                                <div class="headerfont">COVESA Services</div>
+
+                                <div>
+                                    <div class="floating-inputbox">
+                                        <div class="floating-label" style="width:100%;">
+                                            <input class="floating-input" id="searchpubsub" onkeyup="myFunctionpubsub()"
+                                                type="text">
+
+                                            <label class="input-label">Search</label>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <ul id="myULdata">
+                                    {% for service in services %}
+                                    {% if 'message' in service and service['message']|length >0 %}
+
+                                    <li>
+                                        <a>
+
+                                            <label class="containercheck">{{service['display_name']}}
+                                                <input id="cb{{service['name']}}"
+                                                    onchange="checkboxclicked({{service}}, 'pubsub')" type="checkbox">
+                                                <span class="checkmark"></span>
+                                                <h6 class="mb-0"
+                                                    style="margin-top:.50rem!important;color:#FFFF;font-size:14px">
+                                                    {{service['name']}}</h6>
+                                            </label>
+                                        </a>
+                                    </li>
+
+
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                            <div class="col-xl-8">
+                                <div class="box-content-data">
+                                    <p class="text-start">Service Configuration & Status</p>
+                                    <p id="box-content">Search or start service to begin</p>
+                                    {% for service in services %}
+
+                                    {% if 'message' in service and service['message']|length >0 %}
+                                    <div id="div{{service['name']}}">
+                                        <label style="">{{service['display_name']}}</label>
+                                        {% for pub_sub in service['message']%}
+
+
+                                        <div class="flex">
+                                            <input id="cb{{service['name']}}{{pub_sub}}" name="customRadio"
+                                                onclick="onRbChanged(this.labels[0].innerText,{{ pubsub [service['name']]}}, '{{service['name']}}','Publish')"
+                                                type="radio" />
+                                            <label for="cb{{service['name']}}{{pub_sub}}">{{pub_sub}}</label>
+                                        </div>
+
+
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+
+
+                                    <div class="col-xl-12 pubsub-modalLgss" id="modal-lgss">
+                                        <h4 id="pubrpcheader">Configuration</h4>
+                                        <div class="alerterror" hidden id="error"></div>
+                                        <div class="col-xl-12 pubsub-servConfig">
+                                            <div class="col-xl-7 pubsub-uidesignbox" id="uidesignbox">
+                                                <div id="uidesign"></div>
+                                            </div>
+                                            <div class="col-xl-5 pubsub-logbox" id="logbox" style="height: 450px;">
+                                                <div>
+                                                    <h4 class="modal-title">Logs</h4>
+                                                    <button class="btn-delete" onclick="clearLog()" type="button">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                                <div id="logsbox">
+                                                    <p id="logsdesc"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 pubsub-bottomcontent" id="bottomcontent">
+                                    <button class="btn btn-default btn-content" data-dismiss="modal"
+                                        onclick="closebtnClicked()" type="button">
+                                        Cancel
+                                    </button>
+                                    <button class="btn btn-default btn-content" id="back_pub" onclick="onbackClicked()"
+                                        type="button">
+                                        Back
+                                    </button>
+                                    <div>
+                                        <button class="btn btn-primary" id="sub_utransport"
+                                            onclick="execute_subscribe()" type="button">
+                                            Subscribe
+                                        </button>
+                                        <button class="btn btn-primary" id="execute" onclick="execute()" type="button">
+                                            Execute
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="modal" data-backdrop="static" id="myModal2">
+                                        <div>
+                                            <div class="pubsub-modal">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="second_modal"></h4>
+                                                    <button class="close" data-dismiss="modal" type="button">×
+                                                    </button>
+                                                </div>
+                                                <div class="container"></div>
+                                                <div class="modal-body">
+                                                    <div id="repeatedbox">
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary btn-content" id="repeated_add"
+                                                            onclick="add_repeated()" type="button">Add
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class='containerloader' hidden id="modalspinner">
+    <div class='loader'></div>
+    <div class='loader--text'></div>
+</div>
+
+<!-- [ Main Content ] end -->
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script type="text/javascript">
+    setSocketInitialized(document.getElementById('pgname').innerText)
+
+</script>
+{% endblock javascripts %}

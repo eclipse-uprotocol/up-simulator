@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %} RPC Calls {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container maincontent">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <div class="configuration">RPC Logger</div>
+                        <!-- [ Main Content ] start -->
+                        <div class="row">
+                            <div class="col-xl-12">
+
+                                <div class="card Services box-content-data"  style="background: #05061a">
+                                    <div class="col-xl-12 rpcdashboard-firstRow">
+                                        <div class="col-xl-4">
+                                            <div>
+                                                <div>
+                                                    <div class="dashboardTitle">
+                                                        Total RPC Calls
+                                                    </div>
+                                                    <div id="totalRPC">
+                                                        0
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4">
+                                            <div>
+                                                <div class="dashboardTitle">
+                                                    Successful
+                                                </div>
+                                                <div class="dashboardTitle" id="successrpc">
+                                                    0
+                                                </div>
+                                                <div id="successpercentage">
+                                                    0%
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4">
+                                            <div>
+                                                <div class="dashboardTitle">
+                                                    Failed
+                                                </div>
+                                                <div class="dashboardTitle" id="failedrpc">
+                                                    0
+                                                </div>
+                                                <div id="failedpercentage">
+                                                    0%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xl-12 rpcdashboard-thirdRow">
+                                <div class="col-xl-6 rpcdashboard-TRsubone"  style="height:auto; max-height: 680px; overflow:auto;">
+
+                                    <div class="col-xl-6"
+                                        style="font-weight: 700;font-size: 16px;line-height: 150%;color: #FFFFFF; padding:1rem">
+                                        RPC Calls
+                                    </div>
+
+                                    <div>
+                                        <div id="table_rpc">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-6">
+                                    <div style="display: flex;padding: 1rem; justify-content: space-between">
+                                        <div class="col-xl-5"
+                                            style="font-weight: 700;font-size: 16px;line-height: 150%;color: #FFFFFF;">
+                                            Rpc Response Window
+                                        </div>
+                                        <div class="col-xl-1" style="display:flex; justify-content: flex-end">
+                                            <a>
+                                                <div onclick="exportRPCReport()"><i
+                                                        class="fa fa-download statusIcon"></i></div>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="box-content-data" style="height: 680px;overflow:auto;">
+                                        <div id="rpcselected">
+                                            Rpc selected
+                                        </div>
+                                        <div class="para" id="rpc-dashboard-cloud-eventId"
+                                            style="display: none;width:100%;font-weight: 500;font-size: 16px;margin-bottom:10px;line-height: 150%;color: #F0B323;">
+                                        </div>
+
+                                        <div style="display:flex; margin-left:1.2rem;overflow:auto;">
+                                            <div id="requestHeading" style="word-break:break-all;">
+                                                Request
+                                                <div id="request">
+                                                </div>
+                                            </div>
+                                            <div id="responseHeading" style="word-break:break-all;">
+                                                Response
+                                                <div id="response">
+                                                </div>
+                                            </div>
+                                            <div id="publishedHeading" style="word-break:break-all;">
+                                                Published Data
+                                                <div id="publisheddata">
+                                                    >
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <p id="box-content">Click See More</p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- [ Main Content ] end -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class='containerloader' hidden id="modalspinner">
+    <div class='loader'></div>
+    <div class='loader--text'></div>
+</div>
+<p id="rpc_call_data" style="display:none">{{rpc_calls}}</p>
+<!-- [ Main Content ] end -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+
+<script type="text/javascript">
+    setSocketInitialized(document.getElementById('pgname').innerText)
+    setDataOnPageLoad(document.getElementById("rpc_call_data").innerText)
+
+</script>
+{% endblock javascripts %}

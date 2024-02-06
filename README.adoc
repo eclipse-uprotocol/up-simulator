@@ -1,0 +1,162 @@
+= Eclipse up-Simulator
+:toc:
+
+== Overview
+
+The `up-simulator` is a user-friendly web tool designed to make developing uProtocol services and Apps on PCs easy. Its intuitive interface empowers users with features such as Publish-Subscribe, RPC invocation, and the simulation of COVESA Vehicle Services. With a focus on a user-friendly graphical interface (GUI), users can easily navigate through the development and testing phases of uProtocol Apps, ensuring a smooth experience from start to finish.
+
+image::screenshots/uSimulator_overview.drawio.svg[]
+
+.  **SimUI **:
++
+The SimUI is a web-based interface for the up-simulator. It displays the list of vehicle services, RPC, and messages defined in COVESA protos. It offers an interface for initiating pub/sub and RPC transactions using mock services.
+
+
+
+.  **Mock Services **:
++
+These mock COVESA services replicate the interface outlined in the COVESA protobuf, offering a seamless alternative to actual COVESA services. By utilizing these mocks, developers can engage in development and testing activities without the necessity of physical COVESA hardware, thereby elevating the development environment.
+
+
+.  **Logger **:
++
+The Logger component captures all pub/sub and RPC transactions between mock services and apps/services under development. It facilitates real-time monitoring and logging. Developers can monitor transactions in real-time, aiding in debugging and issue resolution.
+
+== Prerequisites
+Before proceeding with the setup of this project, ensure that the following prerequisites are met:
+
+* Maven is installed and configured in your environment. You can verify this by running the following command in your terminal:
+[,bash]
+----
+mvn -version
+----
+If Maven is properly installed, you should see information about the Maven version and configuration.
+
+* Ensure your android emulator is running, and both the `up-core-android` and `up-simulator-proxy` components are up and running. These components are essential for the functionality of this project. Please refer to the installation instructions for `up-core-android` and `up-simulator-proxy` provided https://github.com/eclipse-uprotocol/up-android/blob/main/README.adoc[here]
+
+* When starting the simulator proxy, if you observe the** 'Simulator proxy client connected'** logs, it indicates that your setup is correct, and the simulator proxy has successfully bound to the `up-core-android`.
++
+image::screenshots/androidlogs.png[]
+
+== How to Setup the up-Simulator
+
+To set up the simulator, follow the steps below:
+
+. Clone the code from the GitHub repository:
++
+[source]
+----
+git clone https://github.com/eclipse-uprotocol/up-simulator.git
+cd up-simulator
+----
+. Perform ADB port forwarding to enable communication with the simulator:
++
+[,bash]
+----
+adb forward tcp:6095 tcp:6095
+----
+This step is essential for establishing a connection between the emulator and the simulator.
+
+
+
+. Install the required dependencies using pip:
++
+[source]
+----
+python3 -m pip install -r requirements.txt
+----
+
+. Execute the `setup_simulator.py` script using the following command:
++
+[source]
+----
+python3 setup_simulator.py
+----
+
+This script automates the following tasks:
+
+1. **Cloning and Compilation of Protos:**
+   Clones the `covesa` protos from the specified repository URL, compiles them, and generates Python protofiles in the target folder.
+
+2. **Resource Catalog Generation:**
+   Iterates through all protofiles to create a resource catalog in the target folder.
+
+3. **Services Configuration File Generation:**
+   Iterates through the protos again to generate a `services.json` file. This file is responsible for the UI of the simulator. At runtime, it parses the JSON to retrieve a list of services, RPC, and messages, and displays them in the UI.
+
+Running this script will generate all the necessary files required for the simulator to function.
+
+
+== How to Start and Use the up-Simulator
+
+To start and use the `up-simulator`, follow the steps below:
+
+. Execute the following command to start the simulator:
++
+[source]
+----
+python3 run.py
+----
+
+. On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it  supports only Android.
++
+image::screenshots/configuration.png[]
+
+. To use the publish and subscribe functionality, click on the "Publish-Subscribe" menu. Within this menu, you will find a list of Covesa services.
++
+image::screenshots/pub-sub.png[]
+. Choose the service you want to test for either subscribing or publishing. You can scroll through the list or use the search box to find your service. Once you've selected the service, the simulator will display a list of all supported messages.
+
++
+image::screenshots/pub-sub-service.png[]
+
+. Choose the specific message for which you want to test both subscribing or publishing
++
+image::screenshots/pub-sub-resource.png[]
+
+. Click on the "Subscribe" button to listen for the message data.
++
+image::screenshots/subscribe.png[]
+
+. Select the values you want to publish.
+
+. Click on the "Publish" button to send the selected values.
++
+image::screenshots/publish.png[]
+
+. To test RPC, go to the mock service page, and start the mock service you wish to use for triggering the RPC request.
++
+image::screenshots/covesa-services.png[]
+image::screenshots/start-service.png[]
+
+. To initiate an RPC request, navigate to the "Remote Procedure Calls" menu. Within this menu, you'll find a list of Covesa services. Select the particular service you wish to test. Once the service is chosen, a list of available RPCs for that specific service will be displayed. From this list, choose the specific RPC you intend to test.
+
++
+image::screenshots/hello_world_service.png[]
+
+
+. Provide your input and click on the "Send RPC" button.
++
+image::screenshots/rpc-test.png[]
+
+. You can now see the RPC request, response and publish, subscribe logs in the logger screen.
++
+image::screenshots/rpc-logger.png[]
+
++
+image::screenshots/pub-sub-logger.png[]
+
+
+== Additional Notes
+
+- The script assumes that Python is installed on your system.
+- The `requirements.txt` file contains a list of dependencies that will be installed using pip.
+- The simulator is designed to be independent of the specific up client configuration during the setup phase.
+
+Feel free to explore and contribute to the development of the `up-simulator`!
+
+[NOTE]
+This project is currently under development, and further enhancements and features are expected in future.
+
+
+
