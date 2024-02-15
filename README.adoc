@@ -32,7 +32,7 @@ mvn -version
 ----
 If Maven is properly installed, you should see information about the Maven version and configuration.
 
-* Ensure your android emulator is running, and both the `up-core-android` and `up-simulator-proxy` components are up and running. These components are essential for the functionality of this project. Please refer to the installation instructions for `up-core-android` and `up-simulator-proxy` provided https://github.com/eclipse-uprotocol/up-android/blob/main/README.adoc[here]
+* Ensure your android emulator is running, and both the `up-core-android` and `up-simulator-proxy` components are up and running. These components are essential for the functionality of this project. Please refer to the installation instructions https://github.com/eclipse-uprotocol/up-android-core/blob/main/README.adoc[`up-core-android`] and https://github.com/eclipse-uprotocol/up-simulator-proxy/blob/main/README.adoc[`up-simulator-proxy`]
 
 * When starting the simulator proxy, if you observe the** 'Simulator proxy client connected'** logs, it indicates that your setup is correct, and the simulator proxy has successfully bound to the `up-core-android`.
 +

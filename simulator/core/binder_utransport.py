@@ -145,8 +145,8 @@ class SocketClient:
                                 parsed_message = UMessage()
                                 parsed_message.ParseFromString(serialized_data)
                                 if action == "topic_update":
-                                    uri_str = LongUriSerializer().serialize(parsed_message.source)
-                                    uri = parsed_message.source
+                                    uri_str = LongUriSerializer().serialize(parsed_message.attributes.source)
+                                    uri = parsed_message.attributes.source
                                     action_callbacks = self.subscribe_callbacks
                                 else:
                                     uri_str = LongUriSerializer().serialize(parsed_message.attributes.sink)
@@ -238,7 +238,8 @@ class AndroidBinder(UTransport, RpcClient):
     def send(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
         global json_map
         self.client.connect()
-        umsg = UMessage(source=topic, attributes=attributes, payload=payload)
+        attributes.source.CopyFrom(topic)
+        umsg = UMessage(attributes=attributes, payload=payload)
         message_str = Base64ProtobufSerializer().deserialize(umsg.SerializeToString())
         # validate attributes
         if attributes.type == UMessageType.UMESSAGE_TYPE_PUBLISH:
