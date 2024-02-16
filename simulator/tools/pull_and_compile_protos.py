@@ -91,7 +91,7 @@ def process_python_protofiles(directory):
                                 'import target.protofiles.uservices_options_pb2')
                 replace_in_file(file_path, r'import units_pb2', 'import target.protofiles.units_pb2')
                 replace_in_file(file_path, r'import uprotocol_options_pb2',
-                                'import target.protofiles.uprotocol_options_pb2')
+                                'import uprotocol.proto.uprotocol_options_pb2')
 
 
 def create_init_py(directory):
@@ -106,8 +106,6 @@ def create_init_py(directory):
 
 def execute():
     clone_or_pull(REPO_URL, PROTO_REPO_DIR)
-    shutil.copy(os.path.join('simulator', 'tools', 'uprotocol_options.proto'),
-                os.path.join(PROTO_REPO_DIR, 'src', 'main', 'proto'))
 
     # Execute mvn compile-python
     maven_command = "mvn protobuf:compile-python"
