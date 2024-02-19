@@ -192,6 +192,55 @@ def get_request_class(service, rpc_name):
     return rpc_methods[service][rpc_name]["request"]
 
 
+def get_topics_by_proto_service_name(service_name):
+    global topic_messages
+    topics = []
+    if service_name is None:
+        return topics
+    for pair in topic_messages:
+        topic = pair[0]
+        if '/' + service_name + '/' in topic:
+            topics.append(topic)
+
+    return topics
+
+
+def get_services():
+    global rpc_topics
+    return rpc_topics.keys()
+
+
+def find_message(message_full_name):
+    try:
+        module = message_to_module[message_full_name]
+        message_class = find_message_class(module, message_full_name)
+    except:
+        (containing_message, basename) = message_full_name.rsplit('.', 1)
+        try:
+            module = message_to_module[containing_message]
+            message_class = find_message_class(module, containing_message)
+        except:
+            if containing_message.startswith("google"):
+                from google import protobuf as google_protobuf
+                for loader, modname, ispkg in pkgutil.walk_packages(google_protobuf.__path__):
+                    mod = importlib.import_module("google.protobuf." + modname)
+                    try:
+                        message_class = getattr(mod, basename)
+                        return message_class
+                    except:
+                        # bug in google library? TimeOfDay should be in google.type package
+                        # but does not appear to be.
+                        if basename == "TimeOfDay":
+                            mod = importlib.import_module("google.type.timeofday_pb2")
+                            message_class = getattr(mod, basename)
+                            return message_class
+                        else:
+                            continue
+        return getattr(message_class, basename)
+
+    return message_class
+
+
 # returns a class object for the response message for a given rpc method name
 def get_response_class(service, rpc_name):
     global rpc_methods

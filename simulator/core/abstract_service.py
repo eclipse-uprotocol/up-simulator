@@ -109,6 +109,11 @@ class CovesaService(object):
         if self.transport_layer.start_service(self.service):
             time.sleep(1)
             covesa_services.append({'name': self.service, 'entity': self})
+            # create topic
+            topics = protobuf_autoloader.get_topics_by_proto_service_name(self.service)
+            # for topic in topics:
+            if len(topics) >= 0:
+                self.transport_layer.create_topic(self.service,topics, common_util.print_create_topic_status_handler)
             for attr in dir(self):
                 if callable(getattr(self, attr)) and isinstance(getattr(self, attr), type):
                     for attr1 in dir(getattr(self, attr)):

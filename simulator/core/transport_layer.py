@@ -57,7 +57,7 @@ class TransportLayer:
 
     def set_transport(self, transport: str):
         if self.__utransport != transport:
-            print('set transport, previous is', self.__utransport , 'current is',transport)
+            print('set transport, previous is', self.__utransport, 'current is', transport)
             self.__utransport = transport
             self._update_instance()
 
@@ -89,6 +89,12 @@ class TransportLayer:
     def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
         return self.__instance.unregister_listener(topic, listener)
 
-    def start_service(self, entity) ->bool:
-        if self.__utransport=="BINDER":
+    def start_service(self, entity) -> bool:
+        if self.__utransport == "BINDER":
             return self.__instance.start_service(entity)
+        else:
+            return True
+
+    def create_topic(self, entity, topics, listener):
+        if self.__utransport == "BINDER":
+            return self.__instance.create_topic(entity, topics, listener)
