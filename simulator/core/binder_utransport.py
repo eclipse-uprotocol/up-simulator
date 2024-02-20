@@ -70,6 +70,23 @@ def timeout_counter(response_future, reqid, timeout):
 
 class SocketClient:
     _instance = None
+    _create_topic_status_callbacks = {}
+
+    def __add_create_topic_status_callback(self, topic, callback):
+        if topic in self._create_topic_status_callbacks:
+            callbacks = self._create_topic_status_callbacks[topic]
+            if callback not in callbacks:
+                callbacks.append(callback)
+        else:
+            callbacks = [callback]
+            self._create_topic_status_callbacks[topic] = callbacks
+
+    def _register_create_topic_status_callback(self, topics, status_callback):
+        if isinstance(topics, str):
+            self.__add_create_topic_status_callback(topics, status_callback)
+        else:
+            for topic in topics:
+                self.__add_create_topic_status_callback(topic, status_callback)
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -175,6 +192,21 @@ class SocketClient:
                                     print("Future result state is already finished or cancelled")
                                 m_requests.pop(req_id)
 
+                            elif action in ["create_topic_status"]:
+                                print('create topic status called')
+
+                                parsed_message = UStatus()
+                                parsed_message.ParseFromString(serialized_data)
+                                topic_uri_str = json_data['topic']
+                                if topic_uri_str in self._create_topic_status_callbacks:
+                                    print(f'create topic status called {topic_uri_str}')
+                                    callbacks = self._create_topic_status_callbacks[topic_uri_str]
+                                    for callback in callbacks:
+                                        callback(topic_uri_str, parsed_message.code,
+                                                 parsed_message.message)
+                                else:
+                                    print(f'No create topic callback registered for uri: {topic_uri_str}. Discarding!')
+
                         print(f"Received from server: {json_data}")
             except (socket.timeout, OSError):
                 pass
@@ -226,6 +258,13 @@ class AndroidBinder(UTransport, RpcClient):
     def start_service(self, entity) -> bool:
         # write data to socket, this action will start the android mock service and create all topics
         json_map = {"action": "start_service", "data": entity}
+        message_to_send = json.dumps(json_map) + '\n'
+        return self.client.send_data(message_to_send)
+
+    def create_topic(self, entity, topics, status_callback):
+        print('create topic called')
+        self.client._register_create_topic_status_callback(topics, status_callback)
+        json_map = {"action": "create_topic", "data": entity, "topics": topics}
         message_to_send = json.dumps(json_map) + '\n'
         return self.client.send_data(message_to_send)
 
