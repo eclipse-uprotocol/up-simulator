@@ -34,6 +34,7 @@ from uprotocol.transport.ulistener import UListener
 
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
+from simulator.utils.constant import KEY_URI_PREFIX
 from target.protofiles.common.health_state_pb2 import HealthState
 from target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, \
     ManageHealthMonitoringRequest
@@ -60,7 +61,7 @@ class BrakingService(BaseService):
     def start_rpc_service(self):
         super().start_rpc_service()
         self.subscribe(
-            ["up:/chassis.braking/1/brake_pads.front#BrakePads", "up:/chassis.braking/1/brake_pads.rear#BrakePads", ],
+            [KEY_URI_PREFIX+":/chassis.braking/1/brake_pads.front#BrakePads", KEY_URI_PREFIX+":/chassis.braking/1/brake_pads.rear#BrakePads", ],
             BrakingPreconditions(self))
 
     def init_state(self):
@@ -184,7 +185,7 @@ class BrakingService(BaseService):
             request(protobuf): the protobuf containing the rpc request
         """
         # publish brake info based on current state
-        topic_prefix = "up:/chassis.braking/1/"
+        topic_prefix = KEY_URI_PREFIX+":/chassis.braking/1/"
 
         if type(request) == ResetHealthRequest:
             topic = topic_prefix + request.name + "#BrakePads"

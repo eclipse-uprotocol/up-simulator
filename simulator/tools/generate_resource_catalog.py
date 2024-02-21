@@ -6,7 +6,7 @@ import pkgutil
 import re
 
 from simulator.utils.constant import RESOURCE_CATALOG_DIR, RESOURCE_CATALOG_JSON_NAME, RESOURCE_CATALOG_CSV_NAME, \
-    PROTO_REPO_DIR
+    PROTO_REPO_DIR, KEY_URI_PREFIX
 from target import protofiles as proto
 from google.protobuf import reflection
 
@@ -14,7 +14,7 @@ topic_list = []
 
 
 def create_service_json(service_name, version, service_id, properties):
-    json_structure = {"uri": f"up:/{service_name}/{version}", "id": f"{service_id}", "type": "service", }
+    json_structure = {"uri": f"{KEY_URI_PREFIX}:/{service_name}/{version}", "id": f"{service_id}", "type": "service", }
     if properties:
         json_structure["properties"] = properties
     return json_structure
@@ -96,7 +96,7 @@ def get_protobuf_descriptor_data():
                     for field, value in options.ListFields():
                         if field.name == 'method_id':
                             method_id = value
-                            method_nodes.append(create_method_json(f"up:/{service_name}/{version}", method, method_id))
+                            method_nodes.append(create_method_json(f"{KEY_URI_PREFIX}:/{service_name}/{version}", method, method_id))
                 message_option_descriptor = mod.DESCRIPTOR.message_types_by_name
                 for message in message_option_descriptor.keys():
                     if 'Options' in message:
@@ -131,7 +131,7 @@ def get_protobuf_descriptor_data():
                                 topic_id = base_topic_id + message_mod.enum_types_by_name[resources_key].values_by_name[
                                     resource].number
                                 topic_nodes.append(
-                                    create_topic_json(f"up:/{service_name}/{version}", resource, message_mod.name,
+                                    create_topic_json(f"{KEY_URI_PREFIX}:/{service_name}/{version}", resource, message_mod.name,
                                                       topic_id, message_mod.full_name, message_resource_prefix_dict))
 
                     if service_json and topic_nodes and len(topic_nodes) > 0:

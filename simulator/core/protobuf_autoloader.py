@@ -39,6 +39,7 @@ from google.protobuf.descriptor import FieldDescriptor
 
 from target import protofiles as proto
 from simulator.utils.constant import RESOURCE_CATALOG_CSV_NAME, RESOURCE_CATALOG_JSON_NAME
+import simulator.utils.constant as CONSTANTS
 
 rpc_methods = {}
 rpc_fullname_methods = {}
@@ -145,7 +146,7 @@ def get_protobuf_descriptor_data():
         services = []
         for service in _services:
             options = str(mod.DESCRIPTOR.services_by_name[service].GetOptions())
-            groups = re.search(r"^\[uprotocol\.name\]:\s\"([\w.]+)\"$", options, re.MULTILINE)
+            groups = re.search(r"^\["+CONSTANTS.KEY_PROTO_ENTITY_NAME+"\.name\]:\s\"([\w.]+)\"$", options, re.MULTILINE)
             try:
                 protobuf_service = groups.group(1)
             except:

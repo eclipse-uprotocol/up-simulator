@@ -4,6 +4,7 @@
 
 import re
 
+from simulator.utils.constant import KEY_URI_PREFIX
 from target.protofiles.vehicle.v1.vehicle_topics_pb2 import (TripMeter, VehicleUsage)
 from uprotocol.proto.uattributes_pb2 import UAttributes
 from uprotocol.proto.upayload_pb2 import UPayload
@@ -34,8 +35,8 @@ class VehicleService(BaseService):
     def start_rpc_service(self):
         super().start_rpc_service()
         self.subscribe(
-            ["up:/vehicle/1/trip_meter.trip_1#TripMeter", "up:/vehicle/1/trip_meter.trip_2#TripMeter",
-             "up:/vehicle/1/vehicle_usage.transport_mode#VehicleUsage", ], VehiclePreconditions(self))
+            [KEY_URI_PREFIX+":/vehicle/1/trip_meter.trip_1#TripMeter", KEY_URI_PREFIX+":/vehicle/1/trip_meter.trip_2#TripMeter",
+             KEY_URI_PREFIX+":/vehicle/1/vehicle_usage.transport_mode#VehicleUsage", ], VehiclePreconditions(self))
 
 
     def init_state(self):
@@ -145,11 +146,11 @@ class VehicleService(BaseService):
         if type(request) == ResetTripMeterRequest:
             # get trip_meter key from value, expecting 0 - trip_1 or 1 - trip_2
             trip_val = list(TripMeter.Resources.keys())[list(TripMeter.Resources.values()).index(request.trip_meter)]
-            topic = "up:/vehicle/1/trip_meter." + trip_val + "#TripMeter"
+            topic = KEY_URI_PREFIX+":/vehicle/1/trip_meter." + trip_val + "#TripMeter"
             self.publish(topic, self.state[trip_val],True)
 
         if type(request) == SetTransportModeRequest:
-            topic = "up:/vehicle/1/vehicle_usage.transport_mode#VehicleUsage"
+            topic = KEY_URI_PREFIX+":/vehicle/1/vehicle_usage.transport_mode#VehicleUsage"
             self.publish(topic, self.state,True)
 
         return True

@@ -34,6 +34,7 @@ from uprotocol.transport.ulistener import UListener
 
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
+from simulator.utils.constant import KEY_URI_PREFIX
 from target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (UpdateTireRequest, )
 from target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (Tire, )
 
@@ -56,10 +57,10 @@ class ChassisService(BaseService):
 
     def start_rpc_service(self):
         super().start_rpc_service()
-        self.subscribe(["up:/chassis/1/tire.front_left#Tire", "up:/chassis/1/tire.front_right#Tire",
-                        "up:/chassis/1/tire.rear_right#Tire", "up:/chassis/1/tire.rear_left#Tire",
-                        "up:/chassis/1/tire.rear_left_inner#Tire",
-                        "up:/chassis/1/tire.rear_right_inner#Tire", ], ChassisPreconditions(self))
+        self.subscribe([KEY_URI_PREFIX+":/chassis/1/tire.front_left#Tire", KEY_URI_PREFIX+":/chassis/1/tire.front_right#Tire",
+                        KEY_URI_PREFIX+":/chassis/1/tire.rear_right#Tire", KEY_URI_PREFIX+":/chassis/1/tire.rear_left#Tire",
+                        KEY_URI_PREFIX+":/chassis/1/tire.rear_left_inner#Tire",
+                        KEY_URI_PREFIX+":/chassis/1/tire.rear_right_inner#Tire", ], ChassisPreconditions(self))
     def init_state(self):
         """
         Initializes internal data structures for keeping track of the current state of the tire update service
@@ -153,7 +154,7 @@ class ChassisService(BaseService):
         Publishes a message based on the current tire
         """
         for tire in self.tire_names:
-            topic = "up:/chassis/1/" + tire + "#Tire"
+            topic = KEY_URI_PREFIX+":/chassis/1/" + tire + "#Tire"
             self.publish(topic, self.state[tire],True)
 
 

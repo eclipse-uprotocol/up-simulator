@@ -56,7 +56,7 @@ def extract_proto_info(data, service_file_content, topic_file_content):
     service_name = re.search(r'service\s+(\w+)\s*{', service_file_content)
 
     # Extract uprotocol name
-    uprotocol_name = re.search(r'option\s+\(uprotocol\.name\)\s*=\s*"([^"]+)"', service_file_content)
+    uprotocol_name = re.search(r'option\s+\('+CONSTANTS.KEY_PROTO_ENTITY_NAME+'\.name\)\s*=\s*"([^"]+)"', service_file_content)
 
     # Extract list of RPCs
     rpcs = re.findall(r'rpc\s+(\w+)\s*\(\s*[^)]*\s*\)', service_file_content) or []

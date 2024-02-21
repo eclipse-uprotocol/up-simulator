@@ -14,6 +14,7 @@ from uprotocol.proto.uattributes_pb2 import UAttributes
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.uri_pb2 import UUri
 
+from simulator.utils.constant import KEY_URI_PREFIX
 from target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import (RideHeight, RideHeightSystemStatus)
 from target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import (SetRideHeightRequest)
 
@@ -37,7 +38,7 @@ class SuspensionService(BaseService):
 
     def start_rpc_service(self):
         super().start_rpc_service()
-        self.subscribe(["up:/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus", ],
+        self.subscribe([KEY_URI_PREFIX+":/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus", ],
                        SuspensionPreconditions(self))
 
     def init_state(self):
@@ -182,7 +183,7 @@ class SuspensionService(BaseService):
         Args:
         request(protobuf): the protobuf containing the rpc request
         """
-        topic = "up:/chassis.suspension/1/ride_height#RideHeight"
+        topic = KEY_URI_PREFIX+":/chassis.suspension/1/ride_height#RideHeight"
 
         self.publish(topic, self.state["ride_height"],True)
 
