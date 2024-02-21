@@ -56,7 +56,7 @@ def get_instance(entity):
             return entity_dict.get('entity')
 
 
-class CovesaService(object):
+class BaseService(object):
     # instance = None
 
     def __init__(self, service_name=None, portal_callback=None, use_signal_handler=True):
@@ -158,7 +158,7 @@ class CovesaService(object):
 
         if self.service is None:
             print("Unable to start mock service without specifying the service name.")
-            print("You must set the service name in the CovesaService constructor")
+            print("You must set the service name in the BaseService constructor")
             raise SimulationError("service_name not specified for mock service")
         print("Waiting for events...")
         self.start_rpc_service()

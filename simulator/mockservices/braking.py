@@ -32,7 +32,7 @@ from uprotocol.proto.uri_pb2 import UUri
 from uprotocol.proto.ustatus_pb2 import UStatus
 from uprotocol.transport.ulistener import UListener
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from target.protofiles.common.health_state_pb2 import HealthState
 from target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, \
@@ -40,7 +40,7 @@ from target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import Res
 from target.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
 
 
-class BrakingService(CovesaService):
+class BrakingService(BaseService):
     """
     The BrakingService object handles mock services for the lighting interior service
     """
@@ -98,11 +98,11 @@ class BrakingService(CovesaService):
         self.state['brake_pads.front']['health']['state'] = message.health.state
         self.state['brake_pads.rear']['health']['state'] = message.health.state
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def ResetHealth(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def ManageHealthMonitoring(self, request, response):
         return self.handle_request(request, response)
 

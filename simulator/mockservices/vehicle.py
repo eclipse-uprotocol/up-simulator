@@ -11,12 +11,12 @@ from uprotocol.proto.uri_pb2 import UUri
 from uprotocol.proto.ustatus_pb2 import UStatus
 from uprotocol.transport.ulistener import UListener
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from target.protofiles.vehicle.v1.vehicle_service_pb2 import (ResetTripMeterRequest, SetTransportModeRequest)
 
 
-class VehicleService(CovesaService):
+class VehicleService(BaseService):
     """
     The Vehicle object handles mock services for the vehicle service
     """
@@ -76,11 +76,11 @@ class VehicleService(CovesaService):
             self.state["transport_mode"]['is_setting_change_allowed'] = message.is_setting_change_allowed
             self.state["transport_mode"]['is_active'] = message.is_active
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def ResetTripMeter(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SetTransportMode(self, request, response):
         return self.handle_request(request, response)
 

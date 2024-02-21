@@ -25,7 +25,7 @@
 # -------------------------------------------------------------------------
 
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 
 from target.protofiles.vehicle.body.mirrors.v1.mirrors_service_pb2 import (SlideSideMirrorRequest,
                                                                            FoldSideMirrorRequest,
@@ -38,7 +38,7 @@ from target.protofiles.vehicle.body.mirrors.v1.mirrors_service_pb2 import (Slide
                                                                            UpdateHeatedSideMirrorsSettingsRequest)
 
 
-class BodyMirrorsService(CovesaService):
+class BodyMirrorsService(BaseService):
 
     def __init__(self, portal_callback=None):
         """
@@ -54,39 +54,39 @@ class BodyMirrorsService(CovesaService):
         self.state = {}
 
     # RPC Request Listeners for each RPC method
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SlideSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def FoldSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def UnfoldSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def TiltSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def UntiltSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def ActivateHeatedSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def DeactivateHeatedSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def UpdateSideMirrorMovementSettings(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def UpdateHeatedSideMirrorsSettings(self, request, response):
         return self.handle_request(request, response)
 

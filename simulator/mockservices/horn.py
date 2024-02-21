@@ -2,13 +2,13 @@
 # All Rights Reserved.
 # GM Confidential Restricted.
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from target.protofiles.vehicle.body.horn.v1.horn_service_pb2 import (ActivateHornRequest, DeactivateHornRequest, )
 from target.protofiles.vehicle.body.horn.v1.horn_topics_pb2 import (HornStatus)
 
 
-class HornService(CovesaService):
+class HornService(BaseService):
     """
     The HornService object handles mock services for the horn lighting service
     """
@@ -29,11 +29,11 @@ class HornService(CovesaService):
         """
         self.state["horn_status"] = self.init_message_state(HornStatus)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def ActivateHorn(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def DeactivateHorn(self, request, response):
         return self.handle_request(request, response)
 

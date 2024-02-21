@@ -25,10 +25,10 @@
 # -------------------------------------------------------------------------
 
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 
 
-class TransmissionService(CovesaService):
+class TransmissionService(BaseService):
 
     def __init__(self, portal_callback=None):
         """

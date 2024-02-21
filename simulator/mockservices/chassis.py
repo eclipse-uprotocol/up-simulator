@@ -32,13 +32,13 @@ from uprotocol.proto.uri_pb2 import UUri
 from uprotocol.proto.ustatus_pb2 import UStatus
 from uprotocol.transport.ulistener import UListener
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (UpdateTireRequest, )
 from target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (Tire, )
 
 
-class ChassisService(CovesaService):
+class ChassisService(BaseService):
     """
     The ChassisService object handles mock services for the chassis service
     """
@@ -92,7 +92,7 @@ class ChassisService(CovesaService):
         self.state[topic]['leak_state'] = message.leak_state
         self.state[topic]['is_leak_detection_enabled'] = message.is_leak_detection_enabled
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def UpdateTire(self, request, response):
         """
         Handles UpdateTire RPC Calls. Protobuf needs to be updated to add "Tire.Resources resource_name" attribute to 

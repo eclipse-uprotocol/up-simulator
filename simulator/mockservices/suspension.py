@@ -6,7 +6,7 @@ import re
 
 from uprotocol.transport.ulistener import UListener
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from uprotocol.proto.ustatus_pb2 import UStatus
 
@@ -18,7 +18,7 @@ from target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 impor
 from target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import (SetRideHeightRequest)
 
 
-class SuspensionService(CovesaService):
+class SuspensionService(BaseService):
     """
     The SuspensionService object handles mock services for the sound service
     """
@@ -29,7 +29,7 @@ class SuspensionService(CovesaService):
         """
         SuspensionService constructor:
         """
-        # todo: move uninstall to CovesaService class
+        # todo: move uninstall to BaseService class
 
         super().__init__("chassis.suspension", portal_callback)
         self.init_state()
@@ -76,7 +76,7 @@ class SuspensionService(CovesaService):
         if 'ride_height_system_status' in topic:
             self.state[topic]['source'] = message.source
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SetRideHeight(self, request, response):
         return self.handle_request(request, response)
 
