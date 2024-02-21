@@ -155,11 +155,7 @@ function onTopicUpdateSomeIP(json_proto, json_proto_original, topic, port, destp
 }
 
 function onTopicUpdate(json_proto, json_proto_original, topic) {
-    console.log('ontopicupdate1')
-
     if (JSON.stringify(json_proto, null, 2).length > 2) {
-        console.log('ontopicupdate2')
-
         if (topic == selectedTopic) {
             if (localStorage.getItem("utransportConfig") == "BINDER") {
                 msg = "Received topic update from up-core-android Service"
@@ -305,7 +301,6 @@ function setvalues(json_proto, clearValues) {
             delete json_proto[prefixkey + ".nanos"]
         }
     }
-    console.log("updated json" + JSON.stringify(json_proto))
 
     var inputs = document.getElementById('uidesign').getElementsByTagName('input');
     var selects = document.getElementById('uidesign').getElementsByTagName('select');
@@ -452,6 +447,7 @@ function execute_subscribe(topic) {
 function callPublishApi(data, topic, serviceclass) {
     if (topic.includes("dynamic_topic")) {
         topic = topic.replace("dynamic_topic", JSON.parse(data)['name'])
+        selectedTopic = topic
         if (localStorage.getItem("utransportConfig") in ["BINDER", "VEHICLE"]) {
             execute_subscribe(topic)
         }
@@ -742,16 +738,13 @@ function handleLabelElement(uiDetailsLabel, elLabel) {
     iDiv.appendChild(hr)
     elLabel.appendChild(iDiv)
 }
-function handleRepeatedlement(uiDetailsRepeated, resourceRepeated, elRepeated) {
-    console.log("===", "Repeated")
+function handleRepeatedlement(uiDetailsRepeated, resourceRepeated, elRepeated, modalid) {
     var iDiv = document.createElement('div');
     iDiv.setAttribute('class', 'form-group')
     iDiv.setAttribute("style", "margin-bottom: 5px;");
     var iInput = document.createElement('button');
     iInput.addEventListener("click", function () {
-        console.log("====", "inside repeated")
-        console.log("====", uiDetailsRepeated.value)
-        console.log("====", uiDetailsRepeated.key)
+
         design_layout_repeated(uiDetailsRepeated.value, uiDetailsRepeated.key, uiDetailsRepeated.class);
     }, false);
     if (uiDetailsRepeated.hasOwnProperty("readonly") && uiDetailsRepeated.readonly == 'True') {
@@ -761,9 +754,8 @@ function handleRepeatedlement(uiDetailsRepeated, resourceRepeated, elRepeated) {
     iInput.innerText = '+'
     iInput.setAttribute("class", "btn btn-primary ")
     iInput.setAttribute("style", "vertical-align:top;background: #3B3B39;border: 1px solid #5EB1F3;border-radius: 2px;color: #5EB1F3;    font-size: 16px;font-weight: 400;line-height: 26px;float:right")
-    //    iInput.setAttribute("style", "")
     iInput.setAttribute("data-toggle", "modal");
-    iInput.setAttribute("data-target", "#myModal2");
+    iInput.setAttribute("data-target", modalid);
     iInput.setAttribute("id", resourceRepeated + uiDetailsRepeated.key)
     var iLabel = document.createElement('label');
     if (uiDetailsRepeated.hasOwnProperty('rpcproperty'))
@@ -1164,7 +1156,7 @@ function design_layout(data, resource, servicename) {
             handleTimeElement(data['uidetails'][i], resource, el);
 
         } else if (data['uidetails'][i].type == 'repeated') {
-            handleRepeatedlement(data['uidetails'][i], resource, el);
+            handleRepeatedlement(data['uidetails'][i], resource, el, "#myModal2");
         }
     }
 
@@ -1186,11 +1178,48 @@ function closebtnClicked() {
 }
 
 function design_layout_repeated(data, key, repeated_class) {
-    console.log("=====", data, key, repeated_class)
-    document.getElementById("second_modal").innerText = key
-    document.getElementById("second_modal").setAttribute("repeated_class", repeated_class)
+    var repeated_box_id = "repeatedbox";
+    var second_modal_id = 'second_modal';
+    var myModal_id = 'myModal2';
+    var btn_id = "repeated_add";
+    var repeatedbox;
 
-    var repeatedbox = document.getElementById('repeatedbox');
+    if (document.getElementById(myModal_id).style.display === 'block') {
+        // Clone the original div
+        var clonedModal = document.getElementById(myModal_id).cloneNode(true);
+        repeated_box_id += key;
+        second_modal_id += key;
+        myModal_id += key;
+        btn_id += key;
+
+
+        // Assign new IDs to the cloned modal and its components
+        clonedModal.setAttribute('id', myModal_id);
+        clonedModal.querySelector('#second_modal').setAttribute('id', second_modal_id);
+        clonedModal.querySelector('#repeatedbox').setAttribute('id', repeated_box_id);
+        clonedModal.querySelector('#repeated_add').setAttribute('id', btn_id);
+
+        clonedModal.setAttribute('style', 'display: block; z-index: 10000;'); // Set z-index here
+
+        clonedModal.classList.add('modal');
+        clonedModal.classList.add('show');
+
+        // Append cloned modal to body
+        document.body.appendChild(clonedModal);
+    }
+
+    document.getElementById(second_modal_id).innerText = key;
+    document.getElementById(second_modal_id).setAttribute("repeated_class", repeated_class);
+    repeatedbox = document.getElementById(repeated_box_id);
+
+    var element = document.getElementById(btn_id);
+    if (element && !element.hasEventListener) {
+        element.addEventListener("click", function (event) {
+            add_repeated(event.target.id.replace("repeated_add", ""), document.getElementById("second_modal").innerText);
+        });
+        element.hasEventListener = true; // Set a flag to indicate that event listener is attached
+    }
+
     removeAllChildNodes(repeatedbox)
     for (var x in data) {
 
@@ -1199,46 +1228,81 @@ function design_layout_repeated(data, key, repeated_class) {
 
         }
         else if (data[x].type == 'string') {
-            itDiv = handleStringElement(data[x], key, repeatedbox);
+            handleStringElement(data[x], key, repeatedbox);
         }
         else if (data[x].type == 'int' || data[x].type == 'float') {
-            itDiv = handleIntFloatElement(data[x], key, repeatedbox);
+            handleIntFloatElement(data[x], key, repeatedbox);
         }
         else if (data[x].type == 'bool') {
-            itDiv = handleBoolElement(data[x], key, repeatedbox);
+            handleBoolElement(data[x], key, repeatedbox);
         }
         else if (data[x].type == 'dropdown') {
-            itDiv = handleDropdownElement(data[x], key, repeatedbox);
+            handleDropdownElement(data[x], key, repeatedbox);
         }
         else if (data[x].type == 'time') {
-            itDiv = handleTimeElement(data[x], key, repeatedbox);
+            handleTimeElement(data[x], key, repeatedbox);
+        }
+        else if (data[x].type == 'repeated') {
+            child_json_repeated_dict = {}
+
+            handleRepeatedlement(data[x], key, repeatedbox, "#myModal2" + key);
         }
 
     }
 
 }
 json_repeated_dict = {}
+child_json_repeated_dict = {}
 
 
-function add_repeated() {
-    console.log("++++", add_repeated)
+function add_repeated(id, parentModelKey) {
+    if (id == undefined) {
+        id = ""
+    }
     json_repeated = {}
-    inputs = document.getElementById('repeatedbox').getElementsByTagName('input');
+    inputs = document.getElementById('repeatedbox' + id).getElementsByTagName('input');
     getAllUiValues(inputs, json_repeated)
-    selects = document.getElementById('repeatedbox').getElementsByTagName('select');
+    selects = document.getElementById('repeatedbox' + id).getElementsByTagName('select');
     getAllDropDownValues(selects, json_repeated)
-    $('#myModal2').modal('hide');
-    value = json_repeated_dict[document.getElementById('second_modal').innerText]
+    $('#myModal2' + id).modal('hide');
 
+    value = json_repeated_dict[document.getElementById('second_modal' + id).innerText]
 
     if (Object.keys(json_repeated).length == 1) {
         json_repeated = Object.values(json_repeated)[0]
     }
+
+    if (id != "") {
+        value = child_json_repeated_dict[document.getElementById('second_modal' + id).innerText]
+    }
     if (typeof value == "undefined") {
         value = [json_repeated]
-        json_repeated_dict[document.getElementById('second_modal').innerText] = value
     } else {
-        json_repeated_dict[document.getElementById('second_modal').innerText].push(json_repeated)
+        value.push(json_repeated);
+    }
+    if (id != "") {
+        child_json_repeated_dict[document.getElementById('second_modal' + id).innerText] = value
+    } else {
+        json_repeated_dict[document.getElementById('second_modal').innerText] = value
+
+    }
+
+
+
+    if (id == "") {
+        // Iterating over the JSON object to get all keys and values
+        for (var key in child_json_repeated_dict) {
+            if (child_json_repeated_dict.hasOwnProperty(key)) {
+                var value = child_json_repeated_dict[key];
+                json_repeated_dict[parentModelKey][Object.keys(json_repeated_dict[parentModelKey]).length - 1][key] = value
+
+            }
+        }
+
+    }
+    let secondModal = document.getElementById('myModal2' + id)
+    if (id != "" && secondModal) {
+        secondModal.remove()
     }
 
 }
