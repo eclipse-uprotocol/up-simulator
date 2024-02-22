@@ -6,7 +6,7 @@ import pkgutil
 import re
 
 from simulator.utils.constant import RESOURCE_CATALOG_DIR, RESOURCE_CATALOG_JSON_NAME, RESOURCE_CATALOG_CSV_NAME, \
-    PROTO_REPO_DIR, KEY_URI_PREFIX
+    PROTO_REPO_DIR, KEY_URI_PREFIX, KEY_PROTO_ENTITY_NAME
 from target import protofiles as proto
 from google.protobuf import reflection
 
@@ -43,7 +43,7 @@ def read_proto_files(service_file_path, message, message_resource_prefix_dict):
 
 def extract_resource_name_mask(protobuf_message, message_name, message_resource_prefix_dict):
     # Define a regular expression pattern
-    pattern = rf'{message_name}\.(.*?)\s*=\s*\d+\s*\[\s*\(uprotocol\.resource_name_mask\) = "(.*?)"\s*\];'
+    pattern = rf'{message_name}\.(.*?)\s*=\s*\d+\s*\[\s*\('+KEY_PROTO_ENTITY_NAME+'\.resource_name_mask\) = "(.*?)"\s*\];'
     # Use re.search to find the pattern in the protobuf_message
     match = re.search(pattern, protobuf_message, re.DOTALL)
 

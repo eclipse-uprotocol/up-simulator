@@ -1198,6 +1198,9 @@ function design_layout_repeated(data, key, repeated_class) {
         clonedModal.querySelector('#second_modal').setAttribute('id', second_modal_id);
         clonedModal.querySelector('#repeatedbox').setAttribute('id', repeated_box_id);
         clonedModal.querySelector('#repeated_add').setAttribute('id', btn_id);
+        clonedModal.querySelector('.close').addEventListener('click', function(){
+                  clonedModal.remove()
+        })
 
         clonedModal.setAttribute('style', 'display: block; z-index: 10000;'); // Set z-index here
 
