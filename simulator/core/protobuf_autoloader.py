@@ -207,8 +207,8 @@ def get_topics_by_proto_service_name(service_name):
 
 
 def get_services():
-    global rpc_topics
-    return rpc_topics.keys()
+    global service_id
+    return service_id.keys()
 
 
 def find_message(message_full_name):
@@ -588,8 +588,9 @@ def get_topics_by_service(service_name):
 def get_methods_by_service(service_name):
     global rpc_methods
     ret = {}
-    for method in rpc_methods[service_name].keys():
-        ret[method] = rpc_methods[service_name][method]
+    if service_name in rpc_methods:
+        for method in rpc_methods[service_name].keys():
+            ret[method] = rpc_methods[service_name][method]
     return ret
 
 

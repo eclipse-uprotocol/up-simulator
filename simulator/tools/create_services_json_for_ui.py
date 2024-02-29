@@ -24,57 +24,47 @@
 #
 # -------------------------------------------------------------------------
 
-import os
-import re
 import json
-
+from simulator.core import protobuf_autoloader as autoloader
+import os
 import simulator.utils.constant as CONSTANTS
 
-
-def process_proto(directory):
-    data = []
-    for root, dirs, files in os.walk(directory):
-        service_file_path = next(
-            (os.path.join(root, file) for file in files if file.endswith(CONSTANTS.SERVICE_PROTO_SUFFIX)),
-            None)
-        topic_file_path = next(
-            (os.path.join(root, file) for file in files if file.endswith(CONSTANTS.TOPIC_PROTO_SUFFIX)), None)
-        if service_file_path and topic_file_path:
-            service_content, topic_content = read_proto_files(service_file_path, topic_file_path)
-            extract_proto_info(data, service_content, topic_content)
-
-    return data
+result_data = []
 
 
-def read_proto_files(service_file_path, topic_file_path):
-    with open(service_file_path, 'r') as service_file, open(topic_file_path, 'r') as topic_file:
-        return service_file.read(), topic_file.read()
+def get_messages(service_name):
+    output = []
+    for item in autoloader.get_topics_by_proto_service_name(service_name):
+        status = item.split('#')[-1]
+        output.append(status)
+    unique_element = []
+    seen = set()
+    for item in output:
+        if item not in seen:
+            unique_element.append(item)
+            seen.add(item)
+    return unique_element
 
 
-def extract_proto_info(data, service_file_content, topic_file_content):
-    # Extract service name
-    service_name = re.search(r'service\s+(\w+)\s*{', service_file_content)
-
-    # Extract uprotocol name
-    uprotocol_name = re.search(r'option\s+\('+CONSTANTS.KEY_PROTO_ENTITY_NAME+'\.name\)\s*=\s*"([^"]+)"', service_file_content)
-
-    # Extract list of RPCs
-    rpcs = re.findall(r'rpc\s+(\w+)\s*\(\s*[^)]*\s*\)', service_file_content) or []
-
-    messages = re.findall(r'message\s+(\w+)\s*{', topic_file_content) or []
-
-    append_to_data(data, uprotocol_name, service_name, rpcs, messages)
-
-
-def append_to_data(data, uprotocol_name_match, service_name_match, rpcs, messages):
-    json_obj = {"name": uprotocol_name_match.group(1) if uprotocol_name_match else None,
-                "display_name": service_name_match.group(1) if service_name_match else None, "rpc": rpcs,
-                "message": messages}
-    data.append(json_obj)
+def get_display_name(input_str):
+    parts = input_str.split('.')
+    try:
+        formatted_str = ' '.join(part.capitalize() for part in parts[1].split('_') + parts[2:] if part)
+    except:
+        formatted_str = input_str.capitalize()
+    return formatted_str
 
 
 def execute():
-    result_data = process_proto(CONSTANTS.PROTO_REPO_DIR)
+    for service in autoloader.get_services():
+        data_dict = {
+            "name": service,
+            "display_name": get_display_name(service),
+            "rpc": list(autoloader.get_methods_by_service(service).keys()),
+            "message": get_messages(service)
+        }
+        result_data.append(data_dict)
+
     # Create the directory if it doesn't exist
     if not os.path.exists(CONSTANTS.UI_JSON_DIR):
         os.makedirs(CONSTANTS.UI_JSON_DIR)
@@ -82,6 +72,7 @@ def execute():
     # Write JSON data to the services.json
     with open(SERVICES_JSON_FILE_PATH, 'w') as json_file:
         json.dump(result_data, json_file, indent=2)
+        print("Service.json is created successfully")
 
 
 if __name__ == "__main__":

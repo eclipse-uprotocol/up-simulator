@@ -6,7 +6,7 @@ import pkgutil
 import re
 
 from simulator.utils.constant import RESOURCE_CATALOG_DIR, RESOURCE_CATALOG_JSON_NAME, RESOURCE_CATALOG_CSV_NAME, \
-    PROTO_REPO_DIR, KEY_URI_PREFIX, KEY_PROTO_ENTITY_NAME
+    PROTO_REPO_DIR, KEY_URI_PREFIX, KEY_PROTO_ENTITY_NAME, REPO_URL
 from target import protofiles as proto
 from google.protobuf import reflection
 
@@ -100,9 +100,11 @@ def get_protobuf_descriptor_data():
                 message_option_descriptor = mod.DESCRIPTOR.message_types_by_name
                 for message in message_option_descriptor.keys():
                     if 'Options' in message:
-                        read_proto_files(
-                            os.path.join(PROTO_REPO_DIR, 'src', 'main', 'proto', os.path.normpath(mod.DESCRIPTOR.name)),
-                            message.replace('Options', ''), message_resource_prefix_dict)
+                        path=os.path.join(PROTO_REPO_DIR, 'src', 'main', 'proto', os.path.normpath(mod.DESCRIPTOR.name))
+                        if 'COVESA' not in REPO_URL:
+                            path = os.path.join(PROTO_REPO_DIR,  'proto',
+                                                os.path.normpath(mod.DESCRIPTOR.name))
+                        read_proto_files(path,message.replace('Options', ''), message_resource_prefix_dict)
                         if any(key in message_option_descriptor[message].fields_by_name.keys() for key in
                                ['resource_name', 'name']):
                             for field, value in message_option_descriptor[message].GetOptions().ListFields():
