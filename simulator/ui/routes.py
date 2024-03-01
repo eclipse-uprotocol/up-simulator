@@ -70,10 +70,10 @@ def route_configuration():
 @blueprint.route('/pub-sub.html')
 def route_pubsub():
     services_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
-    pubsub_json_path = os.path.join(os.getcwd(), "simulator", "ui", "ui_json", "pub-sub.json")
+    pubsub_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.PUB_SUB_JSON_FILE_NAME)
 
     if 'ui_json' in os.getcwd():
-        pubsub_json_path = os.sep + "pub-sub.json"
+        pubsub_json_path = os.sep +  CONSTANTS.PUB_SUB_JSON_FILE_NAME
         services_json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
     f = open(pubsub_json_path)
     pubsub = json.load(f)

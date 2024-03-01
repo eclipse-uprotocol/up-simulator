@@ -31,8 +31,10 @@ SERVICE_PROTO_SUFFIX = '_service.proto'
 TOPIC_PROTO_SUFFIX = '_topics.proto'
 UI_JSON_DIR = os.path.join("target", "ui_json")
 SERVICES_JSON_FILE_NAME = "services.json"
+PUB_SUB_JSON_FILE_NAME = "pub-sub.json"
 
 REPO_URL = "https://github.com/COVESA/uservices.git"
+TAG_NAME = "v1.1.6" #For future use
 PROTO_REPO_DIR = os.path.join("target", "protos")
 PROTO_OUTPUT_DIR = os.path.join("target", "protofiles")
 RESOURCE_CATALOG_DIR = os.path.join("target", "resource_catalog")

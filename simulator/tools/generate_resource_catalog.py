@@ -153,6 +153,9 @@ def write_topics_to_csv_file():
         csv_writer = csv.writer(csv_file)
         for topic_info in topic_list:
             csv_writer.writerow([topic_info['uri'], topic_info['package']])
+        print("resource_catalog.csv is created successfully")
+
+
 
 
 def write_nodes_to_json_file(resource_catalog_json):
@@ -162,6 +165,8 @@ def write_nodes_to_json_file(resource_catalog_json):
     json_file_path = os.path.join(RESOURCE_CATALOG_DIR, RESOURCE_CATALOG_JSON_NAME)
     with open(json_file_path, 'w') as json_file:
         json.dump(resource_catalog_json, json_file, indent=2)
+        print("resource_catalog.json is created successfully")
+
 
 
 def execute():

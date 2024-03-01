@@ -12,6 +12,9 @@ def execute_pre_scripts():
     from simulator.tools import create_services_json_for_ui
     create_services_json_for_ui.execute()
     time.sleep(1)
+    from simulator.tools import create_pub_sub_json_for_ui
+    create_pub_sub_json_for_ui.execute()
+    time.sleep(1)
 
 
 

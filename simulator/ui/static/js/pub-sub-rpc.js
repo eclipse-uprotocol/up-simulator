@@ -286,22 +286,6 @@ function clearLog() {
 }
 
 function setvalues(json_proto, clearValues) {
-    //logic for time
-    keys = Object.keys(json_proto);
-    for (key in keys) {
-        if (keys[key].includes(".hours")) {
-            var prefixkey = keys[key].split(".hours")[0]
-            var hours = ('0' + json_proto[keys[key]]).slice(-2)
-            var min = ('0' + json_proto[prefixkey + ".minutes"]).slice(-2)
-            var sec = ('0' + json_proto[prefixkey + ".seconds"]).slice(-2)
-            json_proto[prefixkey] = hours + ":" + min + ":" + sec
-            delete json_proto[keys[key]]
-            delete json_proto[prefixkey + ".minutes"]
-            delete json_proto[prefixkey + ".seconds"]
-            delete json_proto[prefixkey + ".nanos"]
-        }
-    }
-
     var inputs = document.getElementById('uidesign').getElementsByTagName('input');
     var selects = document.getElementById('uidesign').getElementsByTagName('select');
     for (var j = 0; j < selects.length; ++j) {
@@ -484,21 +468,15 @@ function getAllUiValues(input, json_data) {
         // deal with inputs[index] element.
         if (inputs[index].hasAttribute('isconfig') && inputs[index].getAttribute('isconfig') == 'yes') {
             if (inputs[index].checked) {
-                if (inputs[index].hasAttribute('resource_name')) {
-                    json_data['resource_name'] = inputs[index].getAttribute('resource_name')
-                }
-                if (inputs[index].id != 'N') {
-                    if ((inputs[index].id).includes('.')) {
-                        json_data['name'] = inputs[index].id
 
-                        if (inputs[index].hasAttribute('name_key')) {
-                            json_data[inputs[index].getAttribute('name_key')] = inputs[index].id
-                        } else {
-                            json_data[(inputs[index].id).split('.')[0] + ".name"] = inputs[index].id
-                        }
+                if (inputs[index].id != 'N') {
+
+                    if (inputs[index].hasAttribute('name_key')) {
+                        json_data[inputs[index].getAttribute('name_key')] = inputs[index].id
                     } else {
                         json_data['name'] = inputs[index].id
                     }
+
                 }
                 topic = inputs[index].getAttribute('topic')
                 methodname = inputs[index].getAttribute('rpc')
@@ -1092,10 +1070,7 @@ function design_layout(data, resource, servicename) {
         } else if (localStorage.getItem('th') === 'dark') {
             iInput.classList.remove('input-light')
         }
-        if (data['Configuration'][i].hasOwnProperty('resource_name')) {
-            iInput.setAttribute("resource_name", data['Configuration'][i].resource_name);
 
-        }
         if (data['Configuration'][i].hasOwnProperty('name_key')) {
             iInput.setAttribute("name_key", data['Configuration'][i].name_key);
 
