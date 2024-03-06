@@ -33,19 +33,22 @@ from sys import platform, exit
 from threading import current_thread, main_thread
 
 from google.protobuf import text_format, any_pb2
-from uprotocol.proto.uattributes_pb2 import UAttributes, UPriority
+from uprotocol.proto.uattributes_pb2 import UPriority
+from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.upayload_pb2 import UPayloadFormat
-from uprotocol.proto.uri_pb2 import UUri
-from uprotocol.proto.ustatus_pb2 import UStatus
+from uprotocol.proto.uri_pb2 import UEntity, UUri
 from uprotocol.rpc.rpcmapper import RpcMapper
 from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
+from uprotocol.uri.factory.uresource_builder import UResourceBuilder
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
+from simulator.core import protobuf_autoloader
 from simulator.core.exceptions import SimulationError
 from simulator.core.transport_layer import TransportLayer
 from simulator.utils import common_util
-from simulator.core import protobuf_autoloader
+
+RESPONSE_URI = UUri(entity=UEntity(name="simulator", version_major=1), resource=UResourceBuilder.for_rpc_response())
 
 covesa_services = []
 
@@ -83,11 +86,14 @@ class BaseService(object):
     def RequestListener(func):
         class wrapper:
             @staticmethod
-            def on_receive(topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
+            def on_receive(message: UMessage):
                 global instance
                 print('wrapper on receive')
+                attributes = message.attributes
+                topic = attributes.sink
                 entity = topic.entity.name
                 method = topic.resource.instance
+                payload = message.payload
                 req = protobuf_autoloader.get_request_class(entity, method)
                 res = protobuf_autoloader.get_response_class(entity, method)()
                 any_message = any_pb2.Any()
@@ -97,11 +103,11 @@ class BaseService(object):
                 any_obj = any_pb2.Any()
                 any_obj.Pack(response)
                 payload_res = UPayload(value=any_obj.SerializeToString(), format=payload.format)
-                attributes = UAttributesBuilder.response(attributes.priority, attributes.sink, attributes.id).build()
+                attributes = UAttributesBuilder.response(RESPONSE_URI, attributes.sink, attributes.priority,
+                                                         attributes.id).build()
                 if get_instance(entity).portal_callback is not None:
-                    get_instance(entity).portal_callback(req, method, response,
-                                                         get_instance(entity).publish_data)
-                return TransportLayer().send(topic, payload_res, attributes)
+                    get_instance(entity).portal_callback(req, method, response, get_instance(entity).publish_data)
+                return TransportLayer().send(UMessage(attributes=attributes, payload=payload_res))
 
         return wrapper
 
@@ -113,15 +119,15 @@ class BaseService(object):
             topics = protobuf_autoloader.get_topics_by_proto_service_name(self.service)
             # for topic in topics:
             if len(topics) >= 0:
-                self.transport_layer.create_topic(self.service,topics, common_util.print_create_topic_status_handler)
+                self.transport_layer.create_topic(self.service, topics, common_util.print_create_topic_status_handler)
             for attr in dir(self):
                 if callable(getattr(self, attr)) and isinstance(getattr(self, attr), type):
                     for attr1 in dir(getattr(self, attr)):
                         if attr1 == 'on_receive':
                             func = getattr(self, attr)
                             method_uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, attr)
-                            status = self.transport_layer.register_listener(LongUriSerializer().deserialize(method_uri),
-                                                                            func)
+                            status = self.transport_layer.register_rpc_listener(
+                                LongUriSerializer().deserialize(method_uri), func)
                             common_util.print_register_rpc_status(method_uri, status.code, status.message)
 
                             break
@@ -134,8 +140,8 @@ class BaseService(object):
         any_obj.Pack(message)
         payload_data = any_obj.SerializeToString()
         payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
-        attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
-        status = self.transport_layer.send(LongUriSerializer().deserialize(uri), payload, attributes)
+        attributes = UAttributesBuilder.publish(LongUriSerializer().deserialize(uri), UPriority.UPRIORITY_CS4).build()
+        status = self.transport_layer.send(UMessage(payload=payload, attributes=attributes))
         common_util.print_publish_status(uri, status.code, status.message)
         if is_from_rpc:
             self.publish_data.clear()

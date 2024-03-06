@@ -76,7 +76,6 @@ def subscribe(json_subscribe):
 
 @socketio.on(CONSTANTS.API_SENDRPC, namespace=CONSTANTS.NAMESPACE)
 def sendrpc(json_sendrpc):
-    print('received rpc json ' + str(json_sendrpc))
     set_reset_flag()
     socket_utility.execute_send_rpc(json_sendrpc)
 
