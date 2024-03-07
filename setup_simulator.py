@@ -15,7 +15,9 @@ def execute_pre_scripts():
     from simulator.tools import create_pub_sub_json_for_ui
     create_pub_sub_json_for_ui.execute()
     time.sleep(1)
-
+    from simulator.tools import create_rpc_json_for_ui
+    create_rpc_json_for_ui.execute()
+    time.sleep(1)
 
 
 if __name__ == "__main__":

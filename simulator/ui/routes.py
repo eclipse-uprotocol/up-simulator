@@ -23,7 +23,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # -------------------------------------------------------------------------
-
+import html
 import json
 import os
 from urllib.parse import unquote
@@ -51,10 +51,10 @@ def route_configuration():
             status = device.shell("getprop init.svc.bootanim")
             if status.__contains__('stopped'):
                 emu_status = 'Emulator is running'
-                deviceInfo = {'Avd_name': device.shell("getprop ro.boot.qemu.avd_name" ),
+                deviceInfo = {'Avd_name': device.shell("getprop ro.boot.qemu.avd_name"),
                               'Image': device.shell("getprop ro.product.bootimage.name"),
                               'Build_date': device.shell("getprop ro.bootimage.build.date"),
-                             # 'Build_id': device.shell("getprop ro.bootimage.build.id"),
+                              # 'Build_id': device.shell("getprop ro.bootimage.build.id"),
                               'Model': device.shell("getprop ro.product.model")}
             else:
                 emu_status = 'Emulator is loading'
@@ -73,7 +73,7 @@ def route_pubsub():
     pubsub_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.PUB_SUB_JSON_FILE_NAME)
 
     if 'ui_json' in os.getcwd():
-        pubsub_json_path = os.sep +  CONSTANTS.PUB_SUB_JSON_FILE_NAME
+        pubsub_json_path = os.sep + CONSTANTS.PUB_SUB_JSON_FILE_NAME
         services_json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
     f = open(pubsub_json_path)
     pubsub = json.load(f)
@@ -130,12 +130,12 @@ def route_pubsub_logger():
 
 
 @blueprint.route('/send-rpc.html')
-def route_sendrpc():
-    rpc_json_path = os.path.join(os.getcwd(), "simulator", "ui", "ui_json", "rpc.json")
+def route_send_rpc():
     services_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
+    rpc_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.RPC_JSON_FILE_NAME)
 
     if 'ui_json' in os.getcwd():
-        rpc_json_path = os.sep + "rpc.json"
+        rpc_json_path = os.sep + CONSTANTS.RPC_JSON_FILE_NAME
         services_json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
 
     f = open(rpc_json_path)
@@ -210,4 +210,4 @@ def update_service_status():
         stop_service(entity_to_remove)
     except:
         pass
-    return {'result': True, 'entity': entity_to_remove}
+    return {'result': True, 'entity':  html.escape(entity_to_remove)}
