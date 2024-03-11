@@ -26,17 +26,14 @@
 
 import re
 
-from uprotocol.proto.uattributes_pb2 import UAttributes
-from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.proto.uri_pb2 import UUri
-from uprotocol.proto.ustatus_pb2 import UStatus
+from target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (UpdateTireRequest, )
+from target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (Tire, )
+from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from simulator.utils.constant import KEY_URI_PREFIX
-from target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (UpdateTireRequest, )
-from target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (Tire, )
 
 
 class ChassisService(BaseService):
@@ -57,10 +54,12 @@ class ChassisService(BaseService):
 
     def start_rpc_service(self):
         super().start_rpc_service()
-        self.subscribe([KEY_URI_PREFIX+":/chassis/1/tire.front_left#Tire", KEY_URI_PREFIX+":/chassis/1/tire.front_right#Tire",
-                        KEY_URI_PREFIX+":/chassis/1/tire.rear_right#Tire", KEY_URI_PREFIX+":/chassis/1/tire.rear_left#Tire",
-                        KEY_URI_PREFIX+":/chassis/1/tire.rear_left_inner#Tire",
-                        KEY_URI_PREFIX+":/chassis/1/tire.rear_right_inner#Tire", ], ChassisPreconditions(self))
+        self.subscribe(
+            [KEY_URI_PREFIX + ":/chassis/1/tire.front_left#Tire", KEY_URI_PREFIX + ":/chassis/1/tire.front_right#Tire",
+             KEY_URI_PREFIX + ":/chassis/1/tire.rear_right#Tire", KEY_URI_PREFIX + ":/chassis/1/tire.rear_left#Tire",
+             KEY_URI_PREFIX + ":/chassis/1/tire.rear_left_inner#Tire",
+             KEY_URI_PREFIX + ":/chassis/1/tire.rear_right_inner#Tire", ], ChassisPreconditions(self))
+
     def init_state(self):
         """
         Initializes internal data structures for keeping track of the current state of the tire update service
@@ -154,26 +153,25 @@ class ChassisService(BaseService):
         Publishes a message based on the current tire
         """
         for tire in self.tire_names:
-            topic = KEY_URI_PREFIX+":/chassis/1/" + tire + "#Tire"
-            self.publish(topic, self.state[tire],True)
+            topic = KEY_URI_PREFIX + ":/chassis/1/" + tire + "#Tire"
+            self.publish(topic, self.state[tire], True)
 
 
 class ChassisPreconditions(UListener):
-    def __init__(self, covesa_service):
-        self.covesa_Service = covesa_service
+    def __init__(self, chassis_service):
+        self.chassis_service = chassis_service
 
-    def on_receive(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
+    def on_receive(self, umsg: UMessage):
         print('on recieve called')
-        print(payload)
-        print(topic)
-        print(attributes)
+        print(umsg.payload)
+        print(umsg.attributes.source)
         # parse data from here and pass it to onevent method
         pass
 
     def onEvent(self, uri, message):
         if message is not None:
             print(f"Received a {type(message)} message with value {message}")
-            self.covesa_Service.set_topic_state(uri, message)
+            self.chassis_service.set_topic_state(uri, message)
 
 
 if __name__ == "__main__":

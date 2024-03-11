@@ -26,19 +26,16 @@
 
 import re
 
-from uprotocol.proto.uattributes_pb2 import UAttributes
-from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.proto.uri_pb2 import UUri
-from uprotocol.proto.ustatus_pb2 import UStatus
+from target.protofiles.common.health_state_pb2 import HealthState
+from target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, \
+    ManageHealthMonitoringRequest
+from target.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
+from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from simulator.utils.constant import KEY_URI_PREFIX
-from target.protofiles.common.health_state_pb2 import HealthState
-from target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, \
-    ManageHealthMonitoringRequest
-from target.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
 
 
 class BrakingService(BaseService):
@@ -60,9 +57,8 @@ class BrakingService(BaseService):
 
     def start_rpc_service(self):
         super().start_rpc_service()
-        self.subscribe(
-            [KEY_URI_PREFIX+":/chassis.braking/1/brake_pads.front#BrakePads", KEY_URI_PREFIX+":/chassis.braking/1/brake_pads.rear#BrakePads", ],
-            BrakingPreconditions(self))
+        self.subscribe([KEY_URI_PREFIX + ":/chassis.braking/1/brake_pads.front#BrakePads",
+                        KEY_URI_PREFIX + ":/chassis.braking/1/brake_pads.rear#BrakePads", ], BrakingPreconditions(self))
 
     def init_state(self):
         """
@@ -185,35 +181,34 @@ class BrakingService(BaseService):
             request(protobuf): the protobuf containing the rpc request
         """
         # publish brake info based on current state
-        topic_prefix = KEY_URI_PREFIX+":/chassis.braking/1/"
+        topic_prefix = KEY_URI_PREFIX + ":/chassis.braking/1/"
 
         if type(request) == ResetHealthRequest:
             topic = topic_prefix + request.name + "#BrakePads"
-            self.publish(topic, self.state[request.name],True)
+            self.publish(topic, self.state[request.name], True)
         else:
             topic = topic_prefix + "brake_pads.front#BrakePads"
-            self.publish(topic, self.state['brake_pads.front'],True)
+            self.publish(topic, self.state['brake_pads.front'], True)
 
             topic = topic_prefix + "brake_pads.rear#BrakePads"
-            self.publish(topic, self.state['brake_pads.rear'],True)
+            self.publish(topic, self.state['brake_pads.rear'], True)
 
 
 class BrakingPreconditions(UListener):
-    def __init__(self, covesa_service):
-        self.covesa_Service = covesa_service
+    def __init__(self, braking_service):
+        self.braking_service = braking_service
 
-    def on_receive(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
+    def on_receive(self, umsg: UMessage):
         print('on receive braking called')
-        print(payload)
-        print(topic)
-        print(attributes)
+        print(umsg.payload)
+        print(umsg.attributes.source)
         # parse data from here and pass it to onevent method
         pass
 
     def onEvent(self, uri, message):
         if message is not None:
             print(f"Received a {type(message)} message with value(s) {message}")
-            self.covesa_Service.set_topic_state(uri, message)
+            self.braking_service.set_topic_state(uri, message)
 
 
 if __name__ == "__main__":
