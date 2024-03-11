@@ -263,9 +263,10 @@ def get_ui(resources, service_name):
 
 def execute():
     for service in services:
-        data = get_ui(get_resources(service), service)
-        if len(data) > 0:
-            result_data[service] = data
+        if service not in ['core.utelemetry', 'core.usubscription']:
+            data = get_ui(get_resources(service), service)
+            if len(data) > 0:
+                result_data[service] = data
 
         # Create the directory if it doesn't exist
     if not os.path.exists(CONSTANTS.UI_JSON_DIR):

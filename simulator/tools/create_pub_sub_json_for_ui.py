@@ -166,30 +166,31 @@ def extract_fields(data):
 
 def get_ui(pubsub, service_name):
     ui_item = []
-    for resource_name in pubsub:
-        topics = get_topics_by_resource_name(resource_name, service_name)
-        if len(topics) > 0:
-            configuration = []
-            for i in range(len(topics)):
-                name = get_config_name(topics[i])
-                display_name = get_config_display_name(name)
-                if name == display_name:
-                    configuration_dict = {"name": name, "topic": topics[i]}
-                else:
-                    configuration_dict = {"name": name, "display_name": display_name, "topic": topics[i]}
-                configuration.append(configuration_dict)
-            ui_det = get_ui_details(configuration[0]['topic'])
-            ui_details = extract_fields(ui_det)
-            if not ui_details:
-                ui_details = [{"type": "label", "text": "No protofields available"}]
+    if service_name not in ['core.utelemetry','core.usubscription']:
+        for resource_name in pubsub:
+            topics = get_topics_by_resource_name(resource_name, service_name)
+            if len(topics) > 0:
+                configuration = []
+                for i in range(len(topics)):
+                    name = get_config_name(topics[i])
+                    display_name = get_config_display_name(name)
+                    if name == display_name:
+                        configuration_dict = {"name": name, "topic": topics[i]}
+                    else:
+                        configuration_dict = {"name": name, "display_name": display_name, "topic": topics[i]}
+                    configuration.append(configuration_dict)
+                ui_det = get_ui_details(configuration[0]['topic'])
+                ui_details = extract_fields(ui_det)
+                if not ui_details:
+                    ui_details = [{"type": "label", "text": "No protofields available"}]
 
-            modified_ui_list = ui_details
-            if 'Geofence' not in resource_name:
-                modified_ui_list = [item for item in ui_details if
-                                    not (item.get('type') == 'string' and item.get('property') == 'name')]
+                modified_ui_list = ui_details
+                if 'Geofence' not in resource_name:
+                    modified_ui_list = [item for item in ui_details if
+                                        not (item.get('type') == 'string' and item.get('property') == 'name')]
 
-            part_dict = {resource_name: {'Configuration': configuration, 'uidetails': modified_ui_list}}
-            ui_item.append(part_dict)
+                part_dict = {resource_name: {'Configuration': configuration, 'uidetails': modified_ui_list}}
+                ui_item.append(part_dict)
     return ui_item
 
 

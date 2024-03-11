@@ -36,28 +36,6 @@ def create_topic_json(service_uri, resource, message, topic_id, full_name, messa
     return json_structure
 
 
-def read_proto_files(service_file_path, message, message_resource_prefix_dict):
-    with open(service_file_path, 'r') as service_file:
-        extract_resource_name_mask(service_file.read(), message, message_resource_prefix_dict)
-
-
-def extract_resource_name_mask(protobuf_message, message_name, message_resource_prefix_dict):
-    # Define a regular expression pattern
-    pattern = rf'{message_name}\.(.*?)\s*=\s*\d+\s*\[\s*\('+KEY_PROTO_ENTITY_NAME+'\.resource_name_mask\) = "(.*?)"\s*\];'
-    # Use re.search to find the pattern in the protobuf_message
-    match = re.search(pattern, protobuf_message, re.DOTALL)
-
-    # Check if a match is found
-    if match:
-        resource_name_mask_value = match.group(2)
-        resource_name_mask_value = resource_name_mask_value.rstrip('.*')
-
-        if len(resource_name_mask_value) > 0:
-            message_resource_prefix_dict.append({f"{message_name}": resource_name_mask_value})
-    else:
-        return "Resource Name Mask not found."
-
-
 def get_protobuf_descriptor_data():
     node_json = []
     method_nodes = []
@@ -96,17 +74,21 @@ def get_protobuf_descriptor_data():
                     for field, value in options.ListFields():
                         if field.name == 'method_id':
                             method_id = value
-                            method_nodes.append(create_method_json(f"{KEY_URI_PREFIX}:/{service_name}/{version}", method, method_id))
+                            method_nodes.append(
+                                create_method_json(f"{KEY_URI_PREFIX}:/{service_name}/{version}", method, method_id))
                 message_option_descriptor = mod.DESCRIPTOR.message_types_by_name
                 for message in message_option_descriptor.keys():
                     if 'Options' in message:
-                        path=os.path.join(PROTO_REPO_DIR, 'src', 'main', 'proto', os.path.normpath(mod.DESCRIPTOR.name))
-                        if 'COVESA' not in REPO_URL:
-                            path = os.path.join(PROTO_REPO_DIR,  'proto',
-                                                os.path.normpath(mod.DESCRIPTOR.name))
-                        read_proto_files(path,message.replace('Options', ''), message_resource_prefix_dict)
-                        if any(key in message_option_descriptor[message].fields_by_name.keys() for key in
-                               ['resource_name', 'name']):
+                        for key in ['resource_name', 'name']:
+                            if key in message_option_descriptor[message].fields_by_name.keys():
+                                for field, value in message_option_descriptor[message].fields_by_name[
+                                    key].GetOptions().ListFields():
+                                    if 'resource_name_mask' == field.name:
+                                        resource_name_mask_value = value.rstrip('.*')
+                                        if len(resource_name_mask_value) > 0:
+                                            message_resource_prefix_dict.append(
+                                                {f"{message.replace('Options', '')}": resource_name_mask_value})
+                                        break
                             for field, value in message_option_descriptor[message].GetOptions().ListFields():
                                 if field.name == 'base_topic_id':
                                     message_options_dict.append({f"{message.replace('Options', '')}": value})
@@ -122,18 +104,31 @@ def get_protobuf_descriptor_data():
                     for message in messages:
                         message_mod = mod.DESCRIPTOR.message_types_by_name[message]
 
-                        if (
-                                'Resources' in message_mod.enum_types_by_name or 'Resource' in
+                        if ('Resources' in message_mod.enum_types_by_name or 'Resource' in
                                 message_mod.enum_types_by_name):
                             resources_key = 'Resources' if 'Resources' in message_mod.enum_types_by_name else 'Resource'
                             resources = message_mod.enum_types_by_name[resources_key].values_by_name.keys()
                             value = next((d[message] for d in message_options_dict if message in d), 0)
                             base_topic_id = value
+                            for field_key in message_mod.fields_by_name.keys():
+                                if 'resource' in field_key:
+                                    for field_options, field_value in message_mod.fields_by_name[field_key].GetOptions().ListFields():
+                                        if 'resource_name_mask' == field_options.name:
+                                            resource_name_mask_value = field_value.rstrip('.*')
+                                            if len(resource_name_mask_value) > 0:
+                                                message_resource_prefix_dict.append(
+                                                    {f"{message}": resource_name_mask_value})
+
+                            for field, value in message_mod.GetOptions().ListFields():
+                                if field.name == 'base_topic_id':
+                                    base_topic_id = value
+                                    break
                             for resource in resources:
                                 topic_id = base_topic_id + message_mod.enum_types_by_name[resources_key].values_by_name[
                                     resource].number
                                 topic_nodes.append(
-                                    create_topic_json(f"{KEY_URI_PREFIX}:/{service_name}/{version}", resource, message_mod.name,
+                                    create_topic_json(f"{KEY_URI_PREFIX}:/{service_name}/{version}", resource,
+                                                      message_mod.name,
                                                       topic_id, message_mod.full_name, message_resource_prefix_dict))
 
                     if service_json and topic_nodes and len(topic_nodes) > 0:
@@ -156,8 +151,6 @@ def write_topics_to_csv_file():
         print("resource_catalog.csv is created successfully")
 
 
-
-
 def write_nodes_to_json_file(resource_catalog_json):
     # Write JSON data to the services.json
     if not os.path.exists(RESOURCE_CATALOG_DIR):
@@ -166,7 +159,6 @@ def write_nodes_to_json_file(resource_catalog_json):
     with open(json_file_path, 'w') as json_file:
         json.dump(resource_catalog_json, json_file, indent=2)
         print("resource_catalog.json is created successfully")
-
 
 
 def execute():
