@@ -1,14 +1,39 @@
+# -------------------------------------------------------------------------
+#
+# Copyright (c) 2024 General Motors GTO LLC
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# SPDX-FileType: SOURCE
+# SPDX-FileCopyrightText: 2024 General Motors GTO LLC
+# SPDX-License-Identifier: Apache-2.0
+#
+# -------------------------------------------------------------------------
+
 import csv
 import importlib
 import json
 import os
 import pkgutil
-import re
+
+from target import protofiles as proto
 
 from simulator.utils.constant import RESOURCE_CATALOG_DIR, RESOURCE_CATALOG_JSON_NAME, RESOURCE_CATALOG_CSV_NAME, \
-    PROTO_REPO_DIR, KEY_URI_PREFIX, KEY_PROTO_ENTITY_NAME, REPO_URL
-from target import protofiles as proto
-from google.protobuf import reflection
+    KEY_URI_PREFIX
 
 topic_list = []
 
@@ -104,7 +129,8 @@ def get_protobuf_descriptor_data():
                     for message in messages:
                         message_mod = mod.DESCRIPTOR.message_types_by_name[message]
 
-                        if ('Resources' in message_mod.enum_types_by_name or 'Resource' in
+                        if (
+                                'Resources' in message_mod.enum_types_by_name or 'Resource' in
                                 message_mod.enum_types_by_name):
                             resources_key = 'Resources' if 'Resources' in message_mod.enum_types_by_name else 'Resource'
                             resources = message_mod.enum_types_by_name[resources_key].values_by_name.keys()
@@ -112,7 +138,8 @@ def get_protobuf_descriptor_data():
                             base_topic_id = value
                             for field_key in message_mod.fields_by_name.keys():
                                 if 'resource' in field_key:
-                                    for field_options, field_value in message_mod.fields_by_name[field_key].GetOptions().ListFields():
+                                    for field_options, field_value in message_mod.fields_by_name[
+                                        field_key].GetOptions().ListFields():
                                         if 'resource_name_mask' == field_options.name:
                                             resource_name_mask_value = field_value.rstrip('.*')
                                             if len(resource_name_mask_value) > 0:
@@ -128,8 +155,8 @@ def get_protobuf_descriptor_data():
                                     resource].number
                                 topic_nodes.append(
                                     create_topic_json(f"{KEY_URI_PREFIX}:/{service_name}/{version}", resource,
-                                                      message_mod.name,
-                                                      topic_id, message_mod.full_name, message_resource_prefix_dict))
+                                                      message_mod.name, topic_id, message_mod.full_name,
+                                                      message_resource_prefix_dict))
 
                     if service_json and topic_nodes and len(topic_nodes) > 0:
                         service_json["node"]["node"] = service_json["node"]["node"] + topic_nodes

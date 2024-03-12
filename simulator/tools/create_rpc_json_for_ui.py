@@ -29,6 +29,7 @@ from simulator.core import protobuf_autoloader as autoloader
 import os
 import simulator.utils.constant as CONSTANTS
 from simulator.tools.common_methods import get_field_info, get_max, get_min_value, get_property_text, get_type_in_string
+from google.protobuf.descriptor import FieldDescriptor
 
 result_data = {}
 additional_data = {}
@@ -73,7 +74,7 @@ def get_resources_from_message_class(message_class):
             if get_enums_without_fields(nested_message_class) is not None:
                 nested_enum_names.extend(get_enums_without_fields(nested_message_class))
 
-        if field_descriptor.type == 11:  # Assuming type 11 corresponds to a nested message
+        if field_descriptor.type == FieldDescriptor.TYPE_MESSAGE:  # Assuming type FieldDescriptor.TYPE_MESSAGE corresponds to a nested message
             nested_message_class = field_descriptor.message_type._concrete_class
             if get_enums_without_fields(nested_message_class) is not None:
                 nested_enum_names.extend(get_enums_without_fields(nested_message_class))
@@ -89,7 +90,7 @@ def find_enum_fields_recursive(message_class):
         if field_descriptor.enum_type is not None and field_descriptor.enum_type.name in ["Resource", "Resources"]:
             enum_values = find_enum_values(field_descriptor.enum_type)
             enum_fields.append({"field_name": field_name, "enum_values": enum_values})
-        elif field_descriptor.type == 11:  # 11 corresponds to FieldDescriptor.TYPE_MESSAGE
+        elif field_descriptor.type == FieldDescriptor.TYPE_MESSAGE:  # FieldDescriptor.TYPE_MESSAGE corresponds to FieldDescriptor.TYPE_MESSAGE
             nested_message_class = field_descriptor.message_type._concrete_class
             nested_enum_fields = find_enum_fields_recursive(nested_message_class)
             if nested_enum_fields:
@@ -112,7 +113,7 @@ def get_ui_details(resource_name, service_name):
                 pass
             else:
                 field_descriptor = message_class.DESCRIPTOR.fields_by_name[field_name]
-                if field_descriptor.type == 14 and (
+                if field_descriptor.type == FieldDescriptor.TYPE_ENUM and (
                         field_descriptor.enum_type.name == "Resource" or field_descriptor.enum_type.name ==
                         "Resources"):
                     pass
@@ -153,7 +154,7 @@ def extract_fields(data):
     check = False
     for key, value in data.items():
         if isinstance(value, dict):
-            if 'type_field' in value and value['type_field'] not in [11, 14] and value.get('label') == 'Non-repeated':
+            if 'type_field' in value and value['type_field'] not in [FieldDescriptor.TYPE_MESSAGE, FieldDescriptor.TYPE_ENUM] and value.get('label') == 'Non-repeated':
                 type_str = get_type_in_string(value['type_field'])
                 property_value = value['property']
                 result_dict = {'type': type_str, 'property': property_value}
@@ -167,7 +168,7 @@ def extract_fields(data):
 
                 result.append(result_dict)
 
-            elif 'type_field' in value and value['type_field'] == 14 and value.get('label') == 'Non-repeated':
+            elif 'type_field' in value and value['type_field'] == FieldDescriptor.TYPE_ENUM and value.get('label') == 'Non-repeated':
                 property_value = value['property']
                 result_dict = {'type': 'dropdown', 'property': property_value, 'mode': value['enum_values']}
                 if '.' in property_value:
@@ -178,9 +179,9 @@ def extract_fields(data):
 
                 result.append(result_dict)
 
-            elif 'type_field' in value and value['type_field'] == 11 and value.get('label') == 'Non-repeated':
+            elif 'type_field' in value and value['type_field'] == FieldDescriptor.TYPE_MESSAGE and value.get('label') == 'Non-repeated':
                 result.append({'type': 'label', 'text': value['message_name']})
-            elif 'type_field' in value and value['type_field'] == 11 and value.get('label') == "Repeated":
+            elif 'type_field' in value and value['type_field'] == FieldDescriptor.TYPE_MESSAGE and value.get('label') == "Repeated":
                 check = True
                 key = value['property']
                 repeated_value_dict = extract_fields(value)
@@ -188,7 +189,7 @@ def extract_fields(data):
                 result.append(
                     {'type': 'repeated', 'class': value['message_name'], 'key': key, 'value': repeated_value_dict})
 
-            elif 'type_field' in value and value['type_field'] != 11 and value.get('label') == 'Repeated':
+            elif 'type_field' in value and value['type_field'] != FieldDescriptor.TYPE_MESSAGE and value.get('label') == 'Repeated':
                 type_str = get_type_in_string(value['type_field'])
                 if type_str in {'int', 'float', 'double'}:
                     result.append({'type': 'repeated', 'class': type_str, 'key': value['property'], 'value': [
@@ -198,7 +199,7 @@ def extract_fields(data):
                     result.append({'type': 'repeated', 'class': type_str, 'key': value['property'],
                                    'value': [{'type': type_str, 'property': value["property"]}]})
 
-                if 'type_field' in value and value['type_field'] == 14 and 'label' in value and value[
+                if 'type_field' in value and value['type_field'] == FieldDescriptor.TYPE_ENUM and 'label' in value and value[
                     'label'] == 'Repeated':
                     result.append({'type': 'repeated', 'class': value["enum_name"], 'key': value['property'], 'value': [
                         {'type': 'dropdown', 'property': value['property'], 'mode': value['enum_values']}, ]})

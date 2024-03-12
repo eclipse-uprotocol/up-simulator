@@ -84,7 +84,7 @@ class SocketClient:
             callbacks = [callback]
             self._create_topic_status_callbacks[topic] = callbacks
 
-    def _register_create_topic_status_callback(self, topics, status_callback):
+    def register_create_topic_status_callback(self, topics, status_callback):
         if isinstance(topics, str):
             self.__add_create_topic_status_callback(topics, status_callback)
         else:
@@ -267,7 +267,7 @@ class AndroidBinder(UTransport, RpcClient):
 
     def create_topic(self, entity, topics, status_callback):
         print('create topic called')
-        self.client._register_create_topic_status_callback(topics, status_callback)
+        self.client.register_create_topic_status_callback(topics, status_callback)
         json_map = {"action": "create_topic", "data": entity, "topics": topics}
         message_to_send = json.dumps(json_map) + '\n'
         return self.client.send_data(message_to_send)

@@ -24,35 +24,38 @@
 #
 # -------------------------------------------------------------------------
 from simulator.tools import maxmin_field
+from google.protobuf.descriptor import FieldDescriptor
 
 
 def get_enum_info(enum_descriptor, field_descriptor, parent_field_name=""):
     property_name = f"{parent_field_name}.{field_descriptor.name}" if parent_field_name else field_descriptor.name
 
     enum_info = {"enum_name": enum_descriptor.name,
-        "enum_values": [{"label": enum_value.name, "value": enum_value.number} for enum_value in
-                        enum_descriptor.values], "property": property_name}
+                 "enum_values": [{"label": enum_value.name, "value": enum_value.number} for enum_value in
+                                 enum_descriptor.values], "property": property_name}
     return enum_info
 
 
 def get_field_info(field_descriptor, parent_field_name=""):
     field_info = {"type_field": field_descriptor.type,
-        "label": "Repeated" if field_descriptor.label == 3 else "Non-repeated", }
+                  "label": "Repeated" if field_descriptor.label == FieldDescriptor.LABEL_REPEATED else "Non-repeated", }
 
     property_name = f"{parent_field_name}.{field_descriptor.name}" if parent_field_name else field_descriptor.name
     field_info["property"] = property_name
 
-    if field_descriptor.type == 11:  # If field type is TYPE_MESSAGE
+    if field_descriptor.type == FieldDescriptor.TYPE_MESSAGE:  # If field type is TYPE_MESSAGE
         nested_message_descriptor = field_descriptor.message_type
         field_info["message_name"] = nested_message_descriptor.name
         nested_field_info = {
             nested_field_descriptor.name: get_field_info(nested_field_descriptor, field_info["property"]) for
             nested_field_descriptor in nested_message_descriptor.fields if not (
-                        nested_field_descriptor.type == 14 and nested_field_descriptor.enum_type.name in ["Resource",
-                                                                                                          "Resources"])}
+                    nested_field_descriptor.type == FieldDescriptor.TYPE_ENUM and
+                    nested_field_descriptor.enum_type.name in [
+                "Resource",
+                "Resources"])}
         field_info.update(nested_field_info)
 
-    if field_descriptor.type == 14:  # If field type is TYPE_ENUM
+    if field_descriptor.type == FieldDescriptor.TYPE_ENUM:  # If field type is TYPE_ENUM
         enum_info = get_enum_info(field_descriptor.enum_type, field_descriptor, parent_field_name)
         field_info.update(enum_info)
 
@@ -61,15 +64,18 @@ def get_field_info(field_descriptor, parent_field_name=""):
 
 def get_type_in_string(type_field):
     f = ''
-    if type_field == 2:
+    if type_field == FieldDescriptor.TYPE_FLOAT:
         f = 'float'
-    if type_field == 9:
+    if type_field == FieldDescriptor.TYPE_STRING:
         f = 'string'
-    if type_field in {5, 3, 4, 17, 18, 6, 7, 13, 15, 16}:
+    if type_field in {FieldDescriptor.TYPE_INT32, FieldDescriptor.TYPE_INT64, FieldDescriptor.TYPE_UINT64,
+                      FieldDescriptor.TYPE_SINT32, FieldDescriptor.TYPE_SINT64, FieldDescriptor.TYPE_FIXED64,
+                      FieldDescriptor.TYPE_FIXED32, FieldDescriptor.TYPE_UINT32, FieldDescriptor.TYPE_SFIXED32,
+                      FieldDescriptor.TYPE_SFIXED64}:
         f = 'int'
-    if type_field == 8:
+    if type_field == FieldDescriptor.TYPE_BOOL:
         f = 'bool'
-    if type_field == 14:
+    if type_field == FieldDescriptor.TYPE_ENUM:
         f = 'enum'
     if type_field == 'message':
         f = 'message'
