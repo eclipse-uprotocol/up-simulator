@@ -4,21 +4,17 @@
 
 import re
 
+from target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import (SetRideHeightRequest)
+from target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import (RideHeight, RideHeightSystemStatus)
+from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
-from uprotocol.proto.ustatus_pb2 import UStatus
-
-from uprotocol.proto.uattributes_pb2 import UAttributes
-from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.proto.uri_pb2 import UUri
-
-from target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import (RideHeight, RideHeightSystemStatus)
-from target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import (SetRideHeightRequest)
+from simulator.utils.constant import KEY_URI_PREFIX
 
 
-class SuspensionService(CovesaService):
+class SuspensionService(BaseService):
     """
     The SuspensionService object handles mock services for the sound service
     """
@@ -29,15 +25,14 @@ class SuspensionService(CovesaService):
         """
         SuspensionService constructor:
         """
-        # todo: move uninstall to CovesaService class
+        # todo: move uninstall to BaseService class
 
         super().__init__("chassis.suspension", portal_callback)
         self.init_state()
 
-
     def start_rpc_service(self):
         super().start_rpc_service()
-        self.subscribe(["up:/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus", ],
+        self.subscribe([KEY_URI_PREFIX + ":/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus", ],
                        SuspensionPreconditions(self))
 
     def init_state(self):
@@ -76,7 +71,7 @@ class SuspensionService(CovesaService):
         if 'ride_height_system_status' in topic:
             self.state[topic]['source'] = message.source
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SetRideHeight(self, request, response):
         return self.handle_request(request, response)
 
@@ -182,24 +177,23 @@ class SuspensionService(CovesaService):
         Args:
         request(protobuf): the protobuf containing the rpc request
         """
-        topic = "up:/chassis.suspension/1/ride_height#RideHeight"
+        topic = KEY_URI_PREFIX + ":/chassis.suspension/1/ride_height#RideHeight"
 
-        self.publish(topic, self.state["ride_height"],True)
+        self.publish(topic, self.state["ride_height"], True)
 
 
 class SuspensionPreconditions(UListener):
-    def __init__(self, covesa_service):
-        self.covesa_Service = covesa_service
+    def __init__(self, suspension_service):
+        self.suspension_service = suspension_service
 
-    def on_receive(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
-        print('on recieve called')
-        print(payload)
-        print(topic)
-        print(attributes)
+    def on_receive(self, umsg: UMessage):
+        print('on receive suspension called')
+        print(umsg.payload)
+        print(umsg.attributes.source)
         # parse data from here and pass it to onevent method
         pass
 
     def onEvent(self, uri, message):
         if message != None:
             print(f"Received a {type(message)} message with value(s) {message}")
-            self.covesa_Service.set_topic_state(uri, message)
+            self.suspension_service.set_topic_state(uri, message)

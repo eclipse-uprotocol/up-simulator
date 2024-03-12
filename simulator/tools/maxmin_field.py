@@ -1,6 +1,6 @@
 # -------------------------------------------------------------------------
 #
-# Copyright (c) 2023 General Motors GTO LLC
+# Copyright (c) 2024 General Motors GTO LLC
 #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -19,35 +19,41 @@
 # specific language governing permissions and limitations
 # under the License.
 # SPDX-FileType: SOURCE
-# SPDX-FileCopyrightText: 2023 General Motors GTO LLC
+# SPDX-FileCopyrightText: 2024 General Motors GTO LLC
 # SPDX-License-Identifier: Apache-2.0
 #
 # -------------------------------------------------------------------------
 
-
-from simulator.core.abstract_service import BaseService
-
-
-class TransmissionService(BaseService):
-
-    def __init__(self, portal_callback=None):
-        """
-        TransmissionService constructor
-        """
-        super().__init__('propulsion.transmission', portal_callback)
-        self.init_state()
-
-    def init_state(self):
-        """
-        Initializes internal data structures for keeping track of the current state of the TransmissionService
-        """
-        self.state = {}
-
-    # RPC Request Listeners for each RPC method
-    def handle_request(self, request, response):
-        return response
+default_max = 100
+default_min = 0
 
 
-if __name__ == "__main__":
-    service = TransmissionService()
-    service.start()
+MAX_VALUES = {
+    'longitude': 180,
+    'latitude': 90,
+    'radius': 1000,
+    'length': 1000,
+    'width': 1000,
+    'height': 1000,
+    'expiration_duration': 100,
+    'idle_duration': 16777215,
+    'running_duration': 16777215,
+    'temperature': 50,
+    'current_sequence': 7,
+    'total_sequences': 7,
+    'priority': 255,
+    'pressure': 20460,
+    'time_to_flat': 2097151,
+    'light_intensity': 1275,
+    'hours': 24,
+    "minutes": 59,
+    "seconds": 59,
+    "nanos": 999999999
+}
+
+MIN_VALUES = {
+    'longitude': -180,
+    'latitude': -90,
+    'expiration_duration': -1,
+
+}

@@ -26,7 +26,6 @@
 
 import json
 import logging
-import os
 import threading
 import time
 import traceback
@@ -34,14 +33,11 @@ import traceback
 from flask_socketio import SocketIO
 from google.protobuf import any_pb2
 from google.protobuf.json_format import MessageToDict
-from uprotocol.proto.uattributes_pb2 import UAttributes
-from uprotocol.proto.uattributes_pb2 import UPriority
+from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.upayload_pb2 import UPayloadFormat
-from uprotocol.proto.uri_pb2 import UUri
 from uprotocol.rpc.calloptions import CallOptions
 from uprotocol.rpc.rpcmapper import RpcMapper
-from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
 from uprotocol.transport.ulistener import UListener
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
@@ -111,12 +107,12 @@ def get_service_instance_from_entity(name):
             return entity_dict.get('entity')
     return None
 
+
 def get_all_running_service():
-    running_service=[]
+    running_service = []
     for index, entity_dict in enumerate(mock_entity):
         running_service.append(entity_dict.get('name'))
     return running_service
-
 
 
 class SocketUtility:
@@ -156,10 +152,8 @@ class SocketUtility:
                 payload_data = any_obj.SerializeToString()
                 payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
                 method_uri = LongUriSerializer().deserialize(method_uri)
-                attributes = UAttributesBuilder.request(UPriority.UPRIORITY_CS4, method_uri,
-                                                        CallOptions.TIMEOUT_DEFAULT).build()
 
-                res_future = self.transport_layer.invoke_method(method_uri, payload, attributes)
+                res_future = self.transport_layer.invoke_method(method_uri, payload, CallOptions(timeout=15000))
                 sent_data = MessageToDict(message)
 
                 message = "Successfully send rpc request for " + methodname
@@ -190,8 +184,8 @@ class SocketUtility:
                     message, status = service_instance.publish(topic, json_data)
                     self.last_published_data = MessageToDict(message)
                     Handlers.publish_status_handler(self.socketio, self.lock_pubsub,
-                                                    self.transport_layer.get_transport(),
-                                                    topic, status.code, status.message, self.last_published_data)
+                                                    self.transport_layer.get_transport(), topic, status.code,
+                                                    status.message, self.last_published_data)
 
                     self.socketio.emit(CONSTANTS.CALLBACK_PUBLISH_STATUS_SUCCESS,
                                        {'msg': "Publish Data  ", 'data': self.last_published_data},
@@ -202,21 +196,7 @@ class SocketUtility:
                                        "Service is not running. Please start mock service.",
                                        namespace=CONSTANTS.NAMESPACE)
 
-                #
-                # req_cls = protobuf_autoloader.get_request_class_from_topic_uri(topic)
-                #
-                # message = protobuf_autoloader.populate_message(service_class, req_cls, json_data)
-                #
-                # self.last_published_data = MessageToDict(message, preserving_proto_field_name=True,
-                #                                          including_default_value_fields=True)
-                # new_topic = LongUriSerializer().deserialize(topic)
-                # any_obj = any_pb2.Any()
-                # any_obj.Pack(message)
-                # payload_data = any_obj.SerializeToString()
-                # payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
-                #
-                # attributes = UAttributesBuilder.publish(UPriority.UPRIORITY_CS4).build()
-                # status = self.transport_layer.send(new_topic, payload, attributes)
+
 
             else:
                 self.socketio.emit(CONSTANTS.CALLBACK_GENERIC_ERROR, status, namespace=CONSTANTS.NAMESPACE)
@@ -234,7 +214,8 @@ class SocketUtility:
             try:
                 start_service(json_service['entity'], handler)
                 time.sleep(1)
-                self.socketio.emit(CONSTANTS.CALLBACK_START_SERVICE, json_service['entity'], namespace=CONSTANTS.NAMESPACE)
+                self.socketio.emit(CONSTANTS.CALLBACK_START_SERVICE, json_service['entity'],
+                                   namespace=CONSTANTS.NAMESPACE)
             except Exception as ex:
                 logger.error(f'Exception:', exc_info=ex)
         else:
@@ -285,7 +266,7 @@ class SubscribeUListener(UListener):
             self.__lock_pubsub = lock_pubsub
             self._initialized = True
 
-    def on_receive(self, topic: UUri, payload: UPayload, attributes: UAttributes):
+    def on_receive(self, msg: UMessage):
         print("onreceive")
         Handlers.on_receive_event_handler(self.__socketio, self.__lock_pubsub, self.__utransport,
-                                          LongUriSerializer().serialize(topic), payload)
+                                          LongUriSerializer().serialize(msg.attributes.source), msg.payload)

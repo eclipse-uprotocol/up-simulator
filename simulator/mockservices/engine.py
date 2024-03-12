@@ -25,12 +25,12 @@
 # -------------------------------------------------------------------------
 
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 
 from target.protofiles.vehicle.propulsion.engine.v1.engine_service_pb2 import (ResetHealthRequest, )
 
 
-class EngineService(CovesaService):
+class EngineService(BaseService):
 
     def __init__(self, portal_callback=None):
         """
@@ -46,7 +46,7 @@ class EngineService(CovesaService):
         self.state = {}
 
     # RPC Request Listeners for each RPC method
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def ResetHealth(self, request, response):
         return self.handle_request(request, response)
 

@@ -29,8 +29,9 @@ import re
 
 from google.protobuf.json_format import MessageToDict
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
+from simulator.utils.constant import KEY_URI_PREFIX
 from target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
 from target.protofiles.vehicle.body.cabin_climate.v1.cabin_climate_service_pb2 import (SetTemperatureRequest,
                                                                                        SetFanRequest,
@@ -39,7 +40,7 @@ from target.protofiles.vehicle.body.cabin_climate.v1.cabin_climate_service_pb2 i
                                                                                        SetLockRequest, )
 
 
-class CabinClimateService(CovesaService):
+class CabinClimateService(BaseService):
     """
     The CabinClimateService object handles mock services for the cabin climate service
     """
@@ -83,7 +84,7 @@ class CabinClimateService(CovesaService):
             if zone_match:
                 self.number_of_zones += 1
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def ExecuteClimateCommand(self, request, response):
         """
         Handles ExecuteClimateCommand RPC calls
@@ -107,7 +108,7 @@ class CabinClimateService(CovesaService):
 
         return response
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def UpdateSystemSettings(self, request, response):
         """
         Handles UpdateSystemSettings RPC calls
@@ -125,23 +126,23 @@ class CabinClimateService(CovesaService):
         self.publish_system_settings()
         return response
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SetTemperature(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SetFan(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SetAirDistribution(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SetPower(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SetLock(self, request, response):
         return self.handle_request(request, response)
 
@@ -294,7 +295,7 @@ class CabinClimateService(CovesaService):
         Publishes a system settings message based on the current state
         """
         # publish zone info based on current state
-        topic = "up:/body.cabin_climate/1/" + zone_name + "#Zone"
+        topic = KEY_URI_PREFIX+":/body.cabin_climate/1/" + zone_name + "#Zone"
         self.publish(topic, self.state[zone_name],True)
 
     def get_est_cabin_temp(self):
@@ -354,7 +355,7 @@ class CabinClimateService(CovesaService):
         """
         Publishes a system settings message based on the current state
         """
-        topic = "up:/body.cabin_climate/1/system_settings#SystemSettings"
+        topic = KEY_URI_PREFIX+":/body.cabin_climate/1/system_settings#SystemSettings"
         # publish system settings based on current state
         self.publish(topic, self.settings_state,True)
 

@@ -39,6 +39,7 @@ from google.protobuf.descriptor import FieldDescriptor
 
 from target import protofiles as proto
 from simulator.utils.constant import RESOURCE_CATALOG_CSV_NAME, RESOURCE_CATALOG_JSON_NAME
+import simulator.utils.constant as CONSTANTS
 
 rpc_methods = {}
 rpc_fullname_methods = {}
@@ -145,7 +146,7 @@ def get_protobuf_descriptor_data():
         services = []
         for service in _services:
             options = str(mod.DESCRIPTOR.services_by_name[service].GetOptions())
-            groups = re.search(r"^\[uprotocol\.name\]:\s\"([\w.]+)\"$", options, re.MULTILINE)
+            groups = re.search(r"^\["+CONSTANTS.KEY_PROTO_ENTITY_NAME+"\.name\]:\s\"([\w.]+)\"$", options, re.MULTILINE)
             try:
                 protobuf_service = groups.group(1)
             except:
@@ -206,8 +207,8 @@ def get_topics_by_proto_service_name(service_name):
 
 
 def get_services():
-    global rpc_topics
-    return rpc_topics.keys()
+    global service_id
+    return service_id.keys()
 
 
 def find_message(message_full_name):
@@ -587,8 +588,9 @@ def get_topics_by_service(service_name):
 def get_methods_by_service(service_name):
     global rpc_methods
     ret = {}
-    for method in rpc_methods[service_name].keys():
-        ret[method] = rpc_methods[service_name][method]
+    if service_name in rpc_methods:
+        for method in rpc_methods[service_name].keys():
+            ret[method] = rpc_methods[service_name][method]
     return ret
 
 

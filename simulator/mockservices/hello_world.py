@@ -31,11 +31,12 @@ from google.protobuf.json_format import MessageToDict
 from google.protobuf.text_format import MessageToString
 from google.type.timeofday_pb2 import TimeOfDay
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
+from simulator.utils.constant import KEY_URI_PREFIX
 from target.protofiles.example.hello_world.v1.hello_world_topics_pb2 import Timer
 
 
-class HelloWorldService(CovesaService):
+class HelloWorldService(BaseService):
     """
     The HelloWorldService object handles mock services for the hello-world service.
     This service contains 1 RPC method called "SayHello". This RPC method accepts a
@@ -75,7 +76,7 @@ class HelloWorldService(CovesaService):
     # response (a HelloResponse message).
     # The response object will be sent to the caller as the RPC response
     # after it returns from this method.
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SayHello(self, request, response):
         """
         Handles SayHello RPC calls. This method is called whenever a SayHello
@@ -101,8 +102,8 @@ class HelloWorldService(CovesaService):
         """
         # Create a TimeOfDay instance
         time_of_day = TimeOfDay()
-        one_sec_topic = "up:/example.hello_world/1/one_second#Timer"
-        one_min_topic = "up:/example.hello_world/1/one_minute#Timer"
+        one_sec_topic = KEY_URI_PREFIX+":/example.hello_world/1/one_second#Timer"
+        one_min_topic = KEY_URI_PREFIX+":/example.hello_world/1/one_minute#Timer"
 
         while True:
             # Get current time

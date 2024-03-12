@@ -34,8 +34,8 @@ function setPubSubDataInUi(json_data) {
   tr.setAttribute("style", "box-shadow: 0px 0px 3px 1px #5EB1F3;border-radius: 22.5021px;height:65px;width:100%;display:flex;margin-bottom:20px;")
 
   td = document.createElement("div")
-  td.setAttribute("class", "col-xl-6")
-  td.setAttribute("style", "border:none; overflow: auto")
+  td.setAttribute("class", "col-xl-8")
+  td.setAttribute("style", "border:none; word-break: break-all;")
   h6 = document.createElement("h6")
   h6.setAttribute("class", "green-label")
   if (localStorage.getItem('th') === 'light') {
@@ -43,13 +43,13 @@ function setPubSubDataInUi(json_data) {
   }
 
   h6.innerText = json_data['topic'].split('/1/')[1]
-  h6.setAttribute("style", "font-weight: 400;font-size: 16px;line-height: 26px;display: flex;align-items: center;text-align: center;color: #fff;width:100%;margin-top:15px; overflow: auto;")
+  h6.setAttribute("style", "font-weight: 400;font-size: 16px;line-height: 26px;display: flex;align-items: center;text-align: center;color: #fff;width:100%;margin-top:15px;")
   h6.style.color = "#6CC24A"
   td.appendChild(h6)
   tr.appendChild(td)
 
   td = document.createElement("div")
-  td.setAttribute("class", "col-xl-4")
+  td.setAttribute("class", "col-xl-2")
   h6 = document.createElement("h6")
   h6.innerText = json_data['type']
   h6.setAttribute("class", "para")

@@ -4,19 +4,17 @@
 
 import re
 
+from target.protofiles.vehicle.v1.vehicle_service_pb2 import (ResetTripMeterRequest, SetTransportModeRequest)
 from target.protofiles.vehicle.v1.vehicle_topics_pb2 import (TripMeter, VehicleUsage)
-from uprotocol.proto.uattributes_pb2 import UAttributes
-from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.proto.uri_pb2 import UUri
-from uprotocol.proto.ustatus_pb2 import UStatus
+from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
-from simulator.core.abstract_service import CovesaService
+from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
-from target.protofiles.vehicle.v1.vehicle_service_pb2 import (ResetTripMeterRequest, SetTransportModeRequest)
+from simulator.utils.constant import KEY_URI_PREFIX
 
 
-class VehicleService(CovesaService):
+class VehicleService(BaseService):
     """
     The Vehicle object handles mock services for the vehicle service
     """
@@ -33,10 +31,10 @@ class VehicleService(CovesaService):
 
     def start_rpc_service(self):
         super().start_rpc_service()
-        self.subscribe(
-            ["up:/vehicle/1/trip_meter.trip_1#TripMeter", "up:/vehicle/1/trip_meter.trip_2#TripMeter",
-             "up:/vehicle/1/vehicle_usage.transport_mode#VehicleUsage", ], VehiclePreconditions(self))
-
+        self.subscribe([KEY_URI_PREFIX + ":/vehicle/1/trip_meter.trip_1#TripMeter",
+                        KEY_URI_PREFIX + ":/vehicle/1/trip_meter.trip_2#TripMeter",
+                        KEY_URI_PREFIX + ":/vehicle/1/vehicle_usage.transport_mode#VehicleUsage", ],
+            VehiclePreconditions(self))
 
     def init_state(self):
         """
@@ -76,11 +74,11 @@ class VehicleService(CovesaService):
             self.state["transport_mode"]['is_setting_change_allowed'] = message.is_setting_change_allowed
             self.state["transport_mode"]['is_active'] = message.is_active
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def ResetTripMeter(self, request, response):
         return self.handle_request(request, response)
 
-    @CovesaService.RequestListener
+    @BaseService.RequestListener
     def SetTransportMode(self, request, response):
         return self.handle_request(request, response)
 
@@ -145,32 +143,31 @@ class VehicleService(CovesaService):
         if type(request) == ResetTripMeterRequest:
             # get trip_meter key from value, expecting 0 - trip_1 or 1 - trip_2
             trip_val = list(TripMeter.Resources.keys())[list(TripMeter.Resources.values()).index(request.trip_meter)]
-            topic = "up:/vehicle/1/trip_meter." + trip_val + "#TripMeter"
-            self.publish(topic, self.state[trip_val],True)
+            topic = KEY_URI_PREFIX + ":/vehicle/1/trip_meter." + trip_val + "#TripMeter"
+            self.publish(topic, self.state[trip_val], True)
 
         if type(request) == SetTransportModeRequest:
-            topic = "up:/vehicle/1/vehicle_usage.transport_mode#VehicleUsage"
-            self.publish(topic, self.state,True)
+            topic = KEY_URI_PREFIX + ":/vehicle/1/vehicle_usage.transport_mode#VehicleUsage"
+            self.publish(topic, self.state, True)
 
         return True
 
 
 class VehiclePreconditions(UListener):
-    def __init__(self, covesa_service):
-        self.covesa_Service = covesa_service
+    def __init__(self, vehicle_service):
+        self.vehicle_service = vehicle_service
 
-    def on_receive(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
-        print('on recieve called')
-        print(payload)
-        print(topic)
-        print(attributes)
+    def on_receive(self, umsg: UMessage):
+        print('on receive vehicle service called')
+        print(umsg.payload)
+        print(umsg.attributes.source)
         # parse data from here and pass it to onevent method
         pass
 
     def onEvent(self, uri, message):
         if message != None:
             print(f"Recieved a {type(message)} message with value(s) {message}")
-            self.covesa_Service.set_topic_state(uri, message)
+            self.vehicle_service.set_topic_state(uri, message)
 
 
 if __name__ == "__main__":

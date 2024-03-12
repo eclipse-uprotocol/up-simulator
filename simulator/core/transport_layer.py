@@ -26,11 +26,12 @@
 
 from concurrent.futures import Future
 
-from uprotocol.proto.uattributes_pb2 import UAttributes
+from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.uri_pb2 import UEntity
 from uprotocol.proto.uri_pb2 import UUri
 from uprotocol.proto.ustatus_pb2 import UStatus
+from uprotocol.rpc.calloptions import CallOptions
 from uprotocol.transport.ulistener import UListener
 
 from simulator.core.binder_utransport import AndroidBinder
@@ -74,20 +75,23 @@ class TransportLayer:
         if self.__utransport == "BINDER":
             self.__instance = AndroidBinder()
 
-    def invoke_method(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> Future:
-        return self.__instance.invoke_method(topic, payload, attributes)
+    def invoke_method(self, topic: UUri, payload: UPayload, calloptions: CallOptions) -> Future:
+        return self.__instance.invoke_method(topic, payload, calloptions)
 
     def authenticate(self, u_entity: UEntity) -> UStatus:
         return self.__instance.authenticate(u_entity)
 
-    def send(self, topic: UUri, payload: UPayload, attributes: UAttributes) -> UStatus:
-        return self.__instance.send(topic, payload, attributes)
+    def send(self, umessage: UMessage) -> UStatus:
+        return self.__instance.send(umessage)
 
     def register_listener(self, topic: UUri, listener: UListener) -> UStatus:
         return self.__instance.register_listener(topic, listener)
 
     def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
         return self.__instance.unregister_listener(topic, listener)
+
+    def register_rpc_listener(self, topic: UUri, listener: UListener) -> UStatus:
+        return self.__instance.register_rpc_listener(topic, listener)
 
     def start_service(self, entity) -> bool:
         if self.__utransport == "BINDER":
