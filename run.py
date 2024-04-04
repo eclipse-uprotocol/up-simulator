@@ -110,7 +110,7 @@ def reset():
                 os.remove(CONSTANTS.FILENAME_RPC_LOGGER)
             if os.path.isfile(CONSTANTS.FILENAME_PUBSUB_LOGGER):
                 os.remove(CONSTANTS.FILENAME_PUBSUB_LOGGER)
-        except:
+        except Exception:
             pass
 
 

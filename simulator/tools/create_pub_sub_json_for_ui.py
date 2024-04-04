@@ -42,13 +42,13 @@ def get_config_display_name(name):
 
 
 def get_config_name(topic):
-    return topic.rsplit('/', 1)[-1].rsplit('#', 1)[0]
+    return topic.rsplit("/", 1)[-1].rsplit("#", 1)[0]
 
 
 def get_pubsub(service_name):
     output = set()
     for item in autoloader.get_topics_by_proto_service_name(service_name):
-        status = item.split('#')[-1]
+        status = item.split("#")[-1]
         output.add(status)
     return list(output)
 
@@ -68,7 +68,9 @@ def get_ui_details(topic):
     message_class = autoloader.find_message(class_type)
     field_info = {}
     for field_descriptor in message_class.DESCRIPTOR.fields:
-        if not (field_descriptor.type == FieldDescriptor.TYPE_ENUM and field_descriptor.enum_type.name in ["Resource", "Resources"]):
+        if not (
+            field_descriptor.type == FieldDescriptor.TYPE_ENUM and field_descriptor.enum_type.name in ["Resource", "Resources"]
+        ):
             field_info[field_descriptor.name] = get_field_info(field_descriptor)
     message_name = message_class.DESCRIPTOR.name
     all_field_info[message_name] = field_info
@@ -80,7 +82,7 @@ def remove_key_prefix(json_data, prefix):
         for key, value in list(json_data.items()):  # Use list() to avoid modifying the dictionary while iterating
             if key == "property" and value.startswith(prefix):
                 # Remove the key prefix
-                value = value[len(prefix):]
+                value = value[len(prefix) :]
                 json_data[key] = value
                 property_text_key = key + "Text"
                 if property_text_key in json_data and json_data[property_text_key] == value:
@@ -89,9 +91,9 @@ def remove_key_prefix(json_data, prefix):
                 remove_key_prefix(value, prefix)
     elif isinstance(json_data, list):
         for item in json_data:
-            if 'key' in item:
-                new_prefix = item.get('key') + "."
-                item['key'] = item['key'][len(prefix):]
+            if "key" in item:
+                new_prefix = item.get("key") + "."
+                item["key"] = item["key"][len(prefix) :]
                 remove_key_prefix(item, new_prefix)
             remove_key_prefix(item, prefix)
 
@@ -102,53 +104,102 @@ def extract_fields(data):
     check = False
     for key, value in data.items():
         if isinstance(value, dict):
-            if 'type_field' in value and value['type_field'] not in [FieldDescriptor.TYPE_MESSAGE, FieldDescriptor.TYPE_ENUM] and value.get('label') == 'Non-repeated':
-                type_str = get_type_in_string(value['type_field'])
-                property_value = value['property']
-                result_dict = {'type': type_str, 'property': property_value}
-                if type_str in {'int', 'float', 'double'}:
-                    result_dict.update({'minrange': get_min_value(property_value), 'maxrange': get_max(property_value)})
-                if '.' in property_value:
+            if (
+                "type_field" in value
+                and value["type_field"] not in [FieldDescriptor.TYPE_MESSAGE, FieldDescriptor.TYPE_ENUM]
+                and value.get("label") == "Non-repeated"
+            ):
+                type_str = get_type_in_string(value["type_field"])
+                property_value = value["property"]
+                result_dict = {"type": type_str, "property": property_value}
+                if type_str in {"int", "float", "double"}:
+                    result_dict.update({"minrange": get_min_value(property_value), "maxrange": get_max(property_value)})
+                if "." in property_value:
                     property_text = get_property_text(property_value)
                     if property_value != property_text:
-                        result_dict['propertyText'] = property_text
+                        result_dict["propertyText"] = property_text
 
                 result.append(result_dict)
 
-            elif 'type_field' in value and value['type_field'] == FieldDescriptor.TYPE_ENUM and value.get('label') == 'Non-repeated':
-                property_value = value['property']
-                result_dict = {'type': 'dropdown', 'property': property_value, 'mode': value['enum_values']}
-                if '.' in property_value:
+            elif (
+                "type_field" in value
+                and value["type_field"] == FieldDescriptor.TYPE_ENUM
+                and value.get("label") == "Non-repeated"
+            ):
+                property_value = value["property"]
+                result_dict = {"type": "dropdown", "property": property_value, "mode": value["enum_values"]}
+                if "." in property_value:
                     property_text = get_property_text(property_value)
                     if property_value != property_text:
-                        result_dict['propertyText'] = property_text
+                        result_dict["propertyText"] = property_text
 
                 result.append(result_dict)
 
-            elif 'type_field' in value and value['type_field'] == FieldDescriptor.TYPE_MESSAGE and value.get('label') == 'Non-repeated':
-                result.append({'type': 'label', 'text': value['message_name']})
-            elif 'type_field' in value and value['type_field'] == FieldDescriptor.TYPE_MESSAGE and value.get('label') == "Repeated":
+            elif (
+                "type_field" in value
+                and value["type_field"] == FieldDescriptor.TYPE_MESSAGE
+                and value.get("label") == "Non-repeated"
+            ):
+                result.append({"type": "label", "text": value["message_name"]})
+            elif (
+                "type_field" in value
+                and value["type_field"] == FieldDescriptor.TYPE_MESSAGE
+                and value.get("label") == "Repeated"
+            ):
                 check = True
-                key = value['property']
+                key = value["property"]
                 repeated_value_dict = extract_fields(value)
                 remove_key_prefix(repeated_value_dict, key + ".")
-                result.append(
-                    {'type': 'repeated', 'class': value['message_name'], 'key': key, 'value': repeated_value_dict})
+                result.append({"type": "repeated", "class": value["message_name"], "key": key, "value": repeated_value_dict})
 
-            elif 'type_field' in value and value['type_field'] != FieldDescriptor.TYPE_MESSAGE and value.get('label') == 'Repeated':
-                type_str = get_type_in_string(value['type_field'])
-                if type_str in {'int', 'float', 'double'}:
-                    result.append({'type': 'repeated', 'class': type_str, 'key': value['property'], 'value': [
-                        {'type': type_str, 'property': value["property"], 'minrange': get_min_value(value['property']),
-                         'maxrange': get_max(value['property'])}]})
-                if type_str == 'string' or type_str == 'bool':
-                    result.append({'type': 'repeated', 'class': type_str, 'key': value['property'],
-                                   'value': [{'type': type_str, 'property': value["property"]}]})
+            elif (
+                "type_field" in value
+                and value["type_field"] != FieldDescriptor.TYPE_MESSAGE
+                and value.get("label") == "Repeated"
+            ):
+                type_str = get_type_in_string(value["type_field"])
+                if type_str in {"int", "float", "double"}:
+                    result.append(
+                        {
+                            "type": "repeated",
+                            "class": type_str,
+                            "key": value["property"],
+                            "value": [
+                                {
+                                    "type": type_str,
+                                    "property": value["property"],
+                                    "minrange": get_min_value(value["property"]),
+                                    "maxrange": get_max(value["property"]),
+                                }
+                            ],
+                        }
+                    )
+                if type_str == "string" or type_str == "bool":
+                    result.append(
+                        {
+                            "type": "repeated",
+                            "class": type_str,
+                            "key": value["property"],
+                            "value": [{"type": type_str, "property": value["property"]}],
+                        }
+                    )
 
-                if 'type_field' in value and value['type_field'] == FieldDescriptor.TYPE_ENUM and 'label' in value and value[
-                    'label'] == 'Repeated':
-                    result.append({'type': 'repeated', 'class': value["enum_name"], 'key': value['property'], 'value': [
-                        {'type': 'dropdown', 'property': value['property'], 'mode': value['enum_values']}, ]})
+                if (
+                    "type_field" in value
+                    and value["type_field"] == FieldDescriptor.TYPE_ENUM
+                    and "label" in value
+                    and value["label"] == "Repeated"
+                ):
+                    result.append(
+                        {
+                            "type": "repeated",
+                            "class": value["enum_name"],
+                            "key": value["property"],
+                            "value": [
+                                {"type": "dropdown", "property": value["property"], "mode": value["enum_values"]},
+                            ],
+                        }
+                    )
 
             if check:
                 check = False
@@ -157,9 +208,9 @@ def extract_fields(data):
 
     seen_labels = set()
     for item in result:
-        if item['type'] != 'Label' or tuple(item.items()) not in seen_labels:
+        if item["type"] != "Label" or tuple(item.items()) not in seen_labels:
             unique_ui.append(item)
-            if item['type'] == 'Label':
+            if item["type"] == "Label":
                 seen_labels.add(tuple(item.items()))
 
     return unique_ui
@@ -167,7 +218,7 @@ def extract_fields(data):
 
 def get_ui(pubsub, service_name):
     ui_item = []
-    if service_name not in ['core.utelemetry','core.usubscription']:
+    if service_name not in ["core.utelemetry", "core.usubscription"]:
         for resource_name in pubsub:
             topics = get_topics_by_resource_name(resource_name, service_name)
             if len(topics) > 0:
@@ -180,23 +231,24 @@ def get_ui(pubsub, service_name):
                     else:
                         configuration_dict = {"name": name, "display_name": display_name, "topic": topics[i]}
                     configuration.append(configuration_dict)
-                ui_det = get_ui_details(configuration[0]['topic'])
+                ui_det = get_ui_details(configuration[0]["topic"])
                 ui_details = extract_fields(ui_det)
                 if not ui_details:
                     ui_details = [{"type": "label", "text": "No protofields available"}]
 
                 modified_ui_list = ui_details
-                if 'Geofence' not in resource_name:
-                    modified_ui_list = [item for item in ui_details if
-                                        not (item.get('type') == 'string' and item.get('property') == 'name')]
+                if "Geofence" not in resource_name:
+                    modified_ui_list = [
+                        item for item in ui_details if not (item.get("type") == "string" and item.get("property") == "name")
+                    ]
 
-                part_dict = {resource_name: {'Configuration': configuration, 'uidetails': modified_ui_list}}
+                part_dict = {resource_name: {"Configuration": configuration, "uidetails": modified_ui_list}}
                 ui_item.append(part_dict)
     return ui_item
 
 
 def check_resource(message):
-    topic = message[0]['topic']
+    topic = message[0]["topic"]
     class_type = get_pure_class_type(topic)
     message_class = autoloader.find_message(class_type)
     field_names = message_class.DESCRIPTOR.fields_by_name.keys()
@@ -228,7 +280,7 @@ def execute():
         os.makedirs(CONSTANTS.UI_JSON_DIR)
     PUB_SUB_JSON_FILE_PATH = os.path.join(CONSTANTS.UI_JSON_DIR, CONSTANTS.PUB_SUB_JSON_FILE_NAME)
     # Write JSON data to the pub-sub.json
-    with open(PUB_SUB_JSON_FILE_PATH, 'w') as json_file:
+    with open(PUB_SUB_JSON_FILE_PATH, "w") as json_file:
         json.dump(result_data, json_file, indent=2)
         print("pub-sub.json is created successfully")
 

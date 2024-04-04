@@ -27,15 +27,17 @@
 
 from simulator.core.abstract_service import BaseService
 
-from target.protofiles.vehicle.body.mirrors.v1.mirrors_service_pb2 import (SlideSideMirrorRequest,
-                                                                           FoldSideMirrorRequest,
-                                                                           UnfoldSideMirrorRequest,
-                                                                           TiltSideMirrorRequest,
-                                                                           UntiltSideMirrorRequest,
-                                                                           ActivateHeatedSideMirrorRequest,
-                                                                           DeactivateHeatedSideMirrorRequest,
-                                                                           UpdateSideMirrorMovementSettingsRequest,
-                                                                           UpdateHeatedSideMirrorsSettingsRequest)
+from target.protofiles.vehicle.body.mirrors.v1.mirrors_service_pb2 import (
+    SlideSideMirrorRequest,
+    FoldSideMirrorRequest,
+    UnfoldSideMirrorRequest,
+    TiltSideMirrorRequest,
+    UntiltSideMirrorRequest,
+    ActivateHeatedSideMirrorRequest,
+    DeactivateHeatedSideMirrorRequest,
+    UpdateSideMirrorMovementSettingsRequest,
+    UpdateHeatedSideMirrorsSettingsRequest,
+)
 
 
 class BodyMirrorsService(BaseService):
@@ -44,7 +46,7 @@ class BodyMirrorsService(BaseService):
         """
         BodyMirrorsService constructor
         """
-        super().__init__('body.mirrors', portal_callback)
+        super().__init__("body.mirrors", portal_callback)
         self.init_state()
 
     def init_state(self):
@@ -92,48 +94,48 @@ class BodyMirrorsService(BaseService):
 
     def handle_request(self, request, response):
 
-        # handle SlideSideMirror request       
-        if type(request) == SlideSideMirrorRequest:
+        # handle SlideSideMirror request
+        if isinstance(request, SlideSideMirrorRequest):
             # todo return SlideSideMirrorResponse response, Implement your logic here
             pass
 
-        # handle FoldSideMirror request       
-        if type(request) == FoldSideMirrorRequest:
+        # handle FoldSideMirror request
+        if isinstance(request, FoldSideMirrorRequest):
             # todo return FoldSideMirrorResponse response, Implement your logic here
             pass
 
-        # handle UnfoldSideMirror request       
-        if type(request) == UnfoldSideMirrorRequest:
+        # handle UnfoldSideMirror request
+        if isinstance(request, UnfoldSideMirrorRequest):
             # todo return UnfoldSideMirrorResponse response, Implement your logic here
             pass
 
-        # handle TiltSideMirror request       
-        if type(request) == TiltSideMirrorRequest:
+        # handle TiltSideMirror request
+        if isinstance(request, TiltSideMirrorRequest):
             # todo return TiltSideMirrorResponse response, Implement your logic here
             pass
 
-        # handle UntiltSideMirror request       
-        if type(request) == UntiltSideMirrorRequest:
+        # handle UntiltSideMirror request
+        if isinstance(request, UntiltSideMirrorRequest):
             # todo return UntiltSideMirrorResponse response, Implement your logic here
             pass
 
-        # handle ActivateHeatedSideMirror request       
-        if type(request) == ActivateHeatedSideMirrorRequest:
+        # handle ActivateHeatedSideMirror request
+        if isinstance(request, ActivateHeatedSideMirrorRequest):
             # todo return ActivateHeatedSideMirrorResponse response, Implement your logic here
             pass
 
-        # handle DeactivateHeatedSideMirror request       
-        if type(request) == DeactivateHeatedSideMirrorRequest:
+        # handle DeactivateHeatedSideMirror request
+        if isinstance(request, DeactivateHeatedSideMirrorRequest):
             # todo return DeactivateHeatedSideMirrorResponse response, Implement your logic here
             pass
 
-        # handle UpdateSideMirrorMovementSettings request       
-        if type(request) == UpdateSideMirrorMovementSettingsRequest:
+        # handle UpdateSideMirrorMovementSettings request
+        if isinstance(request, UpdateSideMirrorMovementSettingsRequest):
             # todo return UpdateSideMirrorMovementSettingsResponse response, Implement your logic here
             pass
 
-        # handle UpdateHeatedSideMirrorsSettings request       
-        if type(request) == UpdateHeatedSideMirrorsSettingsRequest:
+        # handle UpdateHeatedSideMirrorsSettings request
+        if isinstance(request, UpdateHeatedSideMirrorsSettingsRequest):
             # todo return UpdateHeatedSideMirrorsSettingsResponse response, Implement your logic here
             pass
         response.code.code = 0

@@ -5,8 +5,11 @@
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from simulator.utils.constant import KEY_URI_PREFIX
-from target.protofiles.vehicle.body.horn.v1.horn_service_pb2 import (ActivateHornRequest, DeactivateHornRequest, )
-from target.protofiles.vehicle.body.horn.v1.horn_topics_pb2 import (HornStatus)
+from target.protofiles.vehicle.body.horn.v1.horn_service_pb2 import (
+    ActivateHornRequest,
+    DeactivateHornRequest,
+)
+from target.protofiles.vehicle.body.horn.v1.horn_topics_pb2 import HornStatus
 
 
 class HornService(BaseService):
@@ -70,10 +73,10 @@ class HornService(BaseService):
             request(protobuf): the request object to be validated
         """
 
-        if type(request) == ActivateHornRequest:
+        if isinstance(request, ActivateHornRequest):
             pass
 
-        if type(request) == DeactivateHornRequest:
+        if isinstance(request, DeactivateHornRequest):
             pass
 
     def publish_horn(self, request):
@@ -84,5 +87,5 @@ class HornService(BaseService):
         request(protobuf): the protobuf containing the rpc request
         """
 
-        topic = KEY_URI_PREFIX+":/body.horn/1/horn#HornStatus"
-        self.publish(topic, self.state["horn_status"],True)
+        topic = KEY_URI_PREFIX + ":/body.horn/1/horn#HornStatus"
+        self.publish(topic, self.state["horn_status"], True)

@@ -202,7 +202,7 @@ class BaseService(object):
             with open(self.state_file, "wb+") as fd:
                 pickle.dump(self.state, fd)
             print("Done!")
-        except OSError as e:
+        except OSError:
             print("Unable to save state.")
 
     def load_state(self):
@@ -211,5 +211,5 @@ class BaseService(object):
             with open(self.state_file, "rb") as f:  # "rb" because we want to read in binary mode
                 self.state = pickle.load(f)
             print("Done!")
-        except OSError as e:
+        except OSError:
             print("Unable to load previous state.")

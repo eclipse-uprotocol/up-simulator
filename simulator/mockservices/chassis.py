@@ -26,8 +26,12 @@
 
 import re
 
-from target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (UpdateTireRequest, )
-from target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (Tire, )
+from target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (
+    UpdateTireRequest,
+)
+from target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (
+    Tire,
+)
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
@@ -55,10 +59,16 @@ class ChassisService(BaseService):
     def start_rpc_service(self):
         super().start_rpc_service()
         self.subscribe(
-            [KEY_URI_PREFIX + ":/chassis/1/tire.front_left#Tire", KEY_URI_PREFIX + ":/chassis/1/tire.front_right#Tire",
-             KEY_URI_PREFIX + ":/chassis/1/tire.rear_right#Tire", KEY_URI_PREFIX + ":/chassis/1/tire.rear_left#Tire",
-             KEY_URI_PREFIX + ":/chassis/1/tire.rear_left_inner#Tire",
-             KEY_URI_PREFIX + ":/chassis/1/tire.rear_right_inner#Tire", ], ChassisPreconditions(self))
+            [
+                KEY_URI_PREFIX + ":/chassis/1/tire.front_left#Tire",
+                KEY_URI_PREFIX + ":/chassis/1/tire.front_right#Tire",
+                KEY_URI_PREFIX + ":/chassis/1/tire.rear_right#Tire",
+                KEY_URI_PREFIX + ":/chassis/1/tire.rear_left#Tire",
+                KEY_URI_PREFIX + ":/chassis/1/tire.rear_left_inner#Tire",
+                KEY_URI_PREFIX + ":/chassis/1/tire.rear_right_inner#Tire",
+            ],
+            ChassisPreconditions(self),
+        )
 
     def init_state(self):
         """
@@ -67,14 +77,14 @@ class ChassisService(BaseService):
         self.state = {}
 
         for tire in Tire.Resources.keys():
-            tire = 'tire.' + tire
+            tire = "tire." + tire
             self.tire_names.append(tire)
 
         for tire in self.tire_names:
             self.state[tire] = self.init_message_state(Tire)
-            self.state[tire]['resource_name'] = tire
+            self.state[tire]["resource_name"] = tire
 
-    ###Topic Name grabs From the Environment.py Finds the Messages to the Ubus Leak State and So on
+    # Topic Name grabs From the Environment.py Finds the Messages to the Ubus Leak State and So on
     def set_topic_state(self, uri, message):
         """
         Sets state dictionary with values passed by the uBus, overwritting default values assigned during initialization
@@ -84,18 +94,18 @@ class ChassisService(BaseService):
             message (str): Message object
         """
         # parse topic name from uri
-        topic = re.search(r'\/(?:.(?!\/))+$', uri).group()[1:]
-        topic = re.search(r'.*#', topic).group()[:-1]
+        topic = re.search(r"\/(?:.(?!\/))+$", uri).group()[1:]
+        topic = re.search(r".*#", topic).group()[:-1]
 
         # assign value from message
         # assumes message is of format {'leak_state': true} as defined by protobuf
-        self.state[topic]['leak_state'] = message.leak_state
-        self.state[topic]['is_leak_detection_enabled'] = message.is_leak_detection_enabled
+        self.state[topic]["leak_state"] = message.leak_state
+        self.state[topic]["is_leak_detection_enabled"] = message.is_leak_detection_enabled
 
     @BaseService.RequestListener
     def UpdateTire(self, request, response):
         """
-        Handles UpdateTire RPC Calls. Protobuf needs to be updated to add "Tire.Resources resource_name" attribute to 
+        Handles UpdateTire RPC Calls. Protobuf needs to be updated to add "Tire.Resources resource_name" attribute to
         UpdateTireRequest
         """
         try:
@@ -113,34 +123,40 @@ class ChassisService(BaseService):
         return response
 
     def validate_tire(self, request):
-        if type(request) == UpdateTireRequest:
+        if isinstance(request, UpdateTireRequest):
             for tire in self.tire_names:
                 # TestCase_02
-                if self.state[tire]["leak_state"] not in [Tire.TireLeakState.Value("TLS_NO_LEAK"),
-                                                          Tire.TireLeakState.Value("TLS_UNSPECIFIED")] and \
-                        self.state[tire]["is_leak_detection_enabled"] == True:
+                if (
+                    self.state[tire]["leak_state"]
+                    not in [Tire.TireLeakState.Value("TLS_NO_LEAK"), Tire.TireLeakState.Value("TLS_UNSPECIFIED")]
+                    and self.state[tire]["is_leak_detection_enabled"] is True
+                ):
                     self.state[tire]["is_leak_present"] = True
                     self.state[tire]["leak_state"] = Tire.TireLeakState.Value("TLS_NO_LEAK")
 
                 # Testcase_03
-                elif self.state[tire][
-                    "leak_state"] in Tire.TireLeakState.values() and request.is_leak_present == False and \
-                        self.state[tire]["is_leak_detection_enabled"] == False:
+                elif (
+                    self.state[tire]["leak_state"] in Tire.TireLeakState.values()
+                    and request.is_leak_present is False
+                    and self.state[tire]["is_leak_detection_enabled"] is False
+                ):
                     self.state[tire]["is_leak_present"] = False
 
                 # Testcase_04
-                elif self.state[tire]["is_leak_detection_enabled"] == False and request.is_leak_present == True:
+                elif self.state[tire]["is_leak_detection_enabled"] is False and request.is_leak_present is True:
                     self.state[tire]["is_leak_present"] = True
                     self.state[tire]["is_leak_notification_enabled"] = True
-                    raise ValidationError(2, f"is_leak_detection_enabled: False")
+                    raise ValidationError(2, "is_leak_detection_enabled: False")
 
                 # Testcase_05
-                elif (self.state[tire][
-                          "is_leak_detection_enabled"] == False and request.is_leak_notification_enabled == True and
-                      request.is_leak_present == True):
+                elif (
+                    self.state[tire]["is_leak_detection_enabled"] is False
+                    and request.is_leak_notification_enabled is True
+                    and request.is_leak_present is True
+                ):
                     self.state[tire]["is_leak_present"] = True
                     self.state[tire]["is_leak_notification_enabled"] = True
-                    raise ValidationError(2, f"is_leak_detection_enabled: False")
+                    raise ValidationError(2, "is_leak_detection_enabled: False")
 
                 # Testcase_01
                 else:
@@ -162,7 +178,7 @@ class ChassisPreconditions(UListener):
         self.chassis_service = chassis_service
 
     def on_receive(self, umsg: UMessage):
-        print('on recieve called')
+        print("on recieve called")
         print(umsg.payload)
         print(umsg.attributes.source)
         # parse data from here and pass it to onevent method

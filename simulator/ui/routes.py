@@ -36,43 +36,45 @@ from simulator.ui.utils import adb_utils
 from simulator.ui.utils.socket_utils import get_all_running_service
 
 
-@blueprint.route('/')
+@blueprint.route("/")
 def route_default():
-    return redirect(url_for('simulator_blueprint.route_configuration'))
+    return redirect(url_for("simulator_blueprint.route_configuration"))
 
 
-@blueprint.route('/configuration.html')
+@blueprint.route("/configuration.html")
 def route_configuration():
-    deviceInfo = {'Image': "", 'Build_date': "", 'Build_id': "", 'Model': ""}
-    emu_status = 'Emulator is not running..'
+    deviceInfo = {"Image": "", "Build_date": "", "Build_id": "", "Model": ""}
+    emu_status = "Emulator is not running.."
     try:
         device = adb_utils.get_emulator_device()
         if device is not None:
             status = device.shell("getprop init.svc.bootanim")
-            if status.__contains__('stopped'):
-                emu_status = 'Emulator is running'
-                deviceInfo = {'Avd_name': device.shell("getprop ro.boot.qemu.avd_name"),
-                              'Image': device.shell("getprop ro.product.bootimage.name"),
-                              'Build_date': device.shell("getprop ro.bootimage.build.date"),
-                              # 'Build_id': device.shell("getprop ro.bootimage.build.id"),
-                              'Model': device.shell("getprop ro.product.model")}
+            if status.__contains__("stopped"):
+                emu_status = "Emulator is running"
+                deviceInfo = {
+                    "Avd_name": device.shell("getprop ro.boot.qemu.avd_name"),
+                    "Image": device.shell("getprop ro.product.bootimage.name"),
+                    "Build_date": device.shell("getprop ro.bootimage.build.date"),
+                    # 'Build_id': device.shell("getprop ro.bootimage.build.id"),
+                    "Model": device.shell("getprop ro.product.model"),
+                }
             else:
-                emu_status = 'Emulator is loading'
-
+                emu_status = "Emulator is loading"
 
     except Exception:
         pass
 
-    return render_template('home/configuration.html', segment=get_segment(request), deviceInfo=deviceInfo,
-                           emu_status=emu_status)
+    return render_template(
+        "home/configuration.html", segment=get_segment(request), deviceInfo=deviceInfo, emu_status=emu_status
+    )
 
 
-@blueprint.route('/pub-sub.html')
+@blueprint.route("/pub-sub.html")
 def route_pubsub():
     services_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
     pubsub_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.PUB_SUB_JSON_FILE_NAME)
 
-    if 'ui_json' in os.getcwd():
+    if "ui_json" in os.getcwd():
         pubsub_json_path = os.sep + CONSTANTS.PUB_SUB_JSON_FILE_NAME
         services_json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
     f = open(pubsub_json_path)
@@ -82,59 +84,58 @@ def route_pubsub():
     services = json.load(f)
     f.close()
 
-    return render_template('home/pub-sub.html', segment=get_segment(request), services=services, pubsub=pubsub,
-                           json_proto={})
+    return render_template("home/pub-sub.html", segment=get_segment(request), services=services, pubsub=pubsub, json_proto={})
 
 
-@blueprint.route('/rpc-logger.html')
+@blueprint.route("/rpc-logger.html")
 def route_rpc_logger():
     try:
         f = open(os.path.join(os.getcwd(), CONSTANTS.FILENAME_RPC_LOGGER))
         data = f.read()
         f.close()
-        data = f'[{data}]'
-    except:
-        data = ''
-    return render_template('home/rpc-logger.html', rpc_calls=data, segment=get_segment(request))
+        data = f"[{data}]"
+    except Exception:
+        data = ""
+    return render_template("home/rpc-logger.html", rpc_calls=data, segment=get_segment(request))
 
 
-@blueprint.route('/downloadPubSubReport')
+@blueprint.route("/downloadPubSubReport")
 def download_Pub_file():
     filename = os.getcwd() + "/pubsub_logger.txt"
     if os.path.isfile(filename):
         return send_file(filename, as_attachment=True)
     else:
-        return ''
+        return ""
 
 
-@blueprint.route('/downloadRPCReport')
+@blueprint.route("/downloadRPCReport")
 def download_RPC_file():
     filename = os.getcwd() + "/rpc_logger.txt"
     if os.path.isfile(filename):
         return send_file(filename, as_attachment=True)
     else:
-        return ''
+        return ""
 
 
-@blueprint.route('/pubsub-logger.html')
+@blueprint.route("/pubsub-logger.html")
 def route_pubsub_logger():
     try:
         f = open(os.path.join(os.getcwd(), CONSTANTS.FILENAME_PUBSUB_LOGGER))
         data = f.read()
         f.close()
-        data = f'[{data}]'
-    except:
+        data = f"[{data}]"
+    except Exception:
 
-        data = ''
-    return render_template('home/pub-sub-logger.html', data=data, segment=get_segment(request))
+        data = ""
+    return render_template("home/pub-sub-logger.html", data=data, segment=get_segment(request))
 
 
-@blueprint.route('/send-rpc.html')
+@blueprint.route("/send-rpc.html")
 def route_send_rpc():
     services_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
     rpc_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.RPC_JSON_FILE_NAME)
 
-    if 'ui_json' in os.getcwd():
+    if "ui_json" in os.getcwd():
         rpc_json_path = os.sep + CONSTANTS.RPC_JSON_FILE_NAME
         services_json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
 
@@ -145,30 +146,30 @@ def route_send_rpc():
     services = json.load(f)
     f.close()
 
-    return render_template('home/send-rpc.html', segment=get_segment(request), services=services, rpcs=rpcs)
+    return render_template("home/send-rpc.html", segment=get_segment(request), services=services, rpcs=rpcs)
 
 
-@blueprint.route('/mockservice.html')
+@blueprint.route("/mockservice.html")
 def route_mockservices():
-    return render_template('home/mockservice.html', segment=get_segment(request))
+    return render_template("home/mockservice.html", segment=get_segment(request))
 
 
 # Helper - Extract current page name from request
 def get_segment(request):
     try:
-        segment = request.path.split('/')[-1]
-        if segment == '':
-            segment = 'index'
+        segment = request.path.split("/")[-1]
+        if segment == "":
+            segment = "index"
         return segment
-    except:
+    except Exception:
         return None
 
 
-@blueprint.route('/getuiconfiguration')
+@blueprint.route("/getuiconfiguration")
 def getconfiguration():
     try:
-        resource = str(request.args.get('resource'))
-        service = str(unquote(request.args.get('service')))
+        resource = str(request.args.get("resource"))
+        service = str(unquote(request.args.get("service")))
         ui = json.loads(service)
         layout = None
         for i in ui:
@@ -179,35 +180,36 @@ def getconfiguration():
 
         return layout
     except Exception as e:
-        print(f'Exception:{e}')
+        print(f"Exception:{e}")
         return None
 
 
-@blueprint.route('/getmockservices')
+@blueprint.route("/getmockservices")
 def get_mock_services():
     mockservice_pkgs = []
     json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
-    if 'ui_json' in os.getcwd():
+    if "ui_json" in os.getcwd():
         json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
     f = open(json_path)
     mockservices = json.load(f)
     f.close()
     for m in mockservices:
-        pkgs = {'entity': m['name'], 'name': m['display_name']}
+        pkgs = {"entity": m["name"], "name": m["display_name"]}
         mockservice_pkgs.append(pkgs)
 
     running_services = get_all_running_service()
 
-    return {'result': True, 'pkgs_mock': mockservice_pkgs, 'running': running_services}
+    return {"result": True, "pkgs_mock": mockservice_pkgs, "running": running_services}
 
 
-@blueprint.route('/updateservicestatus')
+@blueprint.route("/updateservicestatus")
 def update_service_status():
-    entity_to_remove = request.args['entity']
+    entity_to_remove = request.args["entity"]
     print(entity_to_remove)
     try:
         from simulator.ui.utils.socket_utils import stop_service
+
         stop_service(entity_to_remove)
-    except:
+    except Exception:
         pass
-    return {'result': True, 'entity':  html.escape(entity_to_remove)}
+    return {"result": True, "entity": html.escape(entity_to_remove)}

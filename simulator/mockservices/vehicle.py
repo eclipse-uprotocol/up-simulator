@@ -4,8 +4,8 @@
 
 import re
 
-from target.protofiles.vehicle.v1.vehicle_service_pb2 import (ResetTripMeterRequest, SetTransportModeRequest)
-from target.protofiles.vehicle.v1.vehicle_topics_pb2 import (TripMeter, VehicleUsage)
+from target.protofiles.vehicle.v1.vehicle_service_pb2 import ResetTripMeterRequest, SetTransportModeRequest
+from target.protofiles.vehicle.v1.vehicle_topics_pb2 import TripMeter, VehicleUsage
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
@@ -26,15 +26,22 @@ class VehicleService(BaseService):
         VehicleService constructor:
         """
 
-        super().__init__("vehicle", portal_callback, )
+        super().__init__(
+            "vehicle",
+            portal_callback,
+        )
         self.init_state()
 
     def start_rpc_service(self):
         super().start_rpc_service()
-        self.subscribe([KEY_URI_PREFIX + ":/vehicle/1/trip_meter.trip_1#TripMeter",
-                        KEY_URI_PREFIX + ":/vehicle/1/trip_meter.trip_2#TripMeter",
-                        KEY_URI_PREFIX + ":/vehicle/1/vehicle_usage.transport_mode#VehicleUsage", ],
-            VehiclePreconditions(self))
+        self.subscribe(
+            [
+                KEY_URI_PREFIX + ":/vehicle/1/trip_meter.trip_1#TripMeter",
+                KEY_URI_PREFIX + ":/vehicle/1/trip_meter.trip_2#TripMeter",
+                KEY_URI_PREFIX + ":/vehicle/1/vehicle_usage.transport_mode#VehicleUsage",
+            ],
+            VehiclePreconditions(self),
+        )
 
     def init_state(self):
         """
@@ -45,7 +52,7 @@ class VehicleService(BaseService):
         # add trip values
         for trip in TripMeter.Resources.keys():
             self.state[trip] = self.init_message_state(TripMeter)
-            self.state[trip]['name'] = trip
+            self.state[trip]["name"] = trip
 
         # add transport mode state
         for mode in VehicleUsage.Resources.keys():
@@ -61,18 +68,18 @@ class VehicleService(BaseService):
             message (str): Message object
         """
         # parse topic name from uri
-        topic = re.search(r'\/(?:.(?!\/))+$', uri).group()[1:]
-        topic = re.search(r'.*#', topic).group()[:-1]
+        topic = re.search(r"\/(?:.(?!\/))+$", uri).group()[1:]
+        topic = re.search(r".*#", topic).group()[:-1]
 
         # assign value from message
         # assumes message is of format {'is_operation_allowed': true} as defined by protobuf
         print(f"Topic name: {topic}")
 
-        if type(message) == TripMeter:
-            self.state[topic]['value'] = message.value
-        if type(message) == VehicleUsage:
-            self.state["transport_mode"]['is_setting_change_allowed'] = message.is_setting_change_allowed
-            self.state["transport_mode"]['is_active'] = message.is_active
+        if isinstance(message, TripMeter):
+            self.state[topic]["value"] = message.value
+        if isinstance(message, VehicleUsage):
+            self.state["transport_mode"]["is_setting_change_allowed"] = message.is_setting_change_allowed
+            self.state["transport_mode"]["is_active"] = message.is_active
 
     @BaseService.RequestListener
     def ResetTripMeter(self, request, response):
@@ -114,7 +121,7 @@ class VehicleService(BaseService):
             request(protobuf): the request object to be validated
         """
         # Request Trip Meter Request
-        if type(request) == ResetTripMeterRequest:
+        if isinstance(request, ResetTripMeterRequest):
             if request.trip_meter not in TripMeter.Resources.values():
                 raise ValidationError(12, f"Unsupported trip meter name {request.trip_meter}.")
             elif request.trip_meter == TripMeter.Resources.Value("trip_1"):
@@ -123,11 +130,14 @@ class VehicleService(BaseService):
                 self.state["trip_2"]["value"] = float(0)
 
         # Set Transport Mode Request
-        elif type(request) == SetTransportModeRequest:
+        elif isinstance(request, SetTransportModeRequest):
             if not self.state["transport_mode"]["is_setting_change_allowed"]:
-                raise ValidationError(9, f"Failed precondition value: is_setting_change_allowed is "
-                                         f"{self.state['transport_mode']['is_setting_change_allowed']} when should be "
-                                         f"True.")
+                raise ValidationError(
+                    9,
+                    f"Failed precondition value: is_setting_change_allowed is "
+                    f"{self.state['transport_mode']['is_setting_change_allowed']} when should be "
+                    f"True.",
+                )
             else:
                 self.state["transport_mode"]["is_active"] = request.is_active
 
@@ -140,13 +150,13 @@ class VehicleService(BaseService):
         Args:
         request(protobuf): the protobuf containing the rpc request
         """
-        if type(request) == ResetTripMeterRequest:
+        if isinstance(request, ResetTripMeterRequest):
             # get trip_meter key from value, expecting 0 - trip_1 or 1 - trip_2
             trip_val = list(TripMeter.Resources.keys())[list(TripMeter.Resources.values()).index(request.trip_meter)]
             topic = KEY_URI_PREFIX + ":/vehicle/1/trip_meter." + trip_val + "#TripMeter"
             self.publish(topic, self.state[trip_val], True)
 
-        if type(request) == SetTransportModeRequest:
+        if isinstance(request, SetTransportModeRequest):
             topic = KEY_URI_PREFIX + ":/vehicle/1/vehicle_usage.transport_mode#VehicleUsage"
             self.publish(topic, self.state, True)
 
@@ -158,14 +168,14 @@ class VehiclePreconditions(UListener):
         self.vehicle_service = vehicle_service
 
     def on_receive(self, umsg: UMessage):
-        print('on receive vehicle service called')
+        print("on receive vehicle service called")
         print(umsg.payload)
         print(umsg.attributes.source)
         # parse data from here and pass it to onevent method
         pass
 
     def onEvent(self, uri, message):
-        if message != None:
+        if message is not None:
             print(f"Recieved a {type(message)} message with value(s) {message}")
             self.vehicle_service.set_topic_state(uri, message)
 
