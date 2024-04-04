@@ -50,7 +50,7 @@ def get_display_name(input_str):
     parts = input_str.split('.')
     try:
         formatted_str = ' '.join(part.capitalize() for part in parts[1].split('_') + parts[2:] if part)
-    except:
+    except Exception:
         formatted_str = input_str.capitalize()
     return formatted_str
 

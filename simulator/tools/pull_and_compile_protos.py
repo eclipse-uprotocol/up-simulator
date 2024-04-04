@@ -39,7 +39,7 @@ def clone_or_pull(repo_url, PROTO_REPO_DIR):
     try:
         Repo.clone_from(repo_url, PROTO_REPO_DIR)
         print(f"Repository cloned successfully from {repo_url} to {PROTO_REPO_DIR}")
-    except git.exc.GitCommandError as clone_error:
+    except git.exc.GitCommandError:
         try:
             git_pull_command = ["git", "pull"]
             subprocess.run(git_pull_command, cwd=PROTO_REPO_DIR, check=True)

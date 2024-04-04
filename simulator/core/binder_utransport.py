@@ -133,7 +133,7 @@ class SocketClient:
                 receive_thread = threading.Thread(target=self.__receive_data)
                 receive_thread.start()
                 time.sleep(2)
-        except:
+        except Exception:
             log = traceback.format_exc()
             print('connect method exception', log)
             pass
@@ -223,13 +223,13 @@ class SocketClient:
             self.client_socket.sendall(message.encode('utf-8'))
             return True
 
-        except:
+        except Exception:
             self.disconnect()
             self.connect()
             try:
                 self.client_socket.sendall(message.encode('utf-8'))
                 return True
-            except:
+            except Exception:
                 return False
 
     def disconnect(self):

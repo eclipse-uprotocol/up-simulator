@@ -1,0 +1,58 @@
+# This workflow will upload a Python Package using Twine when a release is created
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Run Linter/Coverage Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Apache Maven Central
+      uses: actions/setup-java@v3
+      with: # configure settings.xml
+        distribution: 'temurin'
+        java-version: '11'
+        server-id: ossrh
+        server-username: OSSRH_USER
+        server-password: OSSRH_PASSWORD
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install flake8 pytest coverage cloudevents multimethod protobuf==4.24.2
+        python -m pip install -r requirements.txt
+
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 --ignore E203,W503,W504,F811 . --max-line-length=127 --exclude **/*pb2.py
+
+    - name: Set Up Project
+      run: |
+        python3 setup_simulator.py

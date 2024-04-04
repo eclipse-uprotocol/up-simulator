@@ -27,7 +27,9 @@
 
 from simulator.core.abstract_service import BaseService
 
-from target.protofiles.vehicle.propulsion.engine.v1.engine_service_pb2 import (ResetHealthRequest, )
+from target.protofiles.vehicle.propulsion.engine.v1.engine_service_pb2 import (
+    ResetHealthRequest,
+)
 
 
 class EngineService(BaseService):
@@ -36,7 +38,7 @@ class EngineService(BaseService):
         """
         EngineService constructor
         """
-        super().__init__('propulsion.engine', portal_callback)
+        super().__init__("propulsion.engine", portal_callback)
         self.init_state()
 
     def init_state(self):
@@ -51,8 +53,8 @@ class EngineService(BaseService):
         return self.handle_request(request, response)
 
     def handle_request(self, request, response):
-        # handle ResetHealth request       
-        if type(request) == ResetHealthRequest:
+        # handle ResetHealth request
+        if isinstance(request, ResetHealthRequest):
             # todo return ResetHealthResponse response, Implement your logic here
             pass
         response.status.code = 0

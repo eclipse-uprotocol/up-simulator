@@ -27,8 +27,7 @@
 import re
 
 from target.protofiles.common.health_state_pb2 import HealthState
-from target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, \
-    ManageHealthMonitoringRequest
+from target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, ManageHealthMonitoringRequest
 from target.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
@@ -57,8 +56,13 @@ class BrakingService(BaseService):
 
     def start_rpc_service(self):
         super().start_rpc_service()
-        self.subscribe([KEY_URI_PREFIX + ":/chassis.braking/1/brake_pads.front#BrakePads",
-                        KEY_URI_PREFIX + ":/chassis.braking/1/brake_pads.rear#BrakePads", ], BrakingPreconditions(self))
+        self.subscribe(
+            [
+                KEY_URI_PREFIX + ":/chassis.braking/1/brake_pads.front#BrakePads",
+                KEY_URI_PREFIX + ":/chassis.braking/1/brake_pads.rear#BrakePads",
+            ],
+            BrakingPreconditions(self),
+        )
 
     def init_state(self):
         """
@@ -70,7 +74,7 @@ class BrakingService(BaseService):
             brake = "brake_pads." + brake
             self.brake_names.append(brake)
             self.state[brake] = self.init_message_state(BrakePads)
-            self.state[brake]['name'] = brake
+            self.state[brake]["name"] = brake
             self.state[brake]["health"] = self.init_message_state(HealthState)
 
         self.state["brake_pads"] = self.init_message_state(ManageHealthMonitoringRequest)
@@ -85,15 +89,15 @@ class BrakingService(BaseService):
             message (str): Message object
         """
         # parse topic name from uri
-        topic = re.search(r'\/(?:.(?!\/))+$', uri).group()[1:]
-        topic = re.search(r'.*#', topic).group()[:-1]
+        topic = re.search(r"\/(?:.(?!\/))+$", uri).group()[1:]
+        topic = re.search(r".*#", topic).group()[:-1]
 
         # assign value from message
         # assumes message is of format {'health': {'remaining_life': 0, 'state': 3}} as defined by protobuf
 
-        # value setting then being reset 
-        self.state['brake_pads.front']['health']['state'] = message.health.state
-        self.state['brake_pads.rear']['health']['state'] = message.health.state
+        # value setting then being reset
+        self.state["brake_pads.front"]["health"]["state"] = message.health.state
+        self.state["brake_pads.rear"]["health"]["state"] = message.health.state
 
     @BaseService.RequestListener
     def ResetHealth(self, request, response):
@@ -135,41 +139,45 @@ class BrakingService(BaseService):
             request(protobuf): the request object to be validated
         """
         # Reset Health Request
-        if type(request) == ResetHealthRequest:
-            if request.name not in ['brake_pads.front', 'brake_pads.rear']:
+        if isinstance(request, ResetHealthRequest):
+            if request.name not in ["brake_pads.front", "brake_pads.rear"]:
                 raise ValidationError(12, f"Unsupported brake name: {request.name}")
 
-            elif self.state[request.name]['health']['state'] == HealthState.State.Value("S_UNSUPPORTED"):
-                raise ValidationError(2, f"Heath state for {request.name} set to "
-                                         f"{self.state[request.name]['health']['state']}.")
+            elif self.state[request.name]["health"]["state"] == HealthState.State.Value("S_UNSUPPORTED"):
+                raise ValidationError(
+                    2, f"Heath state for {request.name} set to " f"{self.state[request.name]['health']['state']}."
+                )
 
             else:
-                self.state[request.name]['name'] = request.name
-                self.state[request.name]['health']['remaining_life'] = 100
-                self.state[request.name]['health']['state'] = HealthState.State.Value("S_OK")
+                self.state[request.name]["name"] = request.name
+                self.state[request.name]["health"]["remaining_life"] = 100
+                self.state[request.name]["health"]["state"] = HealthState.State.Value("S_OK")
 
         # Manage Health Monitoring Request
-        if type(request) == ManageHealthMonitoringRequest:
-            if request.name not in ['brake_pads.front', 'brake_pads.rear']:
+        if isinstance(request, ManageHealthMonitoringRequest):
+            if request.name not in ["brake_pads.front", "brake_pads.rear"]:
                 raise ValidationError(12, f"Unsupported brake name: {request.name}")
 
-            elif self.state['brake_pads.front']['health']['state'] == HealthState.State.Value("S_UNSUPPORTED") and \
-                    self.state['brake_pads.rear']['health']['state'] == HealthState.State.Value("S_UNSUPPORTED"):
+            elif self.state["brake_pads.front"]["health"]["state"] == HealthState.State.Value("S_UNSUPPORTED") and self.state[
+                "brake_pads.rear"
+            ]["health"]["state"] == HealthState.State.Value("S_UNSUPPORTED"):
                 raise ValidationError(2, "Health monitoring unsupported.")
 
-            elif (self.state['brake_pads.front']['health']['state'] != HealthState.State.Value("S_DISABLED") or
-                  self.state['brake_pads.front']['health']['state'] != HealthState.State.Value("S_UNSUPPORTED") or
-                  self.state['brake_pads.rear']['health']['state'] != HealthState.State.Value("S_DISABLED") or
-                  self.state['brake_pads.rear']['health']['state'] != HealthState.State.Value(
-                        "S_UNSUPPORTED")) and request.is_enabled == False:
-                self.state['brake_pads.front']['health']['state'] = HealthState.State.Value("S_DISABLED")
-                self.state['brake_pads.rear']['health']['state'] = HealthState.State.Value("S_DISABLED")
+            elif (
+                self.state["brake_pads.front"]["health"]["state"] != HealthState.State.Value("S_DISABLED")
+                or self.state["brake_pads.front"]["health"]["state"] != HealthState.State.Value("S_UNSUPPORTED")
+                or self.state["brake_pads.rear"]["health"]["state"] != HealthState.State.Value("S_DISABLED")
+                or self.state["brake_pads.rear"]["health"]["state"] != HealthState.State.Value("S_UNSUPPORTED")
+            ) and request.is_enabled is False:
+                self.state["brake_pads.front"]["health"]["state"] = HealthState.State.Value("S_DISABLED")
+                self.state["brake_pads.rear"]["health"]["state"] = HealthState.State.Value("S_DISABLED")
 
-            elif (self.state['brake_pads.front']['health']['state'] == HealthState.State.Value("S_DISABLED") or
-                  self.state['brake_pads.rear']['health']['state'] == HealthState.State.Value(
-                        "S_DISABLED")) and request.is_enabled == True:
-                self.state['brake_pads.front']['health']['state'] = HealthState.State.Value("S_OK")
-                self.state['brake_pads.rear']['health']['state'] = HealthState.State.Value("S_OK")
+            elif (
+                self.state["brake_pads.front"]["health"]["state"] == HealthState.State.Value("S_DISABLED")
+                or self.state["brake_pads.rear"]["health"]["state"] == HealthState.State.Value("S_DISABLED")
+            ) and request.is_enabled is True:
+                self.state["brake_pads.front"]["health"]["state"] = HealthState.State.Value("S_OK")
+                self.state["brake_pads.rear"]["health"]["state"] = HealthState.State.Value("S_OK")
 
         return True
 
@@ -183,15 +191,15 @@ class BrakingService(BaseService):
         # publish brake info based on current state
         topic_prefix = KEY_URI_PREFIX + ":/chassis.braking/1/"
 
-        if type(request) == ResetHealthRequest:
+        if isinstance(request, ResetHealthRequest):
             topic = topic_prefix + request.name + "#BrakePads"
             self.publish(topic, self.state[request.name], True)
         else:
             topic = topic_prefix + "brake_pads.front#BrakePads"
-            self.publish(topic, self.state['brake_pads.front'], True)
+            self.publish(topic, self.state["brake_pads.front"], True)
 
             topic = topic_prefix + "brake_pads.rear#BrakePads"
-            self.publish(topic, self.state['brake_pads.rear'], True)
+            self.publish(topic, self.state["brake_pads.rear"], True)
 
 
 class BrakingPreconditions(UListener):
@@ -199,7 +207,7 @@ class BrakingPreconditions(UListener):
         self.braking_service = braking_service
 
     def on_receive(self, umsg: UMessage):
-        print('on receive braking called')
+        print("on receive braking called")
         print(umsg.payload)
         print(umsg.attributes.source)
         # parse data from here and pass it to onevent method

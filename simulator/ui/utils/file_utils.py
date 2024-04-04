@@ -80,5 +80,3 @@ def save_pub_sub_data(socketio, lock_pubsub, json_res):
                 socketio.emit(CONSTANTS.CALLBACK_PUBSUB_LOGGER, data, namespace=CONSTANTS.NAMESPACE)
     except IOError as exc:
         print(exc)
-
-
