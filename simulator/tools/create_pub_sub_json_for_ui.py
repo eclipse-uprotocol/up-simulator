@@ -68,9 +68,10 @@ def get_ui_details(topic):
     message_class = autoloader.find_message(class_type)
     field_info = {}
     for field_descriptor in message_class.DESCRIPTOR.fields:
-        if not (
-            field_descriptor.type == FieldDescriptor.TYPE_ENUM and field_descriptor.enum_type.name in ["Resource", "Resources"]
-        ):
+        if (not (field_descriptor.type == FieldDescriptor.TYPE_ENUM and field_descriptor.enum_type.name in ["Resource",
+                                                                                                            "Resources"])
+                and not check_for_recursive_declaration(
+                field_descriptor)):
             field_info[field_descriptor.name] = get_field_info(field_descriptor)
     message_name = message_class.DESCRIPTOR.name
     all_field_info[message_name] = field_info

@@ -34,7 +34,7 @@ class SuspensionService(BaseService):
         super().start_rpc_service()
         self.subscribe(
             [
-                KEY_URI_PREFIX + ":/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus",
+                KEY_URI_PREFIX + "/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus",
             ],
             SuspensionPreconditions(self),
         )
@@ -178,7 +178,7 @@ class SuspensionService(BaseService):
         Args:
         request(protobuf): the protobuf containing the rpc request
         """
-        topic = KEY_URI_PREFIX + ":/chassis.suspension/1/ride_height#RideHeight"
+        topic = KEY_URI_PREFIX + "/chassis.suspension/1/ride_height#RideHeight"
 
         self.publish(topic, self.state["ride_height"], True)
 

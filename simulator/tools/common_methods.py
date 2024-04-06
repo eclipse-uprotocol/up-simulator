@@ -102,6 +102,20 @@ def get_property_text(input):
     else:
         return ""
 
+def check_for_recursive_declaration(field_descriptor, field_message_name_hierarchy=""):
+    check = False
+    if field_descriptor.type == FieldDescriptor.TYPE_MESSAGE:  # If field type is TYPE_MESSAGE
+        nested_message_descriptor = field_descriptor.message_type
+        field_message_name_hierarchy = f"{field_message_name_hierarchy}.{nested_message_descriptor.name}" \
+            if field_message_name_hierarchy else nested_message_descriptor.name
+        if len(field_message_name_hierarchy.split('.')) == len(set(field_message_name_hierarchy.split('.'))):
+            for nested_field_descriptor in nested_message_descriptor.fields:
+                if nested_field_descriptor.type == nested_field_descriptor.TYPE_MESSAGE:
+                    if check_for_recursive_declaration(nested_field_descriptor, field_message_name_hierarchy):
+                        check = True
+        else:
+            check = True
+    return check
 
 def get_max(property):
     for prop, value in maxmin_field.MAX_VALUES.items():

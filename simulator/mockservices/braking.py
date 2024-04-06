@@ -58,8 +58,8 @@ class BrakingService(BaseService):
         super().start_rpc_service()
         self.subscribe(
             [
-                KEY_URI_PREFIX + ":/chassis.braking/1/brake_pads.front#BrakePads",
-                KEY_URI_PREFIX + ":/chassis.braking/1/brake_pads.rear#BrakePads",
+                KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.front#BrakePads",
+                KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.rear#BrakePads",
             ],
             BrakingPreconditions(self),
         )
@@ -189,7 +189,7 @@ class BrakingService(BaseService):
             request(protobuf): the protobuf containing the rpc request
         """
         # publish brake info based on current state
-        topic_prefix = KEY_URI_PREFIX + ":/chassis.braking/1/"
+        topic_prefix = KEY_URI_PREFIX + "/chassis.braking/1/"
 
         if isinstance(request, ResetHealthRequest):
             topic = topic_prefix + request.name + "#BrakePads"

@@ -87,5 +87,5 @@ class HornService(BaseService):
         request(protobuf): the protobuf containing the rpc request
         """
 
-        topic = KEY_URI_PREFIX + ":/body.horn/1/horn#HornStatus"
+        topic = KEY_URI_PREFIX + "/body.horn/1/horn#HornStatus"
         self.publish(topic, self.state["horn_status"], True)

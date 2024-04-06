@@ -102,8 +102,8 @@ class HelloWorldService(BaseService):
         """
         # Create a TimeOfDay instance
         time_of_day = TimeOfDay()
-        one_sec_topic = KEY_URI_PREFIX + ":/example.hello_world/1/one_second#Timer"
-        one_min_topic = KEY_URI_PREFIX + ":/example.hello_world/1/one_minute#Timer"
+        one_sec_topic = KEY_URI_PREFIX + "/example.hello_world/1/one_second#Timer"
+        one_min_topic = KEY_URI_PREFIX + "/example.hello_world/1/one_minute#Timer"
 
         while True:
             # Get current time
