@@ -304,9 +304,9 @@ def get_ui(resources, service_name):
         if not ui_details:
             ui_details = [{"type": "label", "text": "Type of RPC request is google.protobuf.Empty"}]
         modified_ui_list = ui_details
-        # if 'Geofence' not in resource_name:
-        #     modified_ui_list = [item for item in ui_details if
-        #                         not (item.get('type') == 'string' and item.get('property') == 'name')]
+        if 'Geofence' not in resource_name:
+            modified_ui_list = [item for item in ui_details if
+                                not (item.get('type') == 'string' and item.get('property') == 'name')]
         part_dict = {resource_name: {"Configuration": configuration, "uidetails": modified_ui_list}}
         ui_item.append(part_dict)
 

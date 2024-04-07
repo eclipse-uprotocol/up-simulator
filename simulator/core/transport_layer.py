@@ -31,7 +31,7 @@ from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.uri_pb2 import UEntity
 from uprotocol.proto.uri_pb2 import UUri
 from uprotocol.proto.ustatus_pb2 import UStatus
-from uprotocol.rpc.calloptions import CallOptions
+from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.transport.ulistener import UListener
 
 from simulator.core.binder_utransport import AndroidBinder
@@ -89,9 +89,6 @@ class TransportLayer:
 
     def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
         return self.__instance.unregister_listener(topic, listener)
-
-    def register_rpc_listener(self, topic: UUri, listener: UListener) -> UStatus:
-        return self.__instance.register_rpc_listener(topic, listener)
 
     def start_service(self, entity) -> bool:
         if self.__utransport == "BINDER":

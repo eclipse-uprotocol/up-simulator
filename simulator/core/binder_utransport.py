@@ -38,7 +38,7 @@ from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.uri_pb2 import UEntity, UUri
 from uprotocol.proto.ustatus_pb2 import UStatus, UCode
-from uprotocol.rpc.calloptions import CallOptions
+from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.rpc.rpcclient import RpcClient
 from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
 from uprotocol.transport.ulistener import UListener
@@ -256,7 +256,6 @@ class AndroidBinder(UTransport, RpcClient):
 
     def __init__(self):
         self.client = SocketClient()
-
         # Start a separate thread for receiving
 
     def start_service(self, entity) -> bool:
@@ -323,11 +322,17 @@ class AndroidBinder(UTransport, RpcClient):
         uri_str = Base64ProtobufSerializer().deserialize(uri.SerializeToString())
 
         try:
-
-            self.__add_subscribe_callback(LongUriSerializer().serialize(uri), listener)
-            # write data to socket
-            json_map = {"action": "subscribe", "data": uri_str}
-            print('subscribe to ', uri)
+            uri_key = LongUriSerializer().serialize(uri)
+            if UriValidator.is_rpc_method(uri):
+                self.__add_rpc_request_callback(uri_key, listener)
+                # write data to socket
+                json_map = {"action": "register_rpc", "data": uri_str}
+                print('register rpc for ', uri)
+            else:
+                self.__add_subscribe_callback(uri_key, listener)
+                # write data to socket
+                json_map = {"action": "subscribe", "data": uri_str}
+                print('subscribe to ', uri)
 
             message_to_send = json.dumps(json_map) + '\n'
             self.client.send_data(message_to_send)
@@ -337,24 +342,6 @@ class AndroidBinder(UTransport, RpcClient):
         except Exception as e:
             return UStatus(message=str(e), code=UCode.UNKNOWN)
 
-    def register_rpc_listener(self, uri: UUri, listener: UListener) -> UStatus:
-        self.client.connect()
-        uri_str = Base64ProtobufSerializer().deserialize(uri.SerializeToString())
-
-        try:
-            method_uri = LongUriSerializer().serialize(uri)
-            self.__add_rpc_request_callback(method_uri, listener)
-            # write data to socket
-            json_map = {"action": "register_rpc", "data": uri_str}
-            print('register rpc for ', uri)
-            message_to_send = json.dumps(json_map) + '\n'
-            self.client.send_data(message_to_send)
-            # Wait for data to be received from the socket
-            received_data = self.client.receive_data()
-            return received_data
-
-        except Exception as e:
-            return UStatus(message=str(e), code=UCode.UNKNOWN)
 
     def invoke_method(self, method_uri: UUri, payload: UPayload, calloptions: CallOptions) -> Future:
 
@@ -364,7 +351,7 @@ class AndroidBinder(UTransport, RpcClient):
             raise Exception("Payload is None")
         if calloptions is None:
             raise Exception("CallOptions cannot be None")
-        timeout = calloptions.get_timeout()
+        timeout = calloptions.ttl
         if timeout <= 0:
             raise Exception("TTl is invalid or missing")
 

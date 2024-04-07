@@ -47,6 +47,7 @@ rpc_topics = {}
 topic_messages = []
 message_to_module = {}
 service_id = {}
+entity_descriptor = {}
 
 
 # Protobuf autoloader functions. This module will automatically
@@ -114,7 +115,8 @@ def populate_protobuf_classes():
                             if service_name not in rpc_topics.keys():
                                 rpc_topics[service_name] = {}
                             if name not in rpc_topics[service_name].keys():
-                                rpc_topics[service_name][name] = {"uri": [], "versions": [], "id": ""}
+                                rpc_topics[service_name][name] = {"uri": [], "versions": [],
+                                                                  "id": ""}
                                 rpc_topics[service_name][name]["versions"].append(api_version)
                                 rpc_topics[service_name][name]["uri"].append(uri)
                                 rpc_topics[service_name][name]["id"] = endpoint["id"]
@@ -124,9 +126,11 @@ def populate_protobuf_classes():
                                 rpc_topics[service_name][name]["id"] = endpoint["id"]
 
                             else:
-                                print(f"Warning: possible duplicate method name detected for {uri}")
+                                print(
+                                    f"Warning: possible duplicate method name detected for {uri}")
                         else:
-                            print(f"Warning: RPC method name and service name could not be determined for {uri}")
+                            print(
+                                f"Warning: RPC method name and service name could not be determined for {uri}")
         except Exception:
             print("Warning: except occured during parsing of Resource Catalog:")
             traceback.print_exc()
@@ -136,9 +140,21 @@ def populate_protobuf_classes():
         return rpc_methods
 
 
+def get_topic_id_from_topicuri(given_topic):
+    for topic in topic_messages:
+        if given_topic in topic:
+            return int(topic[2]);
+
+
+def get_method_id_from_method_name(entity, rpc_method_name):
+    return int(rpc_topics[entity][rpc_method_name]["id"])
+
+
 def get_protobuf_descriptor_data():
+    global entity_descriptor
     for importer, modname, ispkg in pkgutil.walk_packages(
-        path=proto.__path__, prefix=proto.__name__ + ".", onerror=lambda x: print(f"Error parsing {x}")
+            path=proto.__path__, prefix=proto.__name__ + ".",
+            onerror=lambda x: print(f"Error parsing {x}")
     ):
 
         mod = importlib.import_module(modname)
@@ -149,12 +165,16 @@ def get_protobuf_descriptor_data():
         services = []
         for service in _services:
             options = str(mod.DESCRIPTOR.services_by_name[service].GetOptions())
-            groups = re.search(r"^\[" + CONSTANTS.KEY_PROTO_ENTITY_NAME + '\\.name\\]:\\s"([\\w.]+)"$', options, re.MULTILINE)
+            groups = re.search(
+                r"^\[" + CONSTANTS.KEY_PROTO_ENTITY_NAME + '\\.name\\]:\\s"([\\w.]+)"$', options,
+                re.MULTILINE)
             try:
                 protobuf_service = groups.group(1)
             except Exception:
                 print(options)
                 continue
+            entity_descriptor[protobuf_service] = mod.DESCRIPTOR.services_by_name[
+                service]
             services.append((service, protobuf_service))
         messages = mod.DESCRIPTOR.message_types_by_name.keys()
         for message in messages:
@@ -165,10 +185,12 @@ def get_protobuf_descriptor_data():
             message_to_module[mod.DESCRIPTOR.message_types_by_name[message].full_name] = modname
 
         for service, protobuf_service in services:
+
             for method in mod.DESCRIPTOR.services_by_name[service].methods_by_name.keys():
 
                 # get method object
                 m = mod.DESCRIPTOR.services_by_name[service].methods_by_name[method]
+
                 rpc_info = parse_method(protobuf_service, rpc_method=m, containing_module=modname)
                 if rpc_info is None:
                     continue
@@ -292,7 +314,8 @@ def find_message_class(containing_module, class_full_name):
                 # try absolute import
                 class_obj = getattr(
                     importlib.import_module(
-                        class_full_name.rsplit(".", maxsplit=1)[0] + "." + class_base_name.lower() + "_pb2"
+                        class_full_name.rsplit(".", maxsplit=1)[
+                            0] + "." + class_base_name.lower() + "_pb2"
                     ),
                     class_base_name,
                 )
@@ -306,6 +329,7 @@ def find_message_class(containing_module, class_full_name):
                 except (ModuleNotFoundError, AttributeError):
                     print(f"WARNING: Unable to find protobuf definition for {class_full_name}")
                     class_obj = None
+
     return class_obj
 
 
@@ -319,7 +343,8 @@ def get_rpc_method_uri(service, method):
     if service in rpc_topics.keys():
         for method in rpc_topics[service].keys():
             if method_name == method:
-                return rpc_topics[service][method]["versions"], str(rpc_topics[service][method]["uri"])
+                return rpc_topics[service][method]["versions"], str(
+                    rpc_topics[service][method]["uri"])
 
     return None
 
@@ -361,15 +386,17 @@ def _populate_message(service_name, message_class, data_dict):
         try:
             if message_class.DESCRIPTOR.fields_by_name[field].enum_type is not None:
                 if (
-                    field in data_dict
-                    and (type(data_dict[field]) is not int)
-                    and data_dict[field] not in message_class.DESCRIPTOR.fields_by_name[field].enum_type.values_by_name
+                        field in data_dict
+                        and (type(data_dict[field]) is not int)
+                        and data_dict[field] not in message_class.DESCRIPTOR.fields_by_name[
+                    field].enum_type.values_by_name
                 ):
                     # enum value not present, handle exception
                     # Generate random numbers until one is not in the list
                     while True:
                         rand_num = random.randint(1, 100)
-                        if rand_num not in message_class.DESCRIPTOR.fields_by_name[field].enum_type.values_by_number:
+                        if rand_num not in message_class.DESCRIPTOR.fields_by_name[
+                            field].enum_type.values_by_number:
                             break
                     data_dict[field] = rand_num
         except Exception:
@@ -504,27 +531,33 @@ def unpack_data_dict(data_dict):
         # an arbitrary number of levels...but i have no idea how and
         # google is not helping.
         if len(exploded_key) == 10:
-            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][exploded_key[4]][exploded_key[5]][
+            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][
+                exploded_key[4]][exploded_key[5]][
                 exploded_key[6]
             ][exploded_key[7]][exploded_key[8]][exploded_key[9]] = value
         if len(exploded_key) == 9:
-            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][exploded_key[4]][exploded_key[5]][
+            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][
+                exploded_key[4]][exploded_key[5]][
                 exploded_key[6]
             ][exploded_key[7]][exploded_key[8]] = value
         if len(exploded_key) == 8:
-            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][exploded_key[4]][exploded_key[5]][
+            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][
+                exploded_key[4]][exploded_key[5]][
                 exploded_key[6]
             ][exploded_key[7]] = value
         if len(exploded_key) == 7:
-            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][exploded_key[4]][exploded_key[5]][
+            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][
+                exploded_key[4]][exploded_key[5]][
                 exploded_key[6]
             ] = value
         if len(exploded_key) == 6:
-            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][exploded_key[4]][
+            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][
+                exploded_key[4]][
                 exploded_key[5]
             ] = value
         if len(exploded_key) == 5:
-            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][exploded_key[4]] = value
+            new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]][
+                exploded_key[4]] = value
         if len(exploded_key) == 4:
             new_dict[exploded_key[0]][exploded_key[1]][exploded_key[2]][exploded_key[3]] = value
         if len(exploded_key) == 3:
@@ -539,7 +572,8 @@ def unpack_data_dict(data_dict):
 def find_request_by_type(service, message_type):
     global rpc_methods
     for method in rpc_methods[service].keys():
-        if message_type == rpc_methods[service][method]["request"].DESCRIPTOR.full_name.split(".")[-1]:
+        if message_type == rpc_methods[service][method]["request"].DESCRIPTOR.full_name.split(".")[
+            -1]:
             return rpc_methods[service][method]["request"]
 
     # massage service name to something in the python namespace.
@@ -573,7 +607,8 @@ def get_request_map(service=None):
     for i in rpc_methods[service].keys():
         if rpc_methods[service][i]["service"] == service or service is None:
             request_map[i] = (
-                str(rpc_methods[service][i]["request"].__module__) + "." + str(rpc_methods[service][i]["request"].__qualname__)
+                    str(rpc_methods[service][i]["request"].__module__) + "." + str(
+                rpc_methods[service][i]["request"].__qualname__)
             )
 
     return request_map
@@ -586,9 +621,9 @@ def get_response_map(service=None):
     for i in rpc_methods[service].keys():
         if rpc_methods[service][i]["service"] == service or service is None:
             response_map[i] = (
-                str(rpc_methods[service][i]["response"].__module__)
-                + "."
-                + str(rpc_methods[service][i]["response"].__qualname__)
+                    str(rpc_methods[service][i]["response"].__module__)
+                    + "."
+                    + str(rpc_methods[service][i]["response"].__qualname__)
             )
 
     return response_map

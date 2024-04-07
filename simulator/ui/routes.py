@@ -33,7 +33,7 @@ from flask import redirect, url_for, render_template, request, send_file
 import simulator.utils.constant as CONSTANTS
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
-from simulator.ui.utils.socket_utils import get_all_running_service
+from simulator.core.vehicle_service_utils import get_all_running_service
 
 
 @blueprint.route("/")
@@ -194,8 +194,9 @@ def get_mock_services():
     mockservices = json.load(f)
     f.close()
     for m in mockservices:
-        pkgs = {"entity": m["name"], "name": m["display_name"]}
-        mockservice_pkgs.append(pkgs)
+        if m["name"] not in ["core.udiscovery", "core.utelemetry", "core.usubscription"]:
+            pkgs = {"entity": m["name"], "name": m["display_name"]}
+            mockservice_pkgs.append(pkgs)
 
     running_services = get_all_running_service()
 
@@ -207,7 +208,7 @@ def update_service_status():
     entity_to_remove = request.args["entity"]
     print(entity_to_remove)
     try:
-        from simulator.ui.utils.socket_utils import stop_service
+        from simulator.core.vehicle_service_utils import stop_service
 
         stop_service(entity_to_remove)
     except Exception:

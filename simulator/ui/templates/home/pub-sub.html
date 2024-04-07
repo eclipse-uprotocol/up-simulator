@@ -49,7 +49,7 @@ E -->
                                 <ul id="myULdata">
                                     {% for service in services %}
                                     {% if 'message' in service and service['message']|length >0 %}
-
+                                    {% if service['name'] !="core.udiscovery" %}
                                     <li>
                                         <a>
 
@@ -64,7 +64,7 @@ E -->
                                         </a>
                                     </li>
 
-
+                                    {% endif %}
                                     {% endif %}
                                     {% endfor %}
                                 </ul>

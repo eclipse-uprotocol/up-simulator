@@ -57,13 +57,14 @@ def get_display_name(input_str):
 
 def execute():
     for service in autoloader.get_services():
-        data_dict = {
-            "name": service,
-            "display_name": get_display_name(service),
-            "rpc": list(autoloader.get_methods_by_service(service).keys()),
-            "message": get_messages(service)
-        }
-        result_data.append(data_dict)
+        if service not in ["core.utelemetry", "core.usubscription", "core.udiscovery"]:
+            data_dict = {
+                "name": service,
+                "display_name": get_display_name(service),
+                "rpc": list(autoloader.get_methods_by_service(service).keys()),
+                "message": get_messages(service)
+            }
+            result_data.append(data_dict)
 
     # Create the directory if it doesn't exist
     if not os.path.exists(CONSTANTS.UI_JSON_DIR):

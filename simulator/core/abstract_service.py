@@ -103,8 +103,7 @@ class BaseService(object):
                 any_obj = any_pb2.Any()
                 any_obj.Pack(response)
                 payload_res = UPayload(value=any_obj.SerializeToString(), format=payload.format)
-                attributes = UAttributesBuilder.response(RESPONSE_URI, attributes.sink, attributes.priority,
-                                                         attributes.id).build()
+                attributes = UAttributesBuilder.response(attributes)
                 if get_instance(entity).portal_callback is not None:
                     get_instance(entity).portal_callback(req, method, response, get_instance(entity).publish_data)
                 return TransportLayer().send(UMessage(attributes=attributes, payload=payload_res))
@@ -126,7 +125,7 @@ class BaseService(object):
                         if attr1 == 'on_receive':
                             func = getattr(self, attr)
                             method_uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, attr)
-                            status = self.transport_layer.register_rpc_listener(
+                            status = self.transport_layer.register_listener(
                                 LongUriSerializer().deserialize(method_uri), func)
                             common_util.print_register_rpc_status(method_uri, status.code, status.message)
 

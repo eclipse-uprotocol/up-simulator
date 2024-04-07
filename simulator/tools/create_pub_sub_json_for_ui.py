@@ -29,7 +29,7 @@ import json
 from simulator.core import protobuf_autoloader as autoloader
 import os
 import simulator.utils.constant as CONSTANTS
-from simulator.tools.common_methods import get_field_info, get_max, get_min_value, get_property_text, get_type_in_string
+from simulator.tools.common_methods import get_field_info, get_max, get_min_value, get_property_text, get_type_in_string, check_for_recursive_declaration
 from google.protobuf.descriptor import FieldDescriptor
 
 result_data = {}
@@ -219,7 +219,7 @@ def extract_fields(data):
 
 def get_ui(pubsub, service_name):
     ui_item = []
-    if service_name not in ["core.utelemetry", "core.usubscription"]:
+    if service_name not in ["core.utelemetry", "core.usubscription", "core.udiscovery"]:
         for resource_name in pubsub:
             topics = get_topics_by_resource_name(resource_name, service_name)
             if len(topics) > 0:
