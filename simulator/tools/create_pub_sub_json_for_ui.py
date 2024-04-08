@@ -26,11 +26,21 @@
 
 
 import json
-from simulator.core import protobuf_autoloader as autoloader
 import os
-import simulator.utils.constant as CONSTANTS
-from simulator.tools.common_methods import get_field_info, get_max, get_min_value, get_property_text, get_type_in_string, check_for_recursive_declaration
+
 from google.protobuf.descriptor import FieldDescriptor
+
+import simulator.utils.constant as CONSTANTS
+from simulator.core import protobuf_autoloader as autoloader
+from simulator.tools.common_methods import (
+    get_field_info,
+    get_max,
+    get_min_value,
+    get_property_text,
+    get_type_in_string,
+    check_for_recursive_declaration,
+    get_config_name,
+)
 
 result_data = {}
 additional_data = {}
@@ -39,10 +49,6 @@ services = list(autoloader.get_services())
 
 def get_config_display_name(name):
     return name.rsplit(".", 1)[-1]
-
-
-def get_config_name(topic):
-    return topic.rsplit("/", 1)[-1].rsplit("#", 1)[0]
 
 
 def get_pubsub(service_name):
@@ -55,11 +61,18 @@ def get_pubsub(service_name):
 
 def get_topics_by_resource_name(resource_name, service_name):
     topics = autoloader.get_topics_by_proto_service_name(service_name)
-    return [topic for topic in topics if topic.lower().split("#")[1] == resource_name.lower()]
+    return [
+        topic
+        for topic in topics
+        if topic.lower().split("#")[1] == resource_name.lower()
+    ]
 
 
 def get_pure_class_type(topic):
-    return next((pair[1] for pair in autoloader.topic_messages if topic == pair[0]), None)
+    return next(
+        (pair[1] for pair in autoloader.topic_messages if topic == pair[0]),
+        None,
+    )
 
 
 def get_ui_details(topic):
@@ -68,11 +81,13 @@ def get_ui_details(topic):
     message_class = autoloader.find_message(class_type)
     field_info = {}
     for field_descriptor in message_class.DESCRIPTOR.fields:
-        if (not (field_descriptor.type == FieldDescriptor.TYPE_ENUM and field_descriptor.enum_type.name in ["Resource",
-                                                                                                            "Resources"])
-                and not check_for_recursive_declaration(
-                field_descriptor)):
-            field_info[field_descriptor.name] = get_field_info(field_descriptor)
+        if not (
+            field_descriptor.type == FieldDescriptor.TYPE_ENUM
+            and field_descriptor.enum_type.name in ["Resource", "Resources"]
+        ) and not check_for_recursive_declaration(field_descriptor):
+            field_info[field_descriptor.name] = get_field_info(
+                field_descriptor
+            )
     message_name = message_class.DESCRIPTOR.name
     all_field_info[message_name] = field_info
     return all_field_info
@@ -80,14 +95,21 @@ def get_ui_details(topic):
 
 def remove_key_prefix(json_data, prefix):
     if isinstance(json_data, dict):
-        for key, value in list(json_data.items()):  # Use list() to avoid modifying the dictionary while iterating
+        for key, value in list(
+            json_data.items()
+        ):  # Use list() to avoid modifying the dictionary while iterating
             if key == "property" and value.startswith(prefix):
                 # Remove the key prefix
                 value = value[len(prefix) :]
                 json_data[key] = value
                 property_text_key = key + "Text"
-                if property_text_key in json_data and json_data[property_text_key] == value:
-                    del json_data[property_text_key]  # Remove propertyText key if its value is the same as property
+                if (
+                    property_text_key in json_data
+                    and json_data[property_text_key] == value
+                ):
+                    del json_data[
+                        property_text_key
+                    ]  # Remove propertyText key if its value is the same as property
             elif isinstance(value, (dict, list)):
                 remove_key_prefix(value, prefix)
     elif isinstance(json_data, list):
@@ -107,14 +129,23 @@ def extract_fields(data):
         if isinstance(value, dict):
             if (
                 "type_field" in value
-                and value["type_field"] not in [FieldDescriptor.TYPE_MESSAGE, FieldDescriptor.TYPE_ENUM]
+                and value["type_field"]
+                not in [
+                    FieldDescriptor.TYPE_MESSAGE,
+                    FieldDescriptor.TYPE_ENUM,
+                ]
                 and value.get("label") == "Non-repeated"
             ):
                 type_str = get_type_in_string(value["type_field"])
                 property_value = value["property"]
                 result_dict = {"type": type_str, "property": property_value}
                 if type_str in {"int", "float", "double"}:
-                    result_dict.update({"minrange": get_min_value(property_value), "maxrange": get_max(property_value)})
+                    result_dict.update(
+                        {
+                            "minrange": get_min_value(property_value),
+                            "maxrange": get_max(property_value),
+                        }
+                    )
                 if "." in property_value:
                     property_text = get_property_text(property_value)
                     if property_value != property_text:
@@ -128,7 +159,11 @@ def extract_fields(data):
                 and value.get("label") == "Non-repeated"
             ):
                 property_value = value["property"]
-                result_dict = {"type": "dropdown", "property": property_value, "mode": value["enum_values"]}
+                result_dict = {
+                    "type": "dropdown",
+                    "property": property_value,
+                    "mode": value["enum_values"],
+                }
                 if "." in property_value:
                     property_text = get_property_text(property_value)
                     if property_value != property_text:
@@ -151,7 +186,14 @@ def extract_fields(data):
                 key = value["property"]
                 repeated_value_dict = extract_fields(value)
                 remove_key_prefix(repeated_value_dict, key + ".")
-                result.append({"type": "repeated", "class": value["message_name"], "key": key, "value": repeated_value_dict})
+                result.append(
+                    {
+                        "type": "repeated",
+                        "class": value["message_name"],
+                        "key": key,
+                        "value": repeated_value_dict,
+                    }
+                )
 
             elif (
                 "type_field" in value
@@ -169,7 +211,9 @@ def extract_fields(data):
                                 {
                                     "type": type_str,
                                     "property": value["property"],
-                                    "minrange": get_min_value(value["property"]),
+                                    "minrange": get_min_value(
+                                        value["property"]
+                                    ),
                                     "maxrange": get_max(value["property"]),
                                 }
                             ],
@@ -181,7 +225,12 @@ def extract_fields(data):
                             "type": "repeated",
                             "class": type_str,
                             "key": value["property"],
-                            "value": [{"type": type_str, "property": value["property"]}],
+                            "value": [
+                                {
+                                    "type": type_str,
+                                    "property": value["property"],
+                                }
+                            ],
                         }
                     )
 
@@ -197,7 +246,11 @@ def extract_fields(data):
                             "class": value["enum_name"],
                             "key": value["property"],
                             "value": [
-                                {"type": "dropdown", "property": value["property"], "mode": value["enum_values"]},
+                                {
+                                    "type": "dropdown",
+                                    "property": value["property"],
+                                    "mode": value["enum_values"],
+                                },
                             ],
                         }
                     )
@@ -219,7 +272,11 @@ def extract_fields(data):
 
 def get_ui(pubsub, service_name):
     ui_item = []
-    if service_name not in ["core.utelemetry", "core.usubscription", "core.udiscovery"]:
+    if service_name not in [
+        "core.utelemetry",
+        "core.usubscription",
+        "core.udiscovery",
+    ]:
         for resource_name in pubsub:
             topics = get_topics_by_resource_name(resource_name, service_name)
             if len(topics) > 0:
@@ -230,20 +287,36 @@ def get_ui(pubsub, service_name):
                     if name == display_name:
                         configuration_dict = {"name": name, "topic": topics[i]}
                     else:
-                        configuration_dict = {"name": name, "display_name": display_name, "topic": topics[i]}
+                        configuration_dict = {
+                            "name": name,
+                            "display_name": display_name,
+                            "topic": topics[i],
+                        }
                     configuration.append(configuration_dict)
                 ui_det = get_ui_details(configuration[0]["topic"])
                 ui_details = extract_fields(ui_det)
                 if not ui_details:
-                    ui_details = [{"type": "label", "text": "No protofields available"}]
+                    ui_details = [
+                        {"type": "label", "text": "No protofields available"}
+                    ]
 
                 modified_ui_list = ui_details
                 if "Geofence" not in resource_name:
                     modified_ui_list = [
-                        item for item in ui_details if not (item.get("type") == "string" and item.get("property") == "name")
+                        item
+                        for item in ui_details
+                        if not (
+                            item.get("type") == "string"
+                            and item.get("property") == "name"
+                        )
                     ]
 
-                part_dict = {resource_name: {"Configuration": configuration, "uidetails": modified_ui_list}}
+                part_dict = {
+                    resource_name: {
+                        "Configuration": configuration,
+                        "uidetails": modified_ui_list,
+                    }
+                }
                 ui_item.append(part_dict)
     return ui_item
 
@@ -255,7 +328,10 @@ def check_resource(message):
     field_names = message_class.DESCRIPTOR.fields_by_name.keys()
     for field_name in field_names:
         field_descriptor = message_class.DESCRIPTOR.fields_by_name[field_name]
-        if field_descriptor.type == FieldDescriptor.TYPE_ENUM and field_descriptor.enum_type.name in ["Resource", "Resources"]:
+        if (
+            field_descriptor.type == FieldDescriptor.TYPE_ENUM
+            and field_descriptor.enum_type.name in ["Resource", "Resources"]
+        ):
             return field_name
     return None
 
@@ -279,7 +355,9 @@ def execute():
     # Create the directory if it doesn't exist
     if not os.path.exists(CONSTANTS.UI_JSON_DIR):
         os.makedirs(CONSTANTS.UI_JSON_DIR)
-    PUB_SUB_JSON_FILE_PATH = os.path.join(CONSTANTS.UI_JSON_DIR, CONSTANTS.PUB_SUB_JSON_FILE_NAME)
+    PUB_SUB_JSON_FILE_PATH = os.path.join(
+        CONSTANTS.UI_JSON_DIR, CONSTANTS.PUB_SUB_JSON_FILE_NAME
+    )
     # Write JSON data to the pub-sub.json
     with open(PUB_SUB_JSON_FILE_PATH, "w") as json_file:
         json.dump(result_data, json_file, indent=2)

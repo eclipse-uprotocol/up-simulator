@@ -33,14 +33,15 @@ import traceback
 from flask_socketio import SocketIO
 from google.protobuf import any_pb2
 from google.protobuf.json_format import MessageToDict
+from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.upayload_pb2 import UPayloadFormat
-from uprotocol.proto.uattributes_pb2 import CallOptions
+from uprotocol.proto.uri_pb2 import UResource
 from uprotocol.rpc.rpcmapper import RpcMapper
 from uprotocol.transport.ulistener import UListener
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
-from uprotocol.proto.uri_pb2 import UEntity, UUri, UResource
+
 import simulator.ui.utils.common_handlers as Handlers
 import simulator.utils.constant as CONSTANTS
 from simulator.core import protobuf_autoloader
@@ -115,9 +116,9 @@ class SocketUtility:
                 message = "Successfully send rpc request for " + methodname
                 if self.transport_layer.get_transport() == "Zenoh":
                     message = (
-                            "Successfully send rpc request for "
-                            + methodname
-                            + " to Zenoh"
+                        "Successfully send rpc request for "
+                        + methodname
+                        + " to Zenoh"
                     )
                 res = {"msg": message, "data": sent_data}
                 self.socketio.emit(
@@ -295,8 +296,8 @@ class SubscribeUListener(UListener):
         return cls._instance
 
     def __init__(
-            self, socketio: SocketIO, utransport: str,
-            lock_pubsub: threading.Lock
+        self, socketio: SocketIO, utransport: str,
+        lock_pubsub: threading.Lock
     ):
         if not self._initialized:
             self.__socketio = socketio

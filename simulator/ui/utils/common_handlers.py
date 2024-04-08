@@ -159,7 +159,7 @@ def publish_status_handler(socketio, lock_pubsub, utransport, topic, status_code
 
 def on_receive_event_handler(socketio, lock_pubsub, utransport, topic, payload: UPayload):
     try:
-        topic = "up:" + topic
+        topic = CONSTANTS.KEY_URI_PREFIX + topic
         topic_class = protobuf_autoloader.get_topic_map()[topic]
         res = common_util.get_class(topic_class)
         any_message = any_pb2.Any()

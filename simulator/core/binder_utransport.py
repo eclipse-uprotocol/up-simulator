@@ -33,12 +33,12 @@ from concurrent.futures import Future
 from sys import platform
 
 from uprotocol.cloudevent.serialize.base64protobufserializer import Base64ProtobufSerializer
+from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.proto.uattributes_pb2 import UMessageType, UPriority
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.uri_pb2 import UEntity, UUri
 from uprotocol.proto.ustatus_pb2 import UStatus, UCode
-from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.rpc.rpcclient import RpcClient
 from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
 from uprotocol.transport.ulistener import UListener
@@ -46,13 +46,16 @@ from uprotocol.transport.utransport import UTransport
 from uprotocol.uri.factory.uresource_builder import UResourceBuilder
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 from uprotocol.uri.validator.urivalidator import UriValidator
+from uprotocol.uuid.factory.uuidfactory import Factories
 from uprotocol.uuid.serializer.longuuidserializer import LongUuidSerializer
+
+from simulator.utils.constant import REPO_URL
 
 # Dictionary to store requests
 m_requests = {}
 subscribers = {}  # remove element when ue unregister it
 MAX_MESSAGE_SIZE = 32767
-RESPONSE_URI = UUri(entity=UEntity(name="simulator", version_major=1), resource=UResourceBuilder.for_rpc_response())
+RESPONSE_URI = UUri(entity=UEntity(name="simulator.proxy", version_major=1), resource=UResourceBuilder.for_rpc_response())
 
 
 # Function to add a request
@@ -274,9 +277,6 @@ class AndroidBinder(UTransport, RpcClient):
     def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
         pass
 
-    def authenticate(self, u_entity: UEntity) -> UStatus:
-        print("unimplemented, it is not needed in python components.")
-
     def send(self, umsg: UMessage) -> UStatus:
         global json_map
         self.client.connect()
@@ -342,7 +342,6 @@ class AndroidBinder(UTransport, RpcClient):
         except Exception as e:
             return UStatus(message=str(e), code=UCode.UNKNOWN)
 
-
     def invoke_method(self, method_uri: UUri, payload: UPayload, calloptions: CallOptions) -> Future:
 
         if method_uri is None or method_uri == UUri():
@@ -356,6 +355,8 @@ class AndroidBinder(UTransport, RpcClient):
             raise Exception("TTl is invalid or missing")
 
         attributes = UAttributesBuilder.request(RESPONSE_URI, method_uri, UPriority.UPRIORITY_CS4, timeout).build()
+        if "COVESA" not in REPO_URL:
+            attributes.id.MergeFrom(Factories.UUIDV6.create())
         # check message type,id and ttl
         req_id = LongUuidSerializer.instance().serialize(attributes.id)
         response_future = add_request(req_id)

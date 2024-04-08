@@ -1,13 +1,5 @@
 from uprotocol.uri.factory.uentity_factory import UEntityFactory
-from uprotocol.proto.uri_pb2 import UEntity, UResource
-from uprotocol.proto.uprotocol_options_pb2 import name as Name
-from uprotocol.proto.uprotocol_options_pb2 import (
-    version_major as Version_Major,
-)
-from uprotocol.proto.uprotocol_options_pb2 import (
-    version_minor as Version_Minor,
-)
-from uprotocol.proto.uprotocol_options_pb2 import id as Id
+
 mock_entity = []
 
 
@@ -31,7 +23,6 @@ def get_all_running_service():
     for index, entity_dict in enumerate(mock_entity):
         running_service.append(entity_dict.get('name'))
     return running_service
-
 
 
 def start_service(entity, callback):
@@ -86,6 +77,6 @@ def start_service(entity, callback):
         service.start()
         mock_entity.append({"name": entity, "entity": service})
 
+
 def get_entity_from_descriptor(entity_descriptor):
     return UEntityFactory.from_proto(entity_descriptor)
-
