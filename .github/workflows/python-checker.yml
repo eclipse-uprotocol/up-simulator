@@ -51,7 +51,7 @@ jobs:
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 --ignore E203,W503,W504,F811 . --max-line-length=127 --exclude **/*pb2.py
+        flake8 --ignore E203,W503,W504,F811,E402 --max-line-length=127 --exclude **/*pb2.py
 
     - name: Set Up Project
       run: |

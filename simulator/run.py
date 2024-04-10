@@ -26,6 +26,8 @@
 
 
 import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask import request
 from flask_socketio import SocketIO
@@ -37,7 +39,7 @@ from simulator.ui.config import config_dict
 from simulator.ui.utils.socket_utils import SocketUtility
 
 debug = False
-get_config_mode = 'Debug' if debug else 'Production'
+get_config_mode = "Debug" if debug else "Production"
 app_config = config_dict[get_config_mode.capitalize()]
 
 app = create_app(app_config)
@@ -68,8 +70,8 @@ def set_zenoh_config(routerip, port):
 
 @socketio.on(CONSTANTS.API_SUBSCRIBE, namespace=CONSTANTS.NAMESPACE)
 def subscribe(json_subscribe):
-    print('received subscribe json ' + str(json_subscribe))
-    app.config['SID'] = request.sid
+    print("received subscribe json " + str(json_subscribe))
+    app.config["SID"] = request.sid
     set_reset_flag()
     socket_utility.execute_subscribe(json_subscribe)
 
@@ -83,21 +85,21 @@ def sendrpc(json_sendrpc):
 @socketio.on(CONSTANTS.API_PUBLISH, namespace=CONSTANTS.NAMESPACE)
 def publish(json_publish):
     set_reset_flag()
-    print('received publish json ' + str(json_publish))
-    app.config['SID'] = request.sid
+    print("received publish json " + str(json_publish))
+    app.config["SID"] = request.sid
     socket_utility.execute_publish(json_publish)
 
 
 @socketio.on(CONSTANTS.API_START_SERVICE, namespace=CONSTANTS.NAMESPACE)
 def start_mock_services(json_service):
-    print('start mock services json ' + str(json_service))
+    print("start mock services json " + str(json_service))
     set_reset_flag()
     socket_utility.start_mock_service(json_service)
 
 
 @socketio.on(CONSTANTS.API_STOP_ALL_SERVICE, namespace=CONSTANTS.NAMESPACE)
 def stop_all_mock_services():
-    print('stop all mock services ')
+    print("stop all mock services ")
     set_reset_flag()
 
 
@@ -119,6 +121,6 @@ def set_reset_flag():
     is_reset = False
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Run the server
     socketio.run(app, allow_unsafe_werkzeug=True, debug=debug)

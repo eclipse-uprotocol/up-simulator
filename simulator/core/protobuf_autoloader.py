@@ -42,7 +42,7 @@ from simulator.utils.constant import (
     RESOURCE_CATALOG_CSV_NAME,
     RESOURCE_CATALOG_JSON_NAME,
 )
-from target import protofiles as proto
+from simulator.target import protofiles as proto
 
 rpc_methods = {}
 rpc_fullname_methods = {}
@@ -74,7 +74,7 @@ def populate_protobuf_classes():
 
     cwd = pathlib.Path(__file__).parent.resolve()
     # Specify the relative path to the CSV file
-    relative_path = os.path.abspath(os.path.join(cwd, "../../target/resource_catalog"))
+    relative_path = os.path.abspath(os.path.join(cwd, "../target/resource_catalog"))
     # Combine the current working directory and the relative path
     csv_file_path = relative_path + os.sep + RESOURCE_CATALOG_CSV_NAME
     with open(csv_file_path, "r") as csv_file:

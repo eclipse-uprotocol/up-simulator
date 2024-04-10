@@ -368,7 +368,6 @@ def get_ui(resources, service_name):
             service_name, resource_name
         )
         configuration = []
-        print(service_name, resource_name, message_class)
         enum_fields = find_enum_fields_recursive(message_class)
         if enum_fields == [] or enum_fields is None:
             enums = get_resources_from_message_class(message_class)

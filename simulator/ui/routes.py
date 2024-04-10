@@ -35,6 +35,10 @@ from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
 from simulator.core.vehicle_service_utils import get_all_running_service
 
+run_directory = os.path.dirname(os.path.abspath(__file__))
+run_directory = run_directory.split(os.sep)[:-2]
+run_directory = os.sep.join(run_directory)
+
 
 @blueprint.route("/")
 def route_default():
@@ -54,7 +58,9 @@ def route_configuration():
                 deviceInfo = {
                     "Avd_name": device.shell("getprop ro.boot.qemu.avd_name"),
                     "Image": device.shell("getprop ro.product.bootimage.name"),
-                    "Build_date": device.shell("getprop ro.bootimage.build.date"),
+                    "Build_date": device.shell(
+                        "getprop ro.bootimage.build.date"
+                    ),
                     # 'Build_id': device.shell("getprop ro.bootimage.build.id"),
                     "Model": device.shell("getprop ro.product.model"),
                 }
@@ -65,18 +71,26 @@ def route_configuration():
         pass
 
     return render_template(
-        "home/configuration.html", segment=get_segment(request), deviceInfo=deviceInfo, emu_status=emu_status
+        "home/configuration.html",
+        segment=get_segment(request),
+        deviceInfo=deviceInfo,
+        emu_status=emu_status,
     )
 
 
 @blueprint.route("/pub-sub.html")
 def route_pubsub():
-    services_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
-    pubsub_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.PUB_SUB_JSON_FILE_NAME)
+    services_json_path = os.path.join(
+        run_directory,
+        CONSTANTS.UI_JSON_DIR,
+        CONSTANTS.SERVICES_JSON_FILE_NAME,
+    )
+    pubsub_json_path = os.path.join(
+        run_directory,
+        CONSTANTS.UI_JSON_DIR,
+        CONSTANTS.PUB_SUB_JSON_FILE_NAME,
+    )
 
-    if "ui_json" in os.getcwd():
-        pubsub_json_path = os.sep + CONSTANTS.PUB_SUB_JSON_FILE_NAME
-        services_json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
     f = open(pubsub_json_path)
     pubsub = json.load(f)
     f.close()
@@ -84,19 +98,27 @@ def route_pubsub():
     services = json.load(f)
     f.close()
 
-    return render_template("home/pub-sub.html", segment=get_segment(request), services=services, pubsub=pubsub, json_proto={})
+    return render_template(
+        "home/pub-sub.html",
+        segment=get_segment(request),
+        services=services,
+        pubsub=pubsub,
+        json_proto={},
+    )
 
 
 @blueprint.route("/rpc-logger.html")
 def route_rpc_logger():
     try:
-        f = open(os.path.join(os.getcwd(), CONSTANTS.FILENAME_RPC_LOGGER))
+        f = open(os.path.join(run_directory, CONSTANTS.FILENAME_RPC_LOGGER))
         data = f.read()
         f.close()
         data = f"[{data}]"
     except Exception:
         data = ""
-    return render_template("home/rpc-logger.html", rpc_calls=data, segment=get_segment(request))
+    return render_template(
+        "home/rpc-logger.html", rpc_calls=data, segment=get_segment(request)
+    )
 
 
 @blueprint.route("/downloadPubSubReport")
@@ -120,24 +142,30 @@ def download_RPC_file():
 @blueprint.route("/pubsub-logger.html")
 def route_pubsub_logger():
     try:
-        f = open(os.path.join(os.getcwd(), CONSTANTS.FILENAME_PUBSUB_LOGGER))
+        f = open(
+            os.path.join(run_directory, CONSTANTS.FILENAME_PUBSUB_LOGGER)
+        )
         data = f.read()
         f.close()
         data = f"[{data}]"
     except Exception:
 
         data = ""
-    return render_template("home/pub-sub-logger.html", data=data, segment=get_segment(request))
+    return render_template(
+        "home/pub-sub-logger.html", data=data, segment=get_segment(request)
+    )
 
 
 @blueprint.route("/send-rpc.html")
 def route_send_rpc():
-    services_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
-    rpc_json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.RPC_JSON_FILE_NAME)
-
-    if "ui_json" in os.getcwd():
-        rpc_json_path = os.sep + CONSTANTS.RPC_JSON_FILE_NAME
-        services_json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
+    services_json_path = os.path.join(
+        run_directory,
+        CONSTANTS.UI_JSON_DIR,
+        CONSTANTS.SERVICES_JSON_FILE_NAME,
+    )
+    rpc_json_path = os.path.join(
+        run_directory, CONSTANTS.UI_JSON_DIR, CONSTANTS.RPC_JSON_FILE_NAME
+    )
 
     f = open(rpc_json_path)
     rpcs = json.load(f)
@@ -146,12 +174,19 @@ def route_send_rpc():
     services = json.load(f)
     f.close()
 
-    return render_template("home/send-rpc.html", segment=get_segment(request), services=services, rpcs=rpcs)
+    return render_template(
+        "home/send-rpc.html",
+        segment=get_segment(request),
+        services=services,
+        rpcs=rpcs,
+    )
 
 
 @blueprint.route("/mockservice.html")
 def route_mockservices():
-    return render_template("home/mockservice.html", segment=get_segment(request))
+    return render_template(
+        "home/mockservice.html", segment=get_segment(request)
+    )
 
 
 # Helper - Extract current page name from request
@@ -187,20 +222,31 @@ def getconfiguration():
 @blueprint.route("/getmockservices")
 def get_mock_services():
     mockservice_pkgs = []
-    json_path = os.path.join(os.getcwd(), CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
-    if "ui_json" in os.getcwd():
-        json_path = os.sep + CONSTANTS.SERVICES_JSON_FILE_NAME
+    json_path = os.path.join(
+        run_directory,
+        CONSTANTS.UI_JSON_DIR,
+        CONSTANTS.SERVICES_JSON_FILE_NAME,
+    )
+
     f = open(json_path)
     mockservices = json.load(f)
     f.close()
     for m in mockservices:
-        if m["name"] not in ["core.udiscovery", "core.utelemetry", "core.usubscription"]:
+        if m["name"] not in [
+            "core.udiscovery",
+            "core.utelemetry",
+            "core.usubscription",
+        ]:
             pkgs = {"entity": m["name"], "name": m["display_name"]}
             mockservice_pkgs.append(pkgs)
 
     running_services = get_all_running_service()
 
-    return {"result": True, "pkgs_mock": mockservice_pkgs, "running": running_services}
+    return {
+        "result": True,
+        "pkgs_mock": mockservice_pkgs,
+        "running": running_services,
+    }
 
 
 @blueprint.route("/updateservicestatus")

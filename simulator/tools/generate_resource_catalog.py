@@ -30,7 +30,7 @@ import json
 import os
 import pkgutil
 
-from target import protofiles as proto
+from simulator.target import protofiles as proto
 
 from simulator.utils.constant import (
     RESOURCE_CATALOG_DIR,

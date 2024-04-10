@@ -76,7 +76,7 @@ python3 setup_simulator.py
 This script automates the following tasks:
 
 1. **Cloning and Compilation of Protos:**
-   Clones the `covesa` protos from the specified repository URL, compiles them, and generates Python protofiles in the target folder.
+   Clones the `covesa` protos from the specified repository URL, compiles them, and generates Python protofiles in the simulator/target folder.
 
 2. **Resource Catalog Generation:**
    Iterates through all protofiles to create a resource catalog in the target folder.
@@ -95,7 +95,7 @@ To start and use the `up-simulator`, follow the steps below:
 +
 [source]
 ----
-python3 run.py
+python3 simulator/run.py
 ----
 
 . On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it  supports only Android.
