@@ -30,6 +30,8 @@ import json
 import os
 import pkgutil
 
+from google._upb._message import RepeatedCompositeContainer
+
 from simulator.target import protofiles as proto
 
 from simulator.utils.constant import (
@@ -106,6 +108,8 @@ def get_protobuf_descriptor_data():
                     else:
                         if field.name == "version_major":
                             version = value
+                        if isinstance(value, RepeatedCompositeContainer):
+                            continue
                         properties.append({"name": field.name, "value": value})
                 service_json["node"] = create_service_json(service_name, version, service_id, properties)
 
