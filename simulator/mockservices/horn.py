@@ -5,11 +5,11 @@
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from simulator.utils.constant import KEY_URI_PREFIX
-from target.protofiles.vehicle.body.horn.v1.horn_service_pb2 import (
+from simulator.target.protofiles.vehicle.body.horn.v1.horn_service_pb2 import (
     ActivateHornRequest,
     DeactivateHornRequest,
 )
-from target.protofiles.vehicle.body.horn.v1.horn_topics_pb2 import HornStatus
+from simulator.target.protofiles.vehicle.body.horn.v1.horn_topics_pb2 import HornStatus
 
 
 class HornService(BaseService):

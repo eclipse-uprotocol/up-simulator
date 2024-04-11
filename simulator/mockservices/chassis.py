@@ -26,10 +26,10 @@
 
 import re
 
-from target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (
+from simulator.target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (
     UpdateTireRequest,
 )
-from target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (
+from simulator.target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (
     Tire,
 )
 from uprotocol.proto.umessage_pb2 import UMessage

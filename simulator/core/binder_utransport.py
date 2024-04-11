@@ -32,7 +32,9 @@ from builtins import str
 from concurrent.futures import Future
 from sys import platform
 
-from uprotocol.cloudevent.serialize.base64protobufserializer import Base64ProtobufSerializer
+from uprotocol.cloudevent.serialize.base64protobufserializer import (
+    Base64ProtobufSerializer,
+)
 from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.proto.uattributes_pb2 import UMessageType, UPriority
 from uprotocol.proto.umessage_pb2 import UMessage
@@ -55,14 +57,16 @@ from simulator.utils.constant import REPO_URL
 m_requests = {}
 subscribers = {}  # remove element when ue unregister it
 MAX_MESSAGE_SIZE = 32767
-RESPONSE_URI = UUri(entity=UEntity(name="simulator.proxy", version_major=1), resource=UResourceBuilder.for_rpc_response())
+RESPONSE_URI = UUri(
+    entity=UEntity(name="simulator.proxy", version_major=1),
+    resource=UResourceBuilder.for_rpc_response(),
+)
 
 
 # Function to add a request
 def add_request(req_id: str):
     global m_requests
     future = Future()
-    print('Neel', req_id)
     m_requests[req_id] = future
     return future
 
@@ -71,7 +75,14 @@ def timeout_counter(response_future, reqid, timeout):
     time.sleep(timeout / 1000)
     if not response_future.done():
         response_future.set_exception(
-            TimeoutError('Not received response for request ' + reqid + ' within ' + str(timeout / 1000) + ' seconds'))
+            TimeoutError(
+                "Not received response for request "
+                + reqid
+                + " within "
+                + str(timeout / 1000)
+                + " seconds"
+            )
+        )
 
 
 class SocketClient:
@@ -100,9 +111,11 @@ class SocketClient:
         return cls._instance
 
     def __init__(self):
-        if not hasattr(self, 'initialized'):
-            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.server_address = ('127.0.0.1', 6095)
+        if not hasattr(self, "initialized"):
+            self.client_socket = socket.socket(
+                socket.AF_INET, socket.SOCK_STREAM
+            )
+            self.server_address = ("127.0.0.1", 6095)
             self.connected = False
             self.initialized = True
             self._subscribe_callbacks = {}
@@ -119,7 +132,9 @@ class SocketClient:
                     self.received_data = None
                     return data
             if time.time() - start_time > 11:
-                return UStatus(code=UCode.UNKNOWN, message="Error: Timeout reached")
+                return UStatus(
+                    code=UCode.UNKNOWN, message="Error: Timeout reached"
+                )
             time.sleep(0.1)  # Adjust sleep time as needed to reduce CPU load
 
     def handle_received_data(self, data):
@@ -129,16 +144,18 @@ class SocketClient:
     def connect(self):
         try:
             if not self.connected:
-                self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.client_socket = socket.socket(
+                    socket.AF_INET, socket.SOCK_STREAM
+                )
                 self.client_socket.connect(self.server_address)
                 self.connected = True
-                print('socket connected')
+                print("socket connected")
                 receive_thread = threading.Thread(target=self.__receive_data)
                 receive_thread.start()
                 time.sleep(2)
         except Exception:
             log = traceback.format_exc()
-            print('connect method exception', log)
+            print("connect method exception", log)
             pass
 
     def __receive_data(self):
@@ -147,7 +164,9 @@ class SocketClient:
         while self.connected:
             try:
                 if platform == "linux" or platform == "linux2":
-                    received_data = self.client_socket.recv(MAX_MESSAGE_SIZE, socket.MSG_DONTWAIT)
+                    received_data = self.client_socket.recv(
+                        MAX_MESSAGE_SIZE, socket.MSG_DONTWAIT
+                    )
                 else:
                     received_data = self.client_socket.recv(MAX_MESSAGE_SIZE)
                 for formatted_data in received_data.splitlines():
@@ -156,63 +175,104 @@ class SocketClient:
                         BUFFER_FLAG = False
                     else:
                         buffered_data = formatted_data
-                    if formatted_data != '':
-                        data = formatted_data.decode('utf-8')
+                    if formatted_data != "":
+                        data = formatted_data.decode("utf-8")
 
                         json_data = json.loads(data)
-                        if 'action' in json_data:
-                            action = json_data['action']
-                            serialized_data = Base64ProtobufSerializer().serialize(json_data['data'])
+                        if "action" in json_data:
+                            action = json_data["action"]
+                            serialized_data = (
+                                Base64ProtobufSerializer().serialize(
+                                    json_data["data"]
+                                )
+                            )
 
                             if action in ["topic_update", "rpc_request"]:
                                 parsed_message = UMessage()
                                 parsed_message.ParseFromString(serialized_data)
                                 if action == "topic_update":
-                                    uri_str = LongUriSerializer().serialize(parsed_message.attributes.source)
+                                    uri_str = LongUriSerializer().serialize(
+                                        parsed_message.attributes.source
+                                    )
 
                                     if uri_str in self.subscribe_callbacks:
-                                        callbacks = self.subscribe_callbacks[uri_str]
+                                        callbacks = self.subscribe_callbacks[
+                                            uri_str
+                                        ]
                                         for callback in callbacks:
                                             callback.on_receive(parsed_message)
                                     else:
-                                        print(f'No callback registered for uri: {uri_str}. Discarding!')
+                                        print(
+                                            f"No callback registered for uri: {uri_str}. Discarding!"
+                                        )
                                 else:
-                                    uri_str = LongUriSerializer().serialize(parsed_message.attributes.sink)
+                                    uri_str = LongUriSerializer().serialize(
+                                        parsed_message.attributes.sink
+                                    )
                                     if uri_str in self.rpc_request_callbacks:
-                                        callback = self.rpc_request_callbacks[uri_str]
+                                        callback = self.rpc_request_callbacks[
+                                            uri_str
+                                        ]
                                         callback.on_receive(parsed_message)
                                     else:
-                                        print(f'No callback registered for uri: {uri_str}. Discarding!')
+                                        print(
+                                            f"No callback registered for uri: {uri_str}. Discarding!"
+                                        )
 
-                            elif action in ["publish_status", "subscribe_status", "register_rpc_status",
-                                            "send_rpc_status"]:
+                            elif action in [
+                                "publish_status",
+                                "subscribe_status",
+                                "register_rpc_status",
+                                "send_rpc_status",
+                            ]:
                                 parsed_message = UStatus()
                                 parsed_message.ParseFromString(serialized_data)
                                 self.handle_received_data(parsed_message)
                             elif action == "rpc_response":
                                 parsed_message = UMessage()
                                 parsed_message.ParseFromString(serialized_data)
-                                req_id = LongUuidSerializer.instance().serialize(parsed_message.attributes.reqid)
+                                req_id = (
+                                    LongUuidSerializer.instance().serialize(
+                                        parsed_message.attributes.reqid
+                                    )
+                                )
                                 future_result = m_requests[req_id]
                                 if not future_result.done():
                                     future_result.set_result(parsed_message)
                                 else:
-                                    print("Future result state is already finished or cancelled")
+                                    print(
+                                        "Future result state is already finished or cancelled"
+                                    )
                                 m_requests.pop(req_id)
 
                             elif action in ["create_topic_status"]:
-                                print('create topic status called')
+                                print("create topic status called")
 
                                 parsed_message = UStatus()
                                 parsed_message.ParseFromString(serialized_data)
-                                topic_uri_str = json_data['topic']
-                                if topic_uri_str in self._create_topic_status_callbacks:
-                                    print(f'create topic status called {topic_uri_str}')
-                                    callbacks = self._create_topic_status_callbacks[topic_uri_str]
+                                topic_uri_str = json_data["topic"]
+                                if (
+                                    topic_uri_str
+                                    in self._create_topic_status_callbacks
+                                ):
+                                    print(
+                                        f"create topic status called {topic_uri_str}"
+                                    )
+                                    callbacks = (
+                                        self._create_topic_status_callbacks[
+                                            topic_uri_str
+                                        ]
+                                    )
                                     for callback in callbacks:
-                                        callback(topic_uri_str, parsed_message.code, parsed_message.message)
+                                        callback(
+                                            topic_uri_str,
+                                            parsed_message.code,
+                                            parsed_message.message,
+                                        )
                                 else:
-                                    print(f'No create topic callback registered for uri: {topic_uri_str}. Discarding!')
+                                    print(
+                                        f"No create topic callback registered for uri: {topic_uri_str}. Discarding!"
+                                    )
 
                         print(f"Received from server: {json_data}")
             except (socket.timeout, OSError):
@@ -223,14 +283,14 @@ class SocketClient:
     def send_data(self, message):
 
         try:
-            self.client_socket.sendall(message.encode('utf-8'))
+            self.client_socket.sendall(message.encode("utf-8"))
             return True
 
         except Exception:
             self.disconnect()
             self.connect()
             try:
-                self.client_socket.sendall(message.encode('utf-8'))
+                self.client_socket.sendall(message.encode("utf-8"))
                 return True
             except Exception:
                 return False
@@ -264,23 +324,33 @@ class AndroidBinder(UTransport, RpcClient):
     def start_service(self, entity) -> bool:
         # write data to socket, this action will start the android mock service and create all topics
         json_map = {"action": "start_service", "data": entity}
-        message_to_send = json.dumps(json_map) + '\n'
+        message_to_send = json.dumps(json_map) + "\n"
         return self.client.send_data(message_to_send)
 
     def create_topic(self, entity, topics, status_callback):
-        print('create topic called')
-        self.client.register_create_topic_status_callback(topics, status_callback)
+        self.client.register_create_topic_status_callback(
+            topics, status_callback
+        )
         json_map = {"action": "create_topic", "data": entity, "topics": topics}
-        message_to_send = json.dumps(json_map) + '\n'
+        message_to_send = json.dumps(json_map) + "\n"
         return self.client.send_data(message_to_send)
 
-    def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
+    def unregister_listener(self, uri: UUri, listener: UListener) -> UStatus:
+        uri.entity.ClearField("id")
+        uri.entity.ClearField("version_minor")
         pass
 
     def send(self, umsg: UMessage) -> UStatus:
         global json_map
         self.client.connect()
-        message_str = Base64ProtobufSerializer().deserialize(umsg.SerializeToString())
+        umsg.attributes.source.entity.ClearField("id")
+        umsg.attributes.source.entity.ClearField("version_minor")
+        if umsg.attributes.HasField("sink"):
+            umsg.attributes.sink.entity.ClearField("id")
+            umsg.attributes.sink.entity.ClearField("version_minor")
+        message_str = Base64ProtobufSerializer().deserialize(
+            umsg.SerializeToString()
+        )
         attributes = umsg.attributes
         topic = attributes.source
         # validate attributes
@@ -306,12 +376,14 @@ class AndroidBinder(UTransport, RpcClient):
 
         try:
             # write data to socket
-            message_to_send = json.dumps(json_map) + '\n'
+            message_to_send = json.dumps(json_map) + "\n"
             self.client.send_data(message_to_send)
             received_data = None
             if attributes.type in [UMessageType.UMESSAGE_TYPE_PUBLISH]:
                 # Wait for data to be received from the socket
-                received_data = UStatus(message="Successfully publish", code=UCode.OK)  # self.client.receive_data()
+                received_data = UStatus(
+                    message="Successfully publish", code=UCode.OK
+                )  # self.client.receive_data()
             return received_data
 
         except Exception as e:
@@ -319,7 +391,11 @@ class AndroidBinder(UTransport, RpcClient):
 
     def register_listener(self, uri: UUri, listener: UListener) -> UStatus:
         self.client.connect()
-        uri_str = Base64ProtobufSerializer().deserialize(uri.SerializeToString())
+        uri.entity.ClearField("id")
+        uri.entity.ClearField("version_minor")
+        uri_str = Base64ProtobufSerializer().deserialize(
+            uri.SerializeToString()
+        )
 
         try:
             uri_key = LongUriSerializer().serialize(uri)
@@ -327,14 +403,14 @@ class AndroidBinder(UTransport, RpcClient):
                 self.__add_rpc_request_callback(uri_key, listener)
                 # write data to socket
                 json_map = {"action": "register_rpc", "data": uri_str}
-                print('register rpc for ', uri)
+                print("register rpc for ", uri)
             else:
                 self.__add_subscribe_callback(uri_key, listener)
                 # write data to socket
                 json_map = {"action": "subscribe", "data": uri_str}
-                print('subscribe to ', uri)
+                print("subscribe to ", uri)
 
-            message_to_send = json.dumps(json_map) + '\n'
+            message_to_send = json.dumps(json_map) + "\n"
             self.client.send_data(message_to_send)
             # Wait for data to be received from the socket
             received_data = self.client.receive_data()
@@ -342,7 +418,9 @@ class AndroidBinder(UTransport, RpcClient):
         except Exception as e:
             return UStatus(message=str(e), code=UCode.UNKNOWN)
 
-    def invoke_method(self, method_uri: UUri, payload: UPayload, calloptions: CallOptions) -> Future:
+    def invoke_method(
+        self, method_uri: UUri, payload: UPayload, calloptions: CallOptions
+    ) -> Future:
 
         if method_uri is None or method_uri == UUri():
             raise Exception("Method Uri is empty")
@@ -354,7 +432,9 @@ class AndroidBinder(UTransport, RpcClient):
         if timeout <= 0:
             raise Exception("TTl is invalid or missing")
 
-        attributes = UAttributesBuilder.request(RESPONSE_URI, method_uri, UPriority.UPRIORITY_CS4, timeout).build()
+        attributes = UAttributesBuilder.request(
+            RESPONSE_URI, method_uri, UPriority.UPRIORITY_CS4, timeout
+        ).build()
         if "COVESA" not in REPO_URL:
             attributes.id.MergeFrom(Factories.UUIDV6.create())
         # check message type,id and ttl

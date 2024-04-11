@@ -4,8 +4,8 @@
 
 import re
 
-from target.protofiles.vehicle.v1.vehicle_service_pb2 import ResetTripMeterRequest, SetTransportModeRequest
-from target.protofiles.vehicle.v1.vehicle_topics_pb2 import TripMeter, VehicleUsage
+from simulator.target.protofiles.vehicle.v1.vehicle_service_pb2 import ResetTripMeterRequest, SetTransportModeRequest
+from simulator.target.protofiles.vehicle.v1.vehicle_topics_pb2 import TripMeter, VehicleUsage
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 

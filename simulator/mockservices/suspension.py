@@ -4,8 +4,8 @@
 
 import re
 
-from target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import SetRideHeightRequest
-from target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import RideHeight, RideHeightSystemStatus
+from simulator.target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import SetRideHeightRequest
+from simulator.target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import RideHeight, RideHeightSystemStatus
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 

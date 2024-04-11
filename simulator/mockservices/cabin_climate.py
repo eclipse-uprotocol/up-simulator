@@ -32,8 +32,8 @@ from google.protobuf.json_format import MessageToDict
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from simulator.utils.constant import KEY_URI_PREFIX
-from target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
-from target.protofiles.vehicle.body.cabin_climate.v1.cabin_climate_service_pb2 import (
+from simulator.target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
+from simulator.target.protofiles.vehicle.body.cabin_climate.v1.cabin_climate_service_pb2 import (
     SetTemperatureRequest,
     SetFanRequest,
     SetAirDistributionRequest,

@@ -32,16 +32,25 @@ import subprocess
 import git
 from git import Repo
 
-from simulator.utils.constant import PROTO_OUTPUT_DIR, REPO_URL, PROTO_REPO_DIR
+from simulator.utils.constant import (
+    PROTO_OUTPUT_DIR,
+    REPO_URL,
+    PROTO_REPO_DIR,
+    TAG_NAME,
+)
 
 
 def clone_or_pull(repo_url, PROTO_REPO_DIR):
     try:
-        Repo.clone_from(repo_url, PROTO_REPO_DIR)
-        print(f"Repository cloned successfully from {repo_url} to {PROTO_REPO_DIR}")
+        repo = Repo.clone_from(repo_url, PROTO_REPO_DIR)
+        print(
+            f"Repository cloned successfully from {repo_url} to {PROTO_REPO_DIR}"
+        )
+        # Checkout the specific tag
+        repo.git.checkout(TAG_NAME)
     except git.exc.GitCommandError:
         try:
-            git_pull_command = ["git", "pull"]
+            git_pull_command = ["git", "pull", "origin", TAG_NAME]
             subprocess.run(git_pull_command, cwd=PROTO_REPO_DIR, check=True)
             print("Git pull successful after clone failure.")
         except subprocess.CalledProcessError as pull_error:
@@ -50,8 +59,14 @@ def clone_or_pull(repo_url, PROTO_REPO_DIR):
 
 def execute_maven_command(project_dir, command):
     try:
-        with subprocess.Popen(command, cwd=os.path.join(os.getcwd(), project_dir), shell=True, stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE, text=True) as process:
+        with subprocess.Popen(
+            command,
+            cwd=os.path.join(os.getcwd(), project_dir),
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        ) as process:
             stdout, stderr = process.communicate()
             print(stdout)
 
@@ -59,22 +74,30 @@ def execute_maven_command(project_dir, command):
                 print(f"Error: {stderr}")
             else:
                 print("Maven command executed successfully.")
-                src_directory = os.path.join(os.getcwd(), project_dir, "target", "generated-sources", "protobuf",
-                                             "python")
+                src_directory = os.path.join(
+                    os.getcwd(),
+                    project_dir,
+                    "target",
+                    "generated-sources",
+                    "protobuf",
+                    "python",
+                )
 
-                shutil.copytree(src_directory, PROTO_OUTPUT_DIR, dirs_exist_ok=True)
+                shutil.copytree(
+                    src_directory, PROTO_OUTPUT_DIR, dirs_exist_ok=True
+                )
                 process_python_protofiles(PROTO_OUTPUT_DIR)
     except Exception as e:
         print(f"Error executing Maven command: {e}")
 
 
 def replace_in_file(file_path, search_pattern, replace_pattern):
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         file_content = file.read()
 
     updated_content = re.sub(search_pattern, replace_pattern, file_content)
 
-    with open(file_path, 'w') as file:
+    with open(file_path, "w") as file:
         file.write(updated_content)
 
 
@@ -82,16 +105,38 @@ def process_python_protofiles(directory):
     for root, dirs, files in os.walk(directory):
         create_init_py(root)
         for file in files:
-            if file.endswith('.py'):
+            if file.endswith(".py"):
                 file_path = os.path.join(root, file)
-                replace_in_file(file_path, r'from vehicle', 'from simulator.target.protofiles.vehicle')
-                replace_in_file(file_path, r'from example', 'from simulator.target.protofiles.example')
-                replace_in_file(file_path, r'from common', 'from simulator.target.protofiles.common')
-                replace_in_file(file_path, r'import uservices_options_pb2',
-                                'import simulator.target.protofiles.uservices_options_pb2')
-                replace_in_file(file_path, r'import units_pb2', 'import simulator.target.protofiles.units_pb2')
-                replace_in_file(file_path, r'import uprotocol_options_pb2',
-                                'import uprotocol.proto.uprotocol_options_pb2')
+                replace_in_file(
+                    file_path,
+                    r"from vehicle",
+                    "from simulator.target.protofiles.vehicle",
+                )
+                replace_in_file(
+                    file_path,
+                    r"from example",
+                    "from simulator.target.protofiles.example",
+                )
+                replace_in_file(
+                    file_path,
+                    r"from common",
+                    "from simulator.target.protofiles.common",
+                )
+                replace_in_file(
+                    file_path,
+                    r"import uservices_options_pb2",
+                    "import simulator.target.protofiles.uservices_options_pb2",
+                )
+                replace_in_file(
+                    file_path,
+                    r"import units_pb2",
+                    "import simulator.target.protofiles.units_pb2",
+                )
+                replace_in_file(
+                    file_path,
+                    r"import uprotocol_options_pb2",
+                    "import uprotocol.proto.uprotocol_options_pb2",
+                )
 
 
 def create_init_py(directory):

@@ -27,7 +27,7 @@
 
 from simulator.core.abstract_service import BaseService
 
-from target.protofiles.vehicle.body.mirrors.v1.mirrors_service_pb2 import (
+from simulator.target.protofiles.vehicle.body.mirrors.v1.mirrors_service_pb2 import (
     SlideSideMirrorRequest,
     FoldSideMirrorRequest,
     UnfoldSideMirrorRequest,

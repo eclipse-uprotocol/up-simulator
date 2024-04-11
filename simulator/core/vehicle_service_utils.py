@@ -98,6 +98,10 @@ def start_service(entity, callback):
         from simulator.mockservices.vehicle import VehicleService
 
         service = VehicleService(callback)
+    elif entity == "body.seating":
+        from simulator.mockservices.seating import SeatingService
+
+        service = SeatingService(callback)
 
     if service is not None:
         service.start()
