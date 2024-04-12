@@ -31,9 +31,9 @@ from urllib.parse import unquote
 from flask import redirect, url_for, render_template, request, send_file
 
 import simulator.utils.constant as CONSTANTS
+from simulator.core.vehicle_service_utils import get_all_running_service
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
-from simulator.core.vehicle_service_utils import get_all_running_service
 
 run_directory = os.path.dirname(os.path.abspath(__file__))
 run_directory = run_directory.split(os.sep)[:-2]
@@ -110,7 +110,7 @@ def route_pubsub():
 @blueprint.route("/rpc-logger.html")
 def route_rpc_logger():
     try:
-        f = open(os.path.join(run_directory, CONSTANTS.FILENAME_RPC_LOGGER))
+        f = open(os.path.join(run_directory, "simulator", CONSTANTS.FILENAME_RPC_LOGGER))
         data = f.read()
         f.close()
         data = f"[{data}]"
@@ -143,7 +143,7 @@ def download_RPC_file():
 def route_pubsub_logger():
     try:
         f = open(
-            os.path.join(run_directory, CONSTANTS.FILENAME_PUBSUB_LOGGER)
+            os.path.join(run_directory, "simulator", CONSTANTS.FILENAME_PUBSUB_LOGGER)
         )
         data = f.read()
         f.close()
