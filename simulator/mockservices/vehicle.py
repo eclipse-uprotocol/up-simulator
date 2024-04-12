@@ -4,8 +4,8 @@
 
 import re
 
-from target.protofiles.vehicle.v1.vehicle_service_pb2 import ResetTripMeterRequest, SetTransportModeRequest
-from target.protofiles.vehicle.v1.vehicle_topics_pb2 import TripMeter, VehicleUsage
+from simulator.target.protofiles.vehicle.v1.vehicle_service_pb2 import ResetTripMeterRequest, SetTransportModeRequest
+from simulator.target.protofiles.vehicle.v1.vehicle_topics_pb2 import TripMeter, VehicleUsage
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
@@ -36,9 +36,9 @@ class VehicleService(BaseService):
         super().start_rpc_service()
         self.subscribe(
             [
-                KEY_URI_PREFIX + ":/vehicle/1/trip_meter.trip_1#TripMeter",
-                KEY_URI_PREFIX + ":/vehicle/1/trip_meter.trip_2#TripMeter",
-                KEY_URI_PREFIX + ":/vehicle/1/vehicle_usage.transport_mode#VehicleUsage",
+                KEY_URI_PREFIX + "/vehicle/1/trip_meter.trip_1#TripMeter",
+                KEY_URI_PREFIX + "/vehicle/1/trip_meter.trip_2#TripMeter",
+                KEY_URI_PREFIX + "/vehicle/1/vehicle_usage.transport_mode#VehicleUsage",
             ],
             VehiclePreconditions(self),
         )
@@ -153,11 +153,11 @@ class VehicleService(BaseService):
         if isinstance(request, ResetTripMeterRequest):
             # get trip_meter key from value, expecting 0 - trip_1 or 1 - trip_2
             trip_val = list(TripMeter.Resources.keys())[list(TripMeter.Resources.values()).index(request.trip_meter)]
-            topic = KEY_URI_PREFIX + ":/vehicle/1/trip_meter." + trip_val + "#TripMeter"
+            topic = KEY_URI_PREFIX + "/vehicle/1/trip_meter." + trip_val + "#TripMeter"
             self.publish(topic, self.state[trip_val], True)
 
         if isinstance(request, SetTransportModeRequest):
-            topic = KEY_URI_PREFIX + ":/vehicle/1/vehicle_usage.transport_mode#VehicleUsage"
+            topic = KEY_URI_PREFIX + "/vehicle/1/vehicle_usage.transport_mode#VehicleUsage"
             self.publish(topic, self.state, True)
 
         return True

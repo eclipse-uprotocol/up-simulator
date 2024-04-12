@@ -33,10 +33,11 @@ import traceback
 from flask_socketio import SocketIO
 from google.protobuf import any_pb2
 from google.protobuf.json_format import MessageToDict
+from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.upayload_pb2 import UPayloadFormat
-from uprotocol.rpc.calloptions import CallOptions
+from uprotocol.proto.uri_pb2 import UResource
 from uprotocol.rpc.rpcmapper import RpcMapper
 from uprotocol.transport.ulistener import UListener
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
@@ -44,86 +45,11 @@ from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 import simulator.ui.utils.common_handlers as Handlers
 import simulator.utils.constant as CONSTANTS
 from simulator.core import protobuf_autoloader
+from simulator.core.vehicle_service_utils import get_service_instance_from_entity, \
+    get_entity_from_descriptor, start_service
 from simulator.utils.common_util import verify_all_checks
 
 logger = logging.getLogger("Simulator")
-
-mock_entity = []
-
-
-def start_service(entity, callback):
-    global service
-
-    if entity == "chassis.braking":
-        from simulator.mockservices.braking import BrakingService
-
-        service = BrakingService(callback)
-    elif entity == "body.cabin_climate":
-        from simulator.mockservices.cabin_climate import CabinClimateService
-
-        service = CabinClimateService(callback)
-    elif entity == "chassis":
-        from simulator.mockservices.chassis import ChassisService
-
-        service = ChassisService(callback)
-    elif entity == "propulsion.engine":
-        from simulator.mockservices.engine import EngineService
-
-        service = EngineService(callback)
-    elif entity == "vehicle.exterior":
-        from simulator.mockservices.exterior import VehicleExteriorService
-
-        service = VehicleExteriorService(callback)
-    elif entity == "example.hello_world":
-        from simulator.mockservices.hello_world import HelloWorldService
-
-        service = HelloWorldService(callback)
-    elif entity == "body.horn":
-        from simulator.mockservices.horn import HornService
-
-        service = HornService(callback)
-    elif entity == "body.mirrors":
-        from simulator.mockservices.mirrors import BodyMirrorsService
-
-        service = BodyMirrorsService(callback)
-    elif entity == "chassis.suspension":
-        from simulator.mockservices.suspension import SuspensionService
-
-        service = SuspensionService(callback)
-    elif entity == "propulsion.transmission":
-        from simulator.mockservices.transmission import TransmissionService
-
-        service = TransmissionService(callback)
-    elif entity == "vehicle":
-        from simulator.mockservices.vehicle import VehicleService
-
-        service = VehicleService(callback)
-
-    if service is not None:
-        service.start()
-        mock_entity.append({"name": entity, "entity": service})
-
-
-def stop_service(name):
-    for index, entity_dict in enumerate(mock_entity):
-        if entity_dict.get("name") == name:
-            entity_dict.get("entity").disconnect()
-            mock_entity.pop(index)
-            break
-
-
-def get_service_instance_from_entity(name):
-    for index, entity_dict in enumerate(mock_entity):
-        if entity_dict.get("name") == name:
-            return entity_dict.get("entity")
-    return None
-
-
-def get_all_running_service():
-    running_service = []
-    for index, entity_dict in enumerate(mock_entity):
-        running_service.append(entity_dict.get("name"))
-    return running_service
 
 
 class SocketUtility:
@@ -174,10 +100,17 @@ class SocketUtility:
                     format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF,
                 )
                 method_uri = LongUriSerializer().deserialize(method_uri)
+                method_uri.entity.MergeFrom(get_entity_from_descriptor(
+                    protobuf_autoloader.entity_descriptor[method_uri.entity.name]))
 
-                res_future = self.transport_layer.invoke_method(
-                    method_uri, payload, CallOptions(timeout=15000)
-                )
+                method_uri.resource.MergeFrom(UResource(
+                    id=protobuf_autoloader.get_method_id_from_method_name(
+                        method_uri.entity.name,
+                        method_uri.resource.instance)))
+                res_future = self.transport_layer.invoke_method(method_uri,
+                                                                payload,
+                                                                CallOptions(
+                                                                    ttl=15000))
                 sent_data = MessageToDict(message)
 
                 message = "Successfully send rpc request for " + methodname
@@ -305,6 +238,11 @@ class SocketUtility:
                 # if self.oldtopic != '':
                 #     self.bus_obj_subscribe.unsubscribe(self.oldtopic, self.common_unsubscribe_status_handler)
                 new_topic = LongUriSerializer().deserialize(topic)
+                new_topic.entity.MergeFrom(get_entity_from_descriptor(
+                    protobuf_autoloader.entity_descriptor[new_topic.entity.name]))
+                new_topic.resource.MergeFrom(UResource(
+                    id=protobuf_autoloader.get_topic_id_from_topicuri(topic)))
+
                 status = self.transport_layer.register_listener(
                     new_topic,
                     SubscribeUListener(
@@ -358,7 +296,8 @@ class SubscribeUListener(UListener):
         return cls._instance
 
     def __init__(
-        self, socketio: SocketIO, utransport: str, lock_pubsub: threading.Lock
+        self, socketio: SocketIO, utransport: str,
+        lock_pubsub: threading.Lock
     ):
         if not self._initialized:
             self.__socketio = socketio

@@ -26,12 +26,11 @@
 
 from concurrent.futures import Future
 
+from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.proto.uri_pb2 import UEntity
 from uprotocol.proto.uri_pb2 import UUri
 from uprotocol.proto.ustatus_pb2 import UStatus
-from uprotocol.rpc.calloptions import CallOptions
 from uprotocol.transport.ulistener import UListener
 
 from simulator.core.binder_utransport import AndroidBinder
@@ -51,14 +50,14 @@ class TransportLayer:
             # Initialize the singleton instance
             self._initialized = True
             self.__instance = None
-            self.__ZENOH_IP = '10.0.3.3'
+            self.__ZENOH_IP = "10.0.3.3"
             self.__ZENOH_PORT = 9090
             self.__utransport = "BINDER"
             self._update_instance()
 
     def set_transport(self, transport: str):
         if self.__utransport != transport:
-            print('set transport, previous is', self.__utransport, 'current is', transport)
+            print("set transport, previous is", self.__utransport, "current is", transport)
             self.__utransport = transport
             self._update_instance()
 
@@ -78,9 +77,6 @@ class TransportLayer:
     def invoke_method(self, topic: UUri, payload: UPayload, calloptions: CallOptions) -> Future:
         return self.__instance.invoke_method(topic, payload, calloptions)
 
-    def authenticate(self, u_entity: UEntity) -> UStatus:
-        return self.__instance.authenticate(u_entity)
-
     def send(self, umessage: UMessage) -> UStatus:
         return self.__instance.send(umessage)
 
@@ -89,9 +85,6 @@ class TransportLayer:
 
     def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
         return self.__instance.unregister_listener(topic, listener)
-
-    def register_rpc_listener(self, topic: UUri, listener: UListener) -> UStatus:
-        return self.__instance.register_rpc_listener(topic, listener)
 
     def start_service(self, entity) -> bool:
         if self.__utransport == "BINDER":

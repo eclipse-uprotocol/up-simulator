@@ -7,7 +7,6 @@
 .vscode
 .coverage
 *.txt
-target
-simulator/tools/mock_service_generator
+simulator/target
+simulator/oem_mockservices
 *.sh
-Dockerfile

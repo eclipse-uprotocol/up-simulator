@@ -26,14 +26,15 @@
 
 import re
 
-from target.protofiles.common.health_state_pb2 import HealthState
-from target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, ManageHealthMonitoringRequest
-from target.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
+from simulator.target.protofiles.common.health_state_pb2 import HealthState
+from simulator.target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, \
+    ManageHealthMonitoringRequest
+from simulator.target.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
 from simulator.utils.constant import KEY_URI_PREFIX
 
 
@@ -58,8 +59,8 @@ class BrakingService(BaseService):
         super().start_rpc_service()
         self.subscribe(
             [
-                KEY_URI_PREFIX + ":/chassis.braking/1/brake_pads.front#BrakePads",
-                KEY_URI_PREFIX + ":/chassis.braking/1/brake_pads.rear#BrakePads",
+                KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.front#BrakePads",
+                KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.rear#BrakePads",
             ],
             BrakingPreconditions(self),
         )
@@ -189,7 +190,7 @@ class BrakingService(BaseService):
             request(protobuf): the protobuf containing the rpc request
         """
         # publish brake info based on current state
-        topic_prefix = KEY_URI_PREFIX + ":/chassis.braking/1/"
+        topic_prefix = KEY_URI_PREFIX + "/chassis.braking/1/"
 
         if isinstance(request, ResetHealthRequest):
             topic = topic_prefix + request.name + "#BrakePads"

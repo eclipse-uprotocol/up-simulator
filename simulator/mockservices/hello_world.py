@@ -33,7 +33,7 @@ from google.type.timeofday_pb2 import TimeOfDay
 
 from simulator.core.abstract_service import BaseService
 from simulator.utils.constant import KEY_URI_PREFIX
-from target.protofiles.example.hello_world.v1.hello_world_topics_pb2 import Timer
+from simulator.target.protofiles.example.hello_world.v1.hello_world_topics_pb2 import Timer
 
 
 class HelloWorldService(BaseService):
@@ -102,8 +102,8 @@ class HelloWorldService(BaseService):
         """
         # Create a TimeOfDay instance
         time_of_day = TimeOfDay()
-        one_sec_topic = KEY_URI_PREFIX + ":/example.hello_world/1/one_second#Timer"
-        one_min_topic = KEY_URI_PREFIX + ":/example.hello_world/1/one_minute#Timer"
+        one_sec_topic = KEY_URI_PREFIX + "/example.hello_world/1/one_second#Timer"
+        one_min_topic = KEY_URI_PREFIX + "/example.hello_world/1/one_minute#Timer"
 
         while True:
             # Get current time

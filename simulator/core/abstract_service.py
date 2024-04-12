@@ -37,16 +37,19 @@ from uprotocol.proto.uattributes_pb2 import UPriority
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.upayload_pb2 import UPayloadFormat
-from uprotocol.proto.uri_pb2 import UEntity, UUri
+from uprotocol.proto.uri_pb2 import UEntity, UUri, UResource
 from uprotocol.rpc.rpcmapper import RpcMapper
 from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
 from uprotocol.uri.factory.uresource_builder import UResourceBuilder
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
+from uprotocol.uuid.factory.uuidfactory import Factories
 
 from simulator.core import protobuf_autoloader
 from simulator.core.exceptions import SimulationError
 from simulator.core.transport_layer import TransportLayer
+from simulator.core.vehicle_service_utils import get_entity_from_descriptor
 from simulator.utils import common_util
+from simulator.utils.constant import REPO_URL
 
 RESPONSE_URI = UUri(entity=UEntity(name="simulator", version_major=1), resource=UResourceBuilder.for_rpc_response())
 
@@ -103,8 +106,7 @@ class BaseService(object):
                 any_obj = any_pb2.Any()
                 any_obj.Pack(response)
                 payload_res = UPayload(value=any_obj.SerializeToString(), format=payload.format)
-                attributes = UAttributesBuilder.response(RESPONSE_URI, attributes.sink, attributes.priority,
-                                                         attributes.id).build()
+                attributes = UAttributesBuilder.response(attributes).build()
                 if get_instance(entity).portal_callback is not None:
                     get_instance(entity).portal_callback(req, method, response, get_instance(entity).publish_data)
                 return TransportLayer().send(UMessage(attributes=attributes, payload=payload_res))
@@ -113,7 +115,7 @@ class BaseService(object):
 
     def start_rpc_service(self):
         if self.transport_layer.start_service(self.service):
-            time.sleep(1)
+            time.sleep(3)
             covesa_services.append({'name': self.service, 'entity': self})
             # create topic
             topics = protobuf_autoloader.get_topics_by_proto_service_name(self.service)
@@ -126,8 +128,16 @@ class BaseService(object):
                         if attr1 == 'on_receive':
                             func = getattr(self, attr)
                             method_uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, attr)
-                            status = self.transport_layer.register_rpc_listener(
-                                LongUriSerializer().deserialize(method_uri), func)
+                            method_uri = LongUriSerializer().deserialize(method_uri)
+                            method_uri.entity.MergeFrom(get_entity_from_descriptor(
+                                protobuf_autoloader.entity_descriptor[method_uri.entity.name]))
+
+                            method_uri.resource.MergeFrom(UResource(
+                                id=protobuf_autoloader.get_method_id_from_method_name(
+                                    method_uri.entity.name,
+                                    method_uri.resource.instance)))
+                            status = self.transport_layer.register_listener(
+                                method_uri, func)
                             common_util.print_register_rpc_status(method_uri, status.code, status.message)
 
                             break
@@ -140,7 +150,14 @@ class BaseService(object):
         any_obj.Pack(message)
         payload_data = any_obj.SerializeToString()
         payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
-        attributes = UAttributesBuilder.publish(LongUriSerializer().deserialize(uri), UPriority.UPRIORITY_CS4).build()
+        source_uri = LongUriSerializer().deserialize(uri)
+        source_uri.entity.MergeFrom(get_entity_from_descriptor(
+            protobuf_autoloader.entity_descriptor[source_uri.entity.name]))
+        source_uri.resource.MergeFrom(UResource(
+            id=protobuf_autoloader.get_topic_id_from_topicuri(uri)))
+        attributes = UAttributesBuilder.publish(source_uri, UPriority.UPRIORITY_CS4).build()
+        if "COVESA" not in REPO_URL:
+            attributes.id.MergeFrom(Factories.UUIDV6.create())
         status = self.transport_layer.send(UMessage(payload=payload, attributes=attributes))
         common_util.print_publish_status(uri, status.code, status.message)
         if is_from_rpc:
@@ -156,7 +173,12 @@ class BaseService(object):
                 print(f"Warning: there already exists an object subscribed to {uri}")
                 print(f"Skipping subscription for {uri}")
             self.subscriptions[uri] = listener
-            status = self.transport_layer.register_listener(LongUriSerializer().deserialize(uri), listener)
+            topic_uri = LongUriSerializer().deserialize(uri)
+            topic_uri.entity.MergeFrom(get_entity_from_descriptor(
+                protobuf_autoloader.entity_descriptor[topic_uri.entity.name]))
+            topic_uri.resource.MergeFrom(UResource(
+                id=protobuf_autoloader.get_topic_id_from_topicuri(uri)))
+            status = self.transport_layer.register_listener(topic_uri, listener)
             common_util.print_subscribe_status(uri, status.code, status.message)
             time.sleep(1)
 

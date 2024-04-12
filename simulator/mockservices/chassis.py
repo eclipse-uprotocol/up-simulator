@@ -26,10 +26,10 @@
 
 import re
 
-from target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (
+from simulator.target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (
     UpdateTireRequest,
 )
-from target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (
+from simulator.target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (
     Tire,
 )
 from uprotocol.proto.umessage_pb2 import UMessage
@@ -60,12 +60,12 @@ class ChassisService(BaseService):
         super().start_rpc_service()
         self.subscribe(
             [
-                KEY_URI_PREFIX + ":/chassis/1/tire.front_left#Tire",
-                KEY_URI_PREFIX + ":/chassis/1/tire.front_right#Tire",
-                KEY_URI_PREFIX + ":/chassis/1/tire.rear_right#Tire",
-                KEY_URI_PREFIX + ":/chassis/1/tire.rear_left#Tire",
-                KEY_URI_PREFIX + ":/chassis/1/tire.rear_left_inner#Tire",
-                KEY_URI_PREFIX + ":/chassis/1/tire.rear_right_inner#Tire",
+                KEY_URI_PREFIX + "/chassis/1/tire.front_left#Tire",
+                KEY_URI_PREFIX + "/chassis/1/tire.front_right#Tire",
+                KEY_URI_PREFIX + "/chassis/1/tire.rear_right#Tire",
+                KEY_URI_PREFIX + "/chassis/1/tire.rear_left#Tire",
+                KEY_URI_PREFIX + "/chassis/1/tire.rear_left_inner#Tire",
+                KEY_URI_PREFIX + "/chassis/1/tire.rear_right_inner#Tire",
             ],
             ChassisPreconditions(self),
         )
@@ -169,7 +169,7 @@ class ChassisService(BaseService):
         Publishes a message based on the current tire
         """
         for tire in self.tire_names:
-            topic = KEY_URI_PREFIX + ":/chassis/1/" + tire + "#Tire"
+            topic = KEY_URI_PREFIX + "/chassis/1/" + tire + "#Tire"
             self.publish(topic, self.state[tire], True)
 
 

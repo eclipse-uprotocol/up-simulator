@@ -32,8 +32,8 @@ from google.protobuf.json_format import MessageToDict
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from simulator.utils.constant import KEY_URI_PREFIX
-from target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
-from target.protofiles.vehicle.body.cabin_climate.v1.cabin_climate_service_pb2 import (
+from simulator.target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
+from simulator.target.protofiles.vehicle.body.cabin_climate.v1.cabin_climate_service_pb2 import (
     SetTemperatureRequest,
     SetFanRequest,
     SetAirDistributionRequest,
@@ -312,7 +312,7 @@ class CabinClimateService(BaseService):
         Publishes a system settings message based on the current state
         """
         # publish zone info based on current state
-        topic = KEY_URI_PREFIX + ":/body.cabin_climate/1/" + zone_name + "#Zone"
+        topic = KEY_URI_PREFIX + "/body.cabin_climate/1/" + zone_name + "#Zone"
         self.publish(topic, self.state[zone_name], True)
 
     def get_est_cabin_temp(self):
@@ -375,7 +375,7 @@ class CabinClimateService(BaseService):
         """
         Publishes a system settings message based on the current state
         """
-        topic = KEY_URI_PREFIX + ":/body.cabin_climate/1/system_settings#SystemSettings"
+        topic = KEY_URI_PREFIX + "/body.cabin_climate/1/system_settings#SystemSettings"
         # publish system settings based on current state
         self.publish(topic, self.settings_state, True)
 

@@ -4,8 +4,8 @@
 
 import re
 
-from target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import SetRideHeightRequest
-from target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import RideHeight, RideHeightSystemStatus
+from simulator.target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import SetRideHeightRequest
+from simulator.target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import RideHeight, RideHeightSystemStatus
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
@@ -34,7 +34,7 @@ class SuspensionService(BaseService):
         super().start_rpc_service()
         self.subscribe(
             [
-                KEY_URI_PREFIX + ":/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus",
+                KEY_URI_PREFIX + "/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus",
             ],
             SuspensionPreconditions(self),
         )
@@ -178,7 +178,7 @@ class SuspensionService(BaseService):
         Args:
         request(protobuf): the protobuf containing the rpc request
         """
-        topic = KEY_URI_PREFIX + ":/chassis.suspension/1/ride_height#RideHeight"
+        topic = KEY_URI_PREFIX + "/chassis.suspension/1/ride_height#RideHeight"
 
         self.publish(topic, self.state["ride_height"], True)
 

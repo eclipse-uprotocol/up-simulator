@@ -30,7 +30,9 @@ import json
 import os
 import pkgutil
 
-from target import protofiles as proto
+from google._upb._message import RepeatedCompositeContainer
+
+from simulator.target import protofiles as proto
 
 from simulator.utils.constant import (
     RESOURCE_CATALOG_DIR,
@@ -44,7 +46,7 @@ topic_list = []
 
 def create_service_json(service_name, version, service_id, properties):
     json_structure = {
-        "uri": f"{KEY_URI_PREFIX}:/{service_name}/{version}",
+        "uri": f"{KEY_URI_PREFIX}/{service_name}/{version}",
         "id": f"{service_id}",
         "type": "service",
     }
@@ -106,6 +108,8 @@ def get_protobuf_descriptor_data():
                     else:
                         if field.name == "version_major":
                             version = value
+                        if isinstance(value, RepeatedCompositeContainer):
+                            continue
                         properties.append({"name": field.name, "value": value})
                 service_json["node"] = create_service_json(service_name, version, service_id, properties)
 
@@ -117,7 +121,7 @@ def get_protobuf_descriptor_data():
                         if field.name == "method_id":
                             method_id = value
                             method_nodes.append(
-                                create_method_json(f"{KEY_URI_PREFIX}:/{service_name}/{version}", method, method_id)
+                                create_method_json(f"{KEY_URI_PREFIX}/{service_name}/{version}", method, method_id)
                             )
                 message_option_descriptor = mod.DESCRIPTOR.message_types_by_name
                 for message in message_option_descriptor.keys():
@@ -175,7 +179,7 @@ def get_protobuf_descriptor_data():
                                 )
                                 topic_nodes.append(
                                     create_topic_json(
-                                        f"{KEY_URI_PREFIX}:/{service_name}/{version}",
+                                        f"{KEY_URI_PREFIX}/{service_name}/{version}",
                                         resource,
                                         message_mod.name,
                                         topic_id,

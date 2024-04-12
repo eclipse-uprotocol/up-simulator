@@ -1,6 +1,6 @@
 # -------------------------------------------------------------------------
 #
-# Copyright (c) 2023 General Motors GTO LLC
+# Copyright (c) 2024 General Motors GTO LLC
 #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -19,26 +19,27 @@
 # specific language governing permissions and limitations
 # under the License.
 # SPDX-FileType: SOURCE
-# SPDX-FileCopyrightText: 2023 General Motors GTO LLC
+# SPDX-FileCopyrightText: 2024 General Motors GTO LLC
 # SPDX-License-Identifier: Apache-2.0
 #
 # -------------------------------------------------------------------------
 
 
 from simulator.core.abstract_service import BaseService
-
-from simulator.target.protofiles.vehicle.propulsion.engine.v1.engine_service_pb2 import (
-    ResetHealthRequest,
+from simulator.target.protofiles.vehicle.body.seating.v1.seating_service_pb2 import (
+    MoveSeatsRequest,
+    SetSeatTemperatureRequest,
+    SetSeatMassageRequest,
 )
 
 
-class EngineService(BaseService):
+class SeatingService(BaseService):
 
     def __init__(self, portal_callback=None):
         """
         EngineService constructor
         """
-        super().__init__("propulsion.engine", portal_callback)
+        super().__init__("body.seating", portal_callback)
         self.init_state()
 
     def init_state(self):
@@ -49,13 +50,27 @@ class EngineService(BaseService):
 
     # RPC Request Listeners for each RPC method
     @BaseService.RequestListener
-    def ResetHealth(self, request, response):
+    def MoveSeats(self, request, response):
+        return self.handle_request(request, response)
+
+    @BaseService.RequestListener
+    def SetSeatTemperature(self, request, response):
+        return self.handle_request(request, response)
+
+    @BaseService.RequestListener
+    def SetSeatMassage(self, request, response):
         return self.handle_request(request, response)
 
     def handle_request(self, request, response):
         # handle ResetHealth request
-        if isinstance(request, ResetHealthRequest):
-            # todo return ResetHealthResponse response, Implement your logic here
+        if isinstance(request, MoveSeatsRequest):
+            # todo return MoveSeatsResponse response, Implement your logic here
+            pass
+        elif isinstance(request, SetSeatTemperatureRequest):
+            # todo return SetSeatTemperatureResponse response, Implement your logic here
+            pass
+        elif isinstance(request, SetSeatMassageRequest):
+            # todo return SetSeatMassageResponse response, Implement your logic here
             pass
         response.status.code = 0
         response.status.message = "OK"
@@ -63,5 +78,5 @@ class EngineService(BaseService):
 
 
 if __name__ == "__main__":
-    service = EngineService()
+    service = SeatingService()
     service.start()
