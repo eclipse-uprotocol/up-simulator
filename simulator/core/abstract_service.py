@@ -115,7 +115,6 @@ class BaseService(object):
 
     def start_rpc_service(self):
         if self.transport_layer.start_service(self.service):
-            time.sleep(3)
             covesa_services.append({'name': self.service, 'entity': self})
             # create topic
             topics = protobuf_autoloader.get_topics_by_proto_service_name(self.service)
