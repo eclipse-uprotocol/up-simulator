@@ -113,7 +113,7 @@ class BaseService(object):
 
         return wrapper
 
-    def start_rpc_service(self):
+    def start_rpc_service(self) -> bool:
         if self.transport_layer.start_service(self.service):
             covesa_services.append({'name': self.service, 'entity': self})
             # create topic
@@ -140,6 +140,9 @@ class BaseService(object):
                             common_util.print_register_rpc_status(method_uri, status.code, status.message)
 
                             break
+            return True
+        else:
+            return False
 
     def publish(self, uri, params={}, is_from_rpc=False):
 
@@ -181,16 +184,15 @@ class BaseService(object):
             common_util.print_subscribe_status(uri, status.code, status.message)
             time.sleep(1)
 
-    def start(self):
+    def start(self) -> bool:
 
         if self.service is None:
             print("Unable to start mock service without specifying the service name.")
             print("You must set the service name in the BaseService constructor")
             raise SimulationError("service_name not specified for mock service")
         print("Waiting for events...")
-        self.start_rpc_service()
 
-        return self
+        return self.start_rpc_service()
 
     def disconnect(self):
         # todo write logic to unregister the rpc listener

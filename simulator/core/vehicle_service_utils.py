@@ -103,9 +103,11 @@ def start_service(entity, callback):
 
         service = SeatingService(callback)
 
-    if service is not None:
-        service.start()
+    if service is not None and service.start():
         mock_entity.append({"name": entity, "entity": service})
+        return True
+    else:
+        return False
 
 
 def get_entity_from_descriptor(entity_descriptor):

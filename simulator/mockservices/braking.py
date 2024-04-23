@@ -56,14 +56,16 @@ class BrakingService(BaseService):
         self.init_state()
 
     def start_rpc_service(self):
-        super().start_rpc_service()
-        self.subscribe(
-            [
-                KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.front#BrakePads",
-                KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.rear#BrakePads",
-            ],
-            BrakingPreconditions(self),
-        )
+        status = super().start_rpc_service()
+        if status:
+            self.subscribe(
+                [
+                    KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.front#BrakePads",
+                    KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.rear#BrakePads",
+                ],
+                BrakingPreconditions(self),
+            )
+        return status
 
     def init_state(self):
         """

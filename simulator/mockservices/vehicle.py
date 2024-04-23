@@ -33,15 +33,17 @@ class VehicleService(BaseService):
         self.init_state()
 
     def start_rpc_service(self):
-        super().start_rpc_service()
-        self.subscribe(
-            [
-                KEY_URI_PREFIX + "/vehicle/1/trip_meter.trip_1#TripMeter",
-                KEY_URI_PREFIX + "/vehicle/1/trip_meter.trip_2#TripMeter",
-                KEY_URI_PREFIX + "/vehicle/1/vehicle_usage.transport_mode#VehicleUsage",
-            ],
-            VehiclePreconditions(self),
-        )
+        status = super().start_rpc_service()
+        if status:
+            self.subscribe(
+                [
+                    KEY_URI_PREFIX + "/vehicle/1/trip_meter.trip_1#TripMeter",
+                    KEY_URI_PREFIX + "/vehicle/1/trip_meter.trip_2#TripMeter",
+                    KEY_URI_PREFIX + "/vehicle/1/vehicle_usage.transport_mode#VehicleUsage",
+                ],
+                VehiclePreconditions(self),
+            )
+        return status
 
     def init_state(self):
         """

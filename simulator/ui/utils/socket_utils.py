@@ -216,11 +216,10 @@ class SocketUtility:
                 )
 
             try:
-                start_service(json_service["entity"], handler)
-                time.sleep(1)
+                status = start_service(json_service["entity"], handler)
                 self.socketio.emit(
                     CONSTANTS.CALLBACK_START_SERVICE,
-                    json_service["entity"],
+                    {"entity": json_service["entity"], "status": status},
                     namespace=CONSTANTS.NAMESPACE,
                 )
             except Exception as ex:
