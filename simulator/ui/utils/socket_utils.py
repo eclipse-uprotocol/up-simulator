@@ -97,7 +97,7 @@ class SocketUtility:
                 payload_data = any_obj.SerializeToString()
                 payload = UPayload(
                     value=payload_data,
-                    format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF,
+                    format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY,
                 )
                 method_uri = LongUriSerializer().deserialize(method_uri)
                 method_uri.entity.MergeFrom(get_entity_from_descriptor(
