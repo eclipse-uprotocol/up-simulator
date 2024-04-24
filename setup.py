@@ -23,37 +23,29 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # -------------------------------------------------------------------------
+import os
+import sys
+from setuptools import Extension, setup, find_packages
 
-default_max = 100
-default_min = 0
+project_name = "up-simulator"
 
+script_directory = os.path.realpath(os.path.dirname(__file__))
+REQUIREMENTS = [
+    i.strip() for i in open(os.path.join("requirements.txt")).readlines()
+]
 
-MAX_VALUES = {
-    "longitude": 180,
-    "latitude": 90,
-    "radius": 1000,
-    "length": 1000,
-    "width": 1000,
-    "height": 1000,
-    "expiration_duration": 100,
-    "idle_duration": 16777215,
-    "running_duration": 16777215,
-    "temperature": 50,
-    "current_sequence": 7,
-    "total_sequences": 7,
-    "priority": 255,
-    "pressure": 20460,
-    "time_to_flat": 2097151,
-    "light_intensity": 1275,
-    "hours": 24,
-    "minutes": 59,
-    "seconds": 59,
-    "nanos": 999999999,
-    "token": 10000,
-}
-
-MIN_VALUES = {
-    "longitude": -180,
-    "latitude": -90,
-    "expiration_duration": -1,
-}
+setup(
+    name=project_name,
+    author="Neelam Kushwah",
+    author_email="neelam.kushwah@gm.com",
+    version="0.1.0-dev",
+    python_requires=">=3.8",
+    packages=find_packages(),
+    package_data={
+            'simulator': ['**'],
+        },
+    include_package_data=True,
+    install_requires=REQUIREMENTS,
+    license="LICENSE.txt",
+    long_description=open("README.adoc").read(),
+)

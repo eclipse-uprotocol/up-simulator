@@ -6,3 +6,4 @@ Flask-SocketIO==5.3.6
 protobuf>=4.24.2
 pyaxmlparser==0.3.30
 up-python==0.1.2.dev0
+googleapis-common-protos==1.62.0
