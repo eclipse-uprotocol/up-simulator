@@ -5,5 +5,5 @@ pure-python-adb==0.3.0.dev0
 Flask-SocketIO==5.3.6
 protobuf>=4.24.2
 pyaxmlparser==0.3.30
-up-python==0.1.2.dev0
+up-python==0.1.2-dev
 googleapis-common-protos==1.62.0

@@ -24,8 +24,8 @@
 #
 # -------------------------------------------------------------------------
 import os
-import sys
-from setuptools import Extension, setup, find_packages
+
+from setuptools import setup, find_packages
 
 project_name = "up-simulator"
 
@@ -42,8 +42,8 @@ setup(
     python_requires=">=3.8",
     packages=find_packages(),
     package_data={
-            'simulator': ['**'],
-        },
+        'simulator': ['**'],
+    },
     include_package_data=True,
     install_requires=REQUIREMENTS,
     license="LICENSE.txt",
