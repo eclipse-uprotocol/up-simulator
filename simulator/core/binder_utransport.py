@@ -363,6 +363,7 @@ class AndroidBinder(UTransport, RpcClient):
     def unregister_listener(self, uri: UUri, listener: UListener) -> UStatus:
         uri.entity.ClearField("id")
         uri.entity.ClearField("version_minor")
+        uri.resource.ClearField("id")
         pass
 
     def send(self, umsg: UMessage) -> UStatus:
@@ -370,9 +371,13 @@ class AndroidBinder(UTransport, RpcClient):
         self.client.connect()
         umsg.attributes.source.entity.ClearField("id")
         umsg.attributes.source.entity.ClearField("version_minor")
+        umsg.attributes.source.resource.ClearField("id")
+
         if umsg.attributes.HasField("sink"):
             umsg.attributes.sink.entity.ClearField("id")
             umsg.attributes.sink.entity.ClearField("version_minor")
+            if not UriValidator.is_rpc_response(umsg.attributes.sink):
+                umsg.attributes.sink.resource.ClearField("id")
         message_str = Base64ProtobufSerializer().deserialize(
             umsg.SerializeToString()
         )
@@ -418,6 +423,8 @@ class AndroidBinder(UTransport, RpcClient):
         self.client.connect()
         uri.entity.ClearField("id")
         uri.entity.ClearField("version_minor")
+        uri.resource.ClearField("id")
+
         uri_str = Base64ProtobufSerializer().deserialize(
             uri.SerializeToString()
         )
@@ -437,6 +444,7 @@ class AndroidBinder(UTransport, RpcClient):
 
             message_to_send = json.dumps(json_map) + "\n"
             self.client.send_data(message_to_send)
+
             # Wait for data to be received from the socket
             received_data = self.client.receive_data()
             return received_data

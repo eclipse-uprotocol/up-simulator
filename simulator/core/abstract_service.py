@@ -151,7 +151,7 @@ class BaseService(object):
         any_obj = any_pb2.Any()
         any_obj.Pack(message)
         payload_data = any_obj.SerializeToString()
-        payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF)
+        payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY)
         source_uri = LongUriSerializer().deserialize(uri)
         source_uri.entity.MergeFrom(get_entity_from_descriptor(
             protobuf_autoloader.entity_descriptor[source_uri.entity.name]))
@@ -169,7 +169,6 @@ class BaseService(object):
         return message, status
 
     def subscribe(self, uris, listener):
-
         for uri in uris:
             if uri in self.subscriptions.keys() and listener == self.subscriptions[uri]:
                 print(f"Warning: there already exists an object subscribed to {uri}")
@@ -185,7 +184,6 @@ class BaseService(object):
             time.sleep(1)
 
     def start(self) -> bool:
-
         if self.service is None:
             print("Unable to start mock service without specifying the service name.")
             print("You must set the service name in the BaseService constructor")

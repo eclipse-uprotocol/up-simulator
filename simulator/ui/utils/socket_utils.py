@@ -27,7 +27,6 @@
 import json
 import logging
 import threading
-import time
 import traceback
 
 from flask_socketio import SocketIO
@@ -97,7 +96,7 @@ class SocketUtility:
                 payload_data = any_obj.SerializeToString()
                 payload = UPayload(
                     value=payload_data,
-                    format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF,
+                    format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY,
                 )
                 method_uri = LongUriSerializer().deserialize(method_uri)
                 method_uri.entity.MergeFrom(get_entity_from_descriptor(
@@ -173,7 +172,7 @@ class SocketUtility:
                     self.socketio.emit(
                         CONSTANTS.CALLBACK_PUBLISH_STATUS_SUCCESS,
                         {
-                            "msg": "Publish Data  ",
+                            "msg" : "Publish Data  ",
                             "data": self.last_published_data,
                         },
                         namespace=CONSTANTS.NAMESPACE,
