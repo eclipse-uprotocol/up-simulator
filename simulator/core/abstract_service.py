@@ -140,6 +140,7 @@ class BaseService(object):
                             common_util.print_register_rpc_status(method_uri, status.code, status.message)
 
                             break
+            self.subscribe()
             return True
         else:
             return False
@@ -168,7 +169,9 @@ class BaseService(object):
         time.sleep(0.25)
         return message, status
 
-    def subscribe(self, uris, listener):
+    def subscribe(self, uris=None, listener=None):
+        if uris is None or listener is None:
+            return
         for uri in uris:
             if uri in self.subscriptions.keys() and listener == self.subscriptions[uri]:
                 print(f"Warning: there already exists an object subscribed to {uri}")

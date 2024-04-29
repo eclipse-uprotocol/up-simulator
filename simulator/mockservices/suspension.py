@@ -30,16 +30,13 @@ class SuspensionService(BaseService):
         super().__init__("chassis.suspension", portal_callback)
         self.init_state()
 
-    def start_rpc_service(self):
-        status = super().start_rpc_service()
-        if status:
-            self.subscribe(
-                [
-                    KEY_URI_PREFIX + "/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus",
-                ],
-                SuspensionPreconditions(self),
-            )
-        return status
+    def subscribe(self):
+        super().subscribe(
+            [
+                KEY_URI_PREFIX + "/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus",
+            ],
+            SuspensionPreconditions(self),
+        )
 
     def init_state(self):
         self.state = {}
