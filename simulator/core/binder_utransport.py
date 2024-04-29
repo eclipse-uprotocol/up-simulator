@@ -56,6 +56,7 @@ from simulator.utils.constant import REPO_URL
 # Dictionary to store requests
 m_requests = {}
 subscribers = {}  # remove element when ue unregister it
+r_services = {}  # running services
 MAX_MESSAGE_SIZE = 32767
 RESPONSE_URI = UUri(
     entity=UEntity(name="simulator.proxy", version_major=1),
@@ -273,6 +274,15 @@ class SocketClient:
                                     print(
                                         f"No create topic callback registered for uri: {topic_uri_str}. Discarding!"
                                     )
+                            elif action == "start_service":
+                                parsed_message = UStatus()
+                                parsed_message.ParseFromString(serialized_data)
+                                service_name = parsed_message.message
+                                if service_name in r_services:
+                                    event, status = r_services[service_name]
+                                    if parsed_message.code == UCode.OK or parsed_message.code == UCode.ALREADY_EXISTS:
+                                        r_services[service_name] = (event, True)
+                                    event.set()
 
                         print(f"Received from server: {json_data}")
             except (socket.timeout, OSError):
@@ -325,7 +335,22 @@ class AndroidBinder(UTransport, RpcClient):
         # write data to socket, this action will start the android mock service and create all topics
         json_map = {"action": "start_service", "data": entity}
         message_to_send = json.dumps(json_map) + "\n"
-        return self.client.send_data(message_to_send)
+        start_service_event = threading.Event()
+        global r_services
+        # Update the service status with start_service_event set to False initially
+        r_services.update({entity: (start_service_event, False)})
+        self.client.send_data(message_to_send)
+        # Wait for the service to start with a timeout of 10 seconds
+        if start_service_event.wait(timeout=10) and r_services.get(entity)[1]:
+            print(f"started service: {entity}")
+            r_services.pop(entity, None)
+            return True
+        if start_service_event.is_set():
+            print(f"unable to start service {entity}")
+        else:
+            print(f"unable to start service {entity} within timeout")
+        r_services.pop(entity, None)
+        return False
 
     def create_topic(self, entity, topics, status_callback):
         self.client.register_create_topic_status_callback(

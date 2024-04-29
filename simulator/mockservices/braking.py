@@ -55,9 +55,8 @@ class BrakingService(BaseService):
         super().__init__("chassis.braking", portal_callback)
         self.init_state()
 
-    def start_rpc_service(self):
-        super().start_rpc_service()
-        self.subscribe(
+    def subscribe(self):
+        super().subscribe(
             [
                 KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.front#BrakePads",
                 KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.rear#BrakePads",

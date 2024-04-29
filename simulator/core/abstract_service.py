@@ -113,9 +113,8 @@ class BaseService(object):
 
         return wrapper
 
-    def start_rpc_service(self):
+    def start_rpc_service(self) -> bool:
         if self.transport_layer.start_service(self.service):
-            time.sleep(3)
             covesa_services.append({'name': self.service, 'entity': self})
             # create topic
             topics = protobuf_autoloader.get_topics_by_proto_service_name(self.service)
@@ -141,6 +140,10 @@ class BaseService(object):
                             common_util.print_register_rpc_status(method_uri, status.code, status.message)
 
                             break
+            self.subscribe()
+            return True
+        else:
+            return False
 
     def publish(self, uri, params={}, is_from_rpc=False):
 
@@ -166,7 +169,9 @@ class BaseService(object):
         time.sleep(0.25)
         return message, status
 
-    def subscribe(self, uris, listener):
+    def subscribe(self, uris=None, listener=None):
+        if uris is None or listener is None:
+            return
         for uri in uris:
             if uri in self.subscriptions.keys() and listener == self.subscriptions[uri]:
                 print(f"Warning: there already exists an object subscribed to {uri}")
@@ -181,15 +186,14 @@ class BaseService(object):
             common_util.print_subscribe_status(uri, status.code, status.message)
             time.sleep(1)
 
-    def start(self):
+    def start(self) -> bool:
         if self.service is None:
             print("Unable to start mock service without specifying the service name.")
             print("You must set the service name in the BaseService constructor")
             raise SimulationError("service_name not specified for mock service")
         print("Waiting for events...")
-        self.start_rpc_service()
 
-        return self
+        return self.start_rpc_service()
 
     def disconnect(self):
         # todo write logic to unregister the rpc listener

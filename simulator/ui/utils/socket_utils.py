@@ -27,7 +27,6 @@
 import json
 import logging
 import threading
-import time
 import traceback
 
 from flask_socketio import SocketIO
@@ -173,7 +172,7 @@ class SocketUtility:
                     self.socketio.emit(
                         CONSTANTS.CALLBACK_PUBLISH_STATUS_SUCCESS,
                         {
-                            "msg": "Publish Data  ",
+                            "msg" : "Publish Data  ",
                             "data": self.last_published_data,
                         },
                         namespace=CONSTANTS.NAMESPACE,
@@ -216,11 +215,10 @@ class SocketUtility:
                 )
 
             try:
-                start_service(json_service["entity"], handler)
-                time.sleep(1)
+                status = start_service(json_service["entity"], handler)
                 self.socketio.emit(
                     CONSTANTS.CALLBACK_START_SERVICE,
-                    json_service["entity"],
+                    {"entity": json_service["entity"], "status": status},
                     namespace=CONSTANTS.NAMESPACE,
                 )
             except Exception as ex:

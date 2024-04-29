@@ -106,7 +106,7 @@ function setupSocket() {
 
     });
     socket.on('start_service_callback', function (j) {
-        refreshMockServiceStatus(j, false);
+        refreshMockServiceStatus(j.entity, j.status, false);
 
     });
     socket.on('sendrpc_callback', function (res) {

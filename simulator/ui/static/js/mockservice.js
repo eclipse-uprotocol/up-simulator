@@ -42,7 +42,7 @@ function design_mock_services_list_layout(data) {
             if (running_services[k] == data.pkgs_mock[i].entity) {
                 service_status.style.display = "none";
                 design_service_status_layout(data.pkgs_mock[i].name, data.pkgs_mock[i].entity, "Loading")
-                refreshMockServiceStatus(data.pkgs_mock[i].entity, true)
+                refreshMockServiceStatus(data.pkgs_mock[i].entity, true, true)
                 document.getElementById("cb" + data.pkgs_mock[i].entity).checked = true
                 break;
             }
@@ -187,7 +187,7 @@ function stopMockService(id) {
     activeCheckbox = document.getElementById("cb" + id)
     activeCheckbox.checked = false
 
-    fetch("/updateservicestatus?entity=" + id )
+    fetch("/updateservicestatus?entity=" + id)
         .then((res) => res.json())
         .then((data) => {
             if (data.result) {
@@ -239,15 +239,20 @@ function startAllMockServices() {
 
 
 }
-function refreshMockServiceStatus(key, isAlreadyRunning) {
+function refreshMockServiceStatus(key, isSuccess, isAlreadyRunning) {
     // save service running status
 
     changeIconId = key + "Mock";
     changeStatus = document.getElementById(key);
     changeStatusIcon = document.getElementById(changeIconId)
     if (changeStatus) {
-        changeStatus.textContent = "Running";
-        changeStatus.style.color = "green";
+        if (isSuccess) {
+            changeStatus.textContent = "Running";
+            changeStatus.style.color = "green";
+        } else {
+            changeStatus.textContent = "Error";
+            changeStatus.style.color = "red";
+        }
     }
     if (changeStatusIcon) {
         changeStatusIcon.classList.remove("fa", "fa-refresh", "fa-spin", "statusIcon");

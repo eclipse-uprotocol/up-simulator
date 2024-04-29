@@ -56,9 +56,8 @@ class ChassisService(BaseService):
         super().__init__("chassis", portal_callback)
         self.init_state()
 
-    def start_rpc_service(self):
-        super().start_rpc_service()
-        self.subscribe(
+    def subscribe(self):
+        super().subscribe(
             [
                 KEY_URI_PREFIX + "/chassis/1/tire.front_left#Tire",
                 KEY_URI_PREFIX + "/chassis/1/tire.front_right#Tire",
