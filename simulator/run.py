@@ -21,10 +21,9 @@ SPDX-License-Identifier: Apache-2.0
 
 import os
 import sys
+import time
 
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from flask import request
 from flask_socketio import SocketIO
@@ -63,6 +62,8 @@ def set_someip_config(localip, multicastip):
 @socketio.on(CONSTANTS.API_SET_ZENOH_CONFIG, namespace=CONSTANTS.NAMESPACE)
 def set_zenoh_config(routerip, port):
     transport_layer.set_zenoh_config(routerip, port)
+    time.sleep(1)
+    socketio.emit(CONSTANTS.CALLBACK_ON_SET_TRANSPORT, '', namespace=CONSTANTS.NAMESPACE, )
 
 
 @socketio.on(CONSTANTS.API_SUBSCRIBE, namespace=CONSTANTS.NAMESPACE)

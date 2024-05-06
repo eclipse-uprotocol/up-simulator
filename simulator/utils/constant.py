@@ -66,6 +66,7 @@ CALLBACK_PUBLISH_STATUS_FAILED = "publish_callback_fail"
 CALLBACK_EXCEPTION_PUBLISH = "onPubException"
 CALLBACK_ONEVENT_RECEIVE = "onTopicUpdate"
 CALLBACK_GENERIC_ERROR = "onError"
+CALLBACK_ON_SET_TRANSPORT = "onSetTransport"
 
 KEY_MESSAGE = "message"
 KEY_CODE = "code"

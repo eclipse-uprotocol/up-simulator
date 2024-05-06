@@ -161,6 +161,10 @@ function setupSocket() {
         onTopicUpdate(json_res.json_data, json_res.original_json_data, json_res.topic)
     });
 
+    socket.on('onSetTransport', function (json_res) {
+        hideSpinner()
+    });
+
 };
 
 function showSpinner() {
