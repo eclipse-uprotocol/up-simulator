@@ -57,6 +57,7 @@ from simulator.utils.constant import REPO_URL
 m_requests = {}
 subscribers = {}  # remove element when ue unregister it
 r_services = {}  # running services
+u_status = {}  # status update mapping with status id
 MAX_MESSAGE_SIZE = 32767
 RESPONSE_URI = UUri(
     entity=UEntity(name="simulator.proxy", version_major=1),
@@ -70,6 +71,21 @@ def add_request(req_id: str):
     future = Future()
     m_requests[req_id] = future
     return future
+
+
+def status_update(s_id: str) -> UStatus:
+    status_event = threading.Event()
+    global u_status
+    u_status[s_id] = status_event
+    # Wait for the status to return with a timeout of 10 seconds
+    if status_event.wait(timeout=10):
+        event, status = u_status.get(s_id)
+    else:
+        status = UStatus(
+            code=UCode.UNKNOWN, message="Error: Timeout reached"
+        )
+    u_status.pop(s_id, None)
+    return status
 
 
 def timeout_counter(response_future, reqid, timeout):
@@ -121,26 +137,7 @@ class SocketClient:
             self.initialized = True
             self._subscribe_callbacks = {}
             self._rpc_request_callbacks = {}
-            self.receive_lock = threading.Lock()
             self.received_data = None
-
-    def receive_data(self):
-        start_time = time.time()
-        while True:
-            with self.receive_lock:
-                if self.received_data is not None:
-                    data = self.received_data
-                    self.received_data = None
-                    return data
-            if time.time() - start_time > 11:
-                return UStatus(
-                    code=UCode.UNKNOWN, message="Error: Timeout reached"
-                )
-            time.sleep(0.1)  # Adjust sleep time as needed to reduce CPU load
-
-    def handle_received_data(self, data):
-        with self.receive_lock:
-            self.received_data = data
 
     def connect(self):
         try:
@@ -228,7 +225,12 @@ class SocketClient:
                             ]:
                                 parsed_message = UStatus()
                                 parsed_message.ParseFromString(serialized_data)
-                                self.handle_received_data(parsed_message)
+                                if "status_id" in json_data:
+                                    status_id = json_data.get("status_id")
+                                    if status_id in u_status:
+                                        event = u_status[status_id]
+                                        u_status[status_id] = (event, parsed_message)
+                                        event.set()
                             elif action == "rpc_response":
                                 parsed_message = UMessage()
                                 parsed_message.ParseFromString(serialized_data)
@@ -408,13 +410,7 @@ class AndroidBinder(UTransport, RpcClient):
             # write data to socket
             message_to_send = json.dumps(json_map) + "\n"
             self.client.send_data(message_to_send)
-            received_data = None
-            if attributes.type in [UMessageType.UMESSAGE_TYPE_PUBLISH]:
-                # Wait for data to be received from the socket
-                received_data = UStatus(
-                    message="Successfully publish", code=UCode.OK
-                )  # self.client.receive_data()
-            return received_data
+            return status_update(str(attributes.id))
 
         except Exception as e:
             return UStatus(message=str(e), code=UCode.UNKNOWN)
@@ -430,24 +426,23 @@ class AndroidBinder(UTransport, RpcClient):
         )
 
         try:
+            status_id = str(Factories.UPROTOCOL.create())
             uri_key = LongUriSerializer().serialize(uri)
             if UriValidator.is_rpc_method(uri):
                 self.__add_rpc_request_callback(uri_key, listener)
                 # write data to socket
-                json_map = {"action": "register_rpc", "data": uri_str}
+                json_map = {"action": "register_rpc", "data": uri_str, "status_id": status_id}
                 print("register rpc for ", uri)
             else:
                 self.__add_subscribe_callback(uri_key, listener)
                 # write data to socket
-                json_map = {"action": "subscribe", "data": uri_str}
+                json_map = {"action": "subscribe", "data": uri_str, "status_id": status_id}
                 print("subscribe to ", uri)
 
             message_to_send = json.dumps(json_map) + "\n"
             self.client.send_data(message_to_send)
+            return status_update(status_id)
 
-            # Wait for data to be received from the socket
-            received_data = self.client.receive_data()
-            return received_data
         except Exception as e:
             return UStatus(message=str(e), code=UCode.UNKNOWN)
 
