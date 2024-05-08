@@ -82,8 +82,8 @@ class TransportLayer:
                 conf.insert_json5(zenoh.config.MODE_KEY, json.dumps("client"))
                 conf.insert_json5(zenoh.config.CONNECT_KEY, json.dumps(endpoint))
             from up_client_zenoh.upclientzenoh import UPClientZenoh
-            self.__instance = UPClientZenoh.new(conf, UAuthority(name="test_authority"),
-                                                UEntity(name="test_entity", version_major=1))
+            self.__instance = UPClientZenoh(conf, UAuthority(name="test_authority"),
+                                            UEntity(name="test_entity", version_major=1))
 
     def invoke_method(self, topic: UUri, payload: UPayload, calloptions: CallOptions) -> Future:
         return self.__instance.invoke_method(topic, payload, calloptions)
