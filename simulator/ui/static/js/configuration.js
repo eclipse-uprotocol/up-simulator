@@ -26,16 +26,12 @@ function saveConfig() {
         if (document.querySelector('#utransportConfig').value == "SOME/IP") {
             localStorage.setItem("ip_local", document.getElementById("localip").value)
             localStorage.setItem("ip_multicast", document.getElementById("multicastip").value)
-            console.log('before mci config set')
             socket.emit("set_someip_config", document.getElementById("localip").value, document.getElementById("multicastip").value)
         } else if (document.querySelector('#utransportConfig').value == "ZENOH") {
+            showSpinner()
             localStorage.setItem("zenoh_router_ip", document.getElementById("zenohrouterip").value)
             localStorage.setItem("zenoh_router_port", document.getElementById("zenohrouterport").value)
-
-            console.log('before zenoh router ip')
-             console.log('zenoh before emit')
-             console.log(document.getElementById("zenohrouterport").value)
-
+            console.log(document.getElementById("zenohrouterport").value)
             socket.emit("set_zenoh_config", document.getElementById("zenohrouterip").value, document.getElementById("zenohrouterport").value)
         }
 

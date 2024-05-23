@@ -19,12 +19,14 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
+import json
 from concurrent.futures import Future
 
 from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
+from uprotocol.proto.uri_pb2 import UAuthority
+from uprotocol.proto.uri_pb2 import UEntity
 from uprotocol.proto.uri_pb2 import UUri
 from uprotocol.proto.ustatus_pb2 import UStatus
 from uprotocol.transport.ulistener import UListener
@@ -69,6 +71,19 @@ class TransportLayer:
     def _update_instance(self):
         if self.__utransport == "BINDER":
             self.__instance = AndroidBinder()
+        elif self.__utransport == "ZENOH":
+            import zenoh
+            zenoh_ip = self.__ZENOH_IP
+            zenoh_port = self.__ZENOH_PORT
+            conf = zenoh.Config()
+            if zenoh_ip is not None:
+                endpoint = [f"tcp/{zenoh_ip}:{zenoh_port}"]
+                print(f"EEE: {endpoint}")
+                conf.insert_json5(zenoh.config.MODE_KEY, json.dumps("client"))
+                conf.insert_json5(zenoh.config.CONNECT_KEY, json.dumps(endpoint))
+            from up_client_zenoh.upclientzenoh import UPClientZenoh
+            self.__instance = UPClientZenoh(conf, UAuthority(name="test_authority"),
+                                            UEntity(name="test_entity", version_major=1))
 
     def invoke_method(self, topic: UUri, payload: UPayload, calloptions: CallOptions) -> Future:
         return self.__instance.invoke_method(topic, payload, calloptions)
@@ -91,3 +106,5 @@ class TransportLayer:
     def create_topic(self, entity, topics, listener):
         if self.__utransport == "BINDER":
             return self.__instance.create_topic(entity, topics, listener)
+        else:
+            return True

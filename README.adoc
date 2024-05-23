@@ -32,11 +32,28 @@ mvn -version
 ----
 If Maven is properly installed, you should see information about the Maven version and configuration.
 
+=== Android
+
 * Ensure your android emulator is running, and both the `up-core-android` and `up-simulator-proxy` components are up and running. These components are essential for the functionality of this project. Please refer to the installation instructions https://github.com/eclipse-uprotocol/up-android-core/blob/main/README.adoc[`up-core-android`] and https://github.com/eclipse-uprotocol/up-simulator-proxy/blob/main/README.adoc[`up-simulator-proxy`]
 
 * When starting the simulator proxy, if you observe the** 'Simulator proxy client connected'** logs, it indicates that your setup is correct, and the simulator proxy has successfully bound to the `up-core-android`.
 +
 image::screenshots/androidlogs.png[]
+
+* Perform ADB port forwarding to enable communication with the simulator:
++
+[,bash]
+----
+adb forward tcp:6095 tcp:6095
+----
+This step is essential for establishing a connection between the emulator and the simulator.
+
+
+=== Zenoh
+
+* Start the Zenoh router before running the simulator. You can start the Zenoh router by following the instructions provided in the https://zenoh.io/docs/getting-started/installation/[Zenoh documentation]. Once your Zenoh router is started, you will see the following logs
++
+image::screenshots/zenoh_router.png[]
 
 == How to Setup the up-Simulator
 
@@ -49,15 +66,6 @@ To set up the simulator, follow the steps below:
 git clone https://github.com/eclipse-uprotocol/up-simulator.git
 cd up-simulator
 ----
-. Perform ADB port forwarding to enable communication with the simulator:
-+
-[,bash]
-----
-adb forward tcp:6095 tcp:6095
-----
-This step is essential for establishing a connection between the emulator and the simulator.
-
-
 
 . Install the required dependencies using pip:
 +
@@ -98,9 +106,16 @@ To start and use the `up-simulator`, follow the steps below:
 python3 simulator/run.py
 ----
 
-. On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it  supports only Android.
+. On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it supports Android and Zenoh clients. You can choose either one.
+.. Android
 +
 image::screenshots/configuration.png[]
+.. Zenoh
++
+image::screenshots/zenoh_config.png[]
++
+You need to set the Zenoh router's IP address and port number.
+
 
 . To use the publish and subscribe functionality, click on the "Publish-Subscribe" menu. Within this menu, you will find a list of Covesa services.
 +
