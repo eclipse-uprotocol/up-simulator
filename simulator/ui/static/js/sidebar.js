@@ -46,8 +46,15 @@ function resetViews(value) {
         document.getElementById('zenoh_config_div').hidden = true
         document.getElementById('mqtt_config_div').hidden = true
         document.getElementById('vehicle_config_div').hidden = true
+        document.getElementById("configservicesdialog").hidden = true
+        document.getElementById("someip_save").hidden = true
+        document.getElementById("register_ve_config").className = "card Services box-content-data config-firstRow"
         if (value == "SOME/IP") {
             document.getElementById('someip_config_div').hidden = false
+            document.getElementById("configservicesdialog").hidden = false
+            document.getElementById("someip_save").hidden = false
+            document.getElementById("register_ve_config").className = "card Services box-content-data config-someip"
+
 
         } else if (value == "ZENOH") {
             document.getElementById('zenoh_config_div').hidden = false

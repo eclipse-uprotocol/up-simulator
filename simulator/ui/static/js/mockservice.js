@@ -16,7 +16,7 @@ function myFunctionmock() {
 }
 
 function getMockServices() {
-    fetch("/getmockservices")
+    fetch("/getmockservices?transport=" + localStorage.getItem("utransportConfig"))
         .then((res) => res.json())
         .then((data) => {
             if (data.result) {
@@ -215,7 +215,7 @@ function startAllMockServices() {
             }
         }
     } else {
-        fetch("/getmockservices")
+        fetch("/getmockservices?transport=" + localStorage.getItem("utransportConfig"))
             .then((res) => res.json())
             .then((data) => {
                 if (data.result) {

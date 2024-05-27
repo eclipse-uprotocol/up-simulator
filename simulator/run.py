@@ -23,6 +23,8 @@ import os
 import sys
 import time
 
+from simulator.core import vehicle_service_utils
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from flask import request
@@ -56,17 +58,25 @@ def set_transport(selected_utransport):
 
 @socketio.on(constant.API_SET_SOMEIP_CONFIG, namespace=constant.NAMESPACE)
 def set_someip_config(localip, multicastip):
-    pass
+    vehicle_service_utils.someip_entity = vehicle_service_utils.temp_someip_entity
+    vehicle_service_utils.temp_someip_entity = []
+    transport_layer.set_someip_config(localip, multicastip)
+    time.sleep(0.5)
+    socketio.emit(
+        CONSTANTS.CALLBACK_ON_SET_TRANSPORT,
+        "",
+        namespace=CONSTANTS.NAMESPACE,
+    )
 
 
 @socketio.on(constant.API_SET_ZENOH_CONFIG, namespace=constant.NAMESPACE)
 def set_zenoh_config(routerip, port):
     transport_layer.set_zenoh_config(routerip, port)
-    time.sleep(1)
+    time.sleep(0.5)
     socketio.emit(
-        constant.CALLBACK_ON_SET_TRANSPORT,
-        '',
-        namespace=constant.NAMESPACE,
+        CONSTANTS.CALLBACK_ON_SET_TRANSPORT,
+        "",
+        namespace=CONSTANTS.NAMESPACE,
     )
 
 
@@ -105,7 +115,14 @@ def stop_all_mock_services():
     set_reset_flag()
 
 
-@socketio.on(constant.API_RESET, namespace=constant.NAMESPACE)
+@socketio.on(CONSTANTS.API_CONFIGURE_SOMEIP_SERVICE, namespace=CONSTANTS.NAMESPACE)
+def configure_someip_service(json_service):
+    print("configure someip service json " + str(json_service))
+    set_reset_flag()
+    socket_utility.configure_service_someip(json_service)
+
+
+@socketio.on(CONSTANTS.API_RESET, namespace=CONSTANTS.NAMESPACE)
 def reset():
     global is_reset
     if is_reset:

@@ -27,6 +27,11 @@ from urllib.parse import unquote
 from flask import redirect, render_template, request, send_file, url_for
 
 from simulator.core.vehicle_service_utils import get_all_running_service
+from simulator.core import vehicle_service_utils
+from simulator.core.vehicle_service_utils import (
+    get_all_running_service,
+    get_all_configured_someip_service,
+)
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
 from simulator.utils import constant
@@ -55,6 +60,7 @@ def route_configuration():
                     "Avd_name": device.shell("getprop ro.boot.qemu.avd_name"),
                     "Image": device.shell("getprop ro.product.bootimage.name"),
                     "Build_date": device.shell("getprop ro.bootimage.build.date"),
+                    # 'Build_id': device.shell("getprop ro.bootimage.build.id"),
                     "Model": device.shell("getprop ro.product.model"),
                 }
             else:
@@ -103,7 +109,9 @@ def route_pubsub():
 @blueprint.route("/rpc-logger.html")
 def route_rpc_logger():
     try:
-        f = open(os.path.join(run_directory, "simulator", constant.FILENAME_RPC_LOGGER))
+        f = open(
+            os.path.join(run_directory, "simulator", CONSTANTS.FILENAME_RPC_LOGGER)
+        )
         data = f.read()
         f.close()
         data = f"[{data}]"
@@ -203,13 +211,14 @@ def getconfiguration():
 
 @blueprint.route("/getmockservices")
 def get_mock_services():
+    env = str(request.args.get("env"))
+    transport = str(request.args.get("transport"))
     mockservice_pkgs = []
     json_path = os.path.join(
         run_directory,
         constant.UI_JSON_DIR,
         constant.SERVICES_JSON_FILE_NAME,
     )
-
     f = open(json_path)
     mockservices = json.load(f)
     f.close()
@@ -218,11 +227,18 @@ def get_mock_services():
             "core.udiscovery",
             "core.utelemetry",
             "core.usubscription",
-        ]:
+        ] and (
+            m["name"] in vehicle_service_utils.someip_entity
+            or env == "Someip"
+            or transport != "SOME/IP"
+        ):
             pkgs = {"entity": m["name"], "name": m["display_name"]}
             mockservice_pkgs.append(pkgs)
-
-    running_services = get_all_running_service()
+    if env == "Someip":
+        running_services = get_all_configured_someip_service()
+        vehicle_service_utils.temp_someip_entity = running_services
+    else:
+        running_services = get_all_running_service()
 
     return {
         "result": True,
@@ -239,6 +255,19 @@ def update_service_status():
         from simulator.core.vehicle_service_utils import stop_service
 
         stop_service(entity_to_remove)
+    except Exception:
+        pass
+    return {"result": True, "entity": html.escape(entity_to_remove)}
+
+
+@blueprint.route("/updatesomeipservicestatus")
+def update_someip_service_status():
+    entity_to_remove = request.args["entity"]
+    print(entity_to_remove)
+    try:
+        from simulator.core.vehicle_service_utils import remove_service_from_someip
+
+        remove_service_from_someip(entity_to_remove)
     except Exception:
         pass
     return {"result": True, "entity": html.escape(entity_to_remove)}

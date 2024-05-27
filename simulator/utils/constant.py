@@ -51,6 +51,8 @@ API_SET_ZENOH_CONFIG = "set_zenoh_config"
 API_SET_SOMEIP_CONFIG = "set_someip_config"
 API_SET_UTRANSPORT = "set_utransport"
 API_RESET = "reset"
+API_CONFIGURE_SOMEIP_SERVICE = "configure_service_someip"
+CALLBACK_CONFIGURE_SOMEIP_SERVICE = "configure_service_someip_callback"
 
 CALLBACK_START_SERVICE = "start_service_callback"
 CALLBACK_SENDRPC = "sendrpc_callback"

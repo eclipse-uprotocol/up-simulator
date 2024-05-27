@@ -22,6 +22,8 @@ SPDX-License-Identifier: Apache-2.0
 from uprotocol.uri.factory.uentity_factory import UEntityFactory
 
 mock_entity = []
+someip_entity = []
+temp_someip_entity = []
 
 
 def stop_service(name):
@@ -32,22 +34,39 @@ def stop_service(name):
             break
 
 
+def remove_service_from_someip(name):
+    global temp_someip_entity
+    for index, entity_name in enumerate(temp_someip_entity):
+        if entity_name == name:
+            temp_someip_entity.pop(index)
+            stop_service(name)
+            break
+
+
 def get_service_instance_from_entity(name):
     for index, entity_dict in enumerate(mock_entity):
-        if entity_dict.get('name') == name:
-            return entity_dict.get('entity')
+        if entity_dict.get("name") == name:
+            return entity_dict.get("entity")
     return None
 
 
 def get_all_running_service():
     running_service = []
     for index, entity_dict in enumerate(mock_entity):
-        running_service.append(entity_dict.get('name'))
+        running_service.append(entity_dict.get("name"))
     return running_service
+
+
+def get_all_configured_someip_service():
+    configured_service = []
+    for entity_name in someip_entity:
+        configured_service.append(entity_name)
+    return configured_service
 
 
 def start_service(entity, callback):
     global service
+    service = None
 
     if entity == "chassis.braking":
         from simulator.mockservices.braking import BrakingService
@@ -106,6 +125,11 @@ def start_service(entity, callback):
         return "Running"
     else:
         return "Error"
+
+
+def configure_someip_service(entity_name):
+    global temp_someip_entity
+    temp_someip_entity.append(entity_name)
 
 
 def get_entity_from_descriptor(entity_descriptor):

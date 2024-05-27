@@ -37,12 +37,11 @@ from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
 from simulator.core import protobuf_autoloader
 from simulator.core.vehicle_service_utils import (
-    get_entity_from_descriptor,
     get_service_instance_from_entity,
+    get_entity_from_descriptor,
+    configure_someip_service,
     start_service,
 )
-from simulator.ui.utils import common_handlers
-from simulator.utils import constant
 from simulator.utils.common_util import verify_all_checks
 
 logger = logging.getLogger("Simulator")
@@ -182,6 +181,14 @@ class SocketUtility:
                 namespace=constant.NAMESPACE,
             )
 
+    def configure_service_someip(self, json_service):
+        configure_someip_service(json_service["entity"])
+        self.socketio.emit(
+            CONSTANTS.CALLBACK_CONFIGURE_SOMEIP_SERVICE,
+            {"entity": json_service["entity"], "status": True},
+            namespace=CONSTANTS.NAMESPACE,
+        )
+
     def start_mock_service(self, json_service):
         status = verify_all_checks()
         if status == "":
@@ -215,9 +222,13 @@ class SocketUtility:
             if status == "":
                 new_topic = LongUriSerializer().deserialize(topic)
                 new_topic.entity.MergeFrom(
-                    get_entity_from_descriptor(protobuf_autoloader.entity_descriptor[new_topic.entity.name])
+                    get_entity_from_descriptor(
+                        protobuf_autoloader.entity_descriptor[new_topic.entity.name]
+                    )
                 )
-                new_topic.resource.MergeFrom(UResource(id=protobuf_autoloader.get_topic_id_from_topicuri(topic)))
+                new_topic.resource.MergeFrom(
+                    UResource(id=protobuf_autoloader.get_topic_id_from_topicuri(topic))
+                )
 
                 status = self.transport_layer.register_listener(
                     new_topic,

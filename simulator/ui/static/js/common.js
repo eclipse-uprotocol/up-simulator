@@ -86,7 +86,7 @@ function setupSocket() {
         transport_value = ''
 
         socket.emit("set_transport", localStorage.getItem("utransportConfig"))
-        socket.emit("set_someip_config", localStorage.getItem("ip_local"), localStorage.getItem("ip_multicast"))
+        //        socket.emit("set_someip_config", localStorage.getItem("ip_local"), localStorage.getItem("ip_multicast"))
         console.log('zenoh before emit')
         console.log(localStorage.getItem("zenoh_router_port"))
 
@@ -102,12 +102,18 @@ function setupSocket() {
         if (segment.includes('mockservice')) {
             getMockServices()
         }
+        if (segment.includes('configuration')) {
+            getConfigurationMockServices()
+        }
 
 
     });
     socket.on('start_service_callback', function (j) {
         refreshMockServiceStatus(j.entity, j.status, false);
 
+    });
+    socket.on('configure_service_someip_callback', function (j) {
+        refreshSomeipServiceConfigureStatus(j.entity, j.status, false);
     });
     socket.on('sendrpc_callback', function (res) {
         onSendRPCCallBack(res)

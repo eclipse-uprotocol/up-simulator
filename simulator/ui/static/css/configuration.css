@@ -2,8 +2,27 @@
   height: 280px;
 }
 
+.config-someip {
+  height: 200px;
+}
+
 .config-mOne {
   margin: 20px;
+}
+
+.floating-btn {
+  position: fixed;
+  bottom: 0px;
+  /* Adjust as needed */
+  background: #05061A;
+  ;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
 }
 
 .config-table {

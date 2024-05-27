@@ -14,9 +14,10 @@
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
                 <div class="main-body">
-                    <div class="page-wrapper">
+                    <div class="page-wrapper" style="margin-bottom:50px;">
                         <!--                [ Main Content ] start-->
                         <div class="configuration">Configuration</div>
+
 
                         <div class="row">
                             <div class="col-xl-8" id="space_div">
@@ -28,7 +29,7 @@
                                         <span class="headerfont">Device</span>
                                         <div class="underline"></div>
                                         <span id="emulator_status"
-                                              style="color:#ffff;background:#0F3307;border-radius:22px;border:1px solid #4B9E38">{{emu_status}}</span>
+                                            style="color:#ffff;background:#0F3307;border-radius:22px;border:1px solid #4B9E38">{{emu_status}}</span>
 
                                     </div>
 
@@ -47,7 +48,7 @@
                             </div>
 
                             <div class="col-xl-8" hidden id="someip_config_div">
-                                <div class="card Services box-content-data config-firstRow">
+                                <div class="card Services box-content-data config-someip">
                                     <div class="config-mOne">
                                         <span class="headerfont">SOME/IP</span>
                                         <div class="underline"></div>
@@ -69,11 +70,7 @@
                                                 <label class="input-label" style="left:30px;">Multicast IP</label>
                                             </div>
                                         </div>
-                                        <button class="btn btn-default btn-content" onclick="saveConfig()"
-                                                style="vertical-align:top;background: #3B3B39;border: 1px solid #5EB1F3;border-radius: 2px;color: #5EB1F3;font-size: 16px;"
-                                                type="button">
-                                            Save
-                                        </button>
+
                                     </div>
                                 </div>
                             </div>
@@ -100,8 +97,8 @@
                                         </div>
 
                                         <button class="btn btn-default btn-content" onclick="saveConfig()"
-                                                style="vertical-align:top;background: #3B3B39;border: 1px solid #5EB1F3;border-radius: 2px;color: #5EB1F3;font-size: 16px;"
-                                                type="button">
+                                            style="vertical-align:top;background: #3B3B39;border: 1px solid #5EB1F3;border-radius: 2px;color: #5EB1F3;font-size: 16px;"
+                                            type="button">
                                             Save
                                         </button>
                                     </div>
@@ -131,8 +128,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4" >
-                                <div class="card Services box-content-data config-rOnecTwo">
+                            <div class="col-xl-4">
+                                <div id="register_ve_config" class="card Services box-content-data config-firstRow">
                                     <h5 class="headerfont config-rOnecTwoHeading">Register Vehicle Config</h5>
                                     <div class="underline ins-dOne"></div>
                                     <div class="ins-dtwo">
@@ -149,17 +146,56 @@
                                             <label class="installlabel instl-lOne">Vehicle Type</label>
                                         </div>
                                         <div class="inst-dFour">
-                                            <button class="btn btn-default btn-content inst-setBtn"
-                                                    type="button">
+                                            <button class="btn btn-default btn-content inst-setBtn" type="button">
                                                 Set
                                             </button>
                                         </div>
                                     </div>
 
-                                    <p id="updatenode_status" class="installlabel" style="margin-top:2.0rem!important;font-size:16px;width:80%;margin:10px 0px 0px 20px;" >Coming Soon...</p>
+                                    <p id="updatenode_status" class="installlabel"
+                                        style="margin-top:2.0rem!important;font-size:16px;width:80%;margin:10px 0px 0px 20px;">
+                                        Coming Soon...</p>
                                 </div>
                             </div>
                         </div>
+                        <div class="row" hidden id="configservicesdialog">
+
+                            <div class="col-xl-12 servicecontent">
+                                <div class="col-xl-4">
+                                    <div class="headerfont">Vehicle Services</div>
+                                    <div>
+                                        <div class="floating-inputbox">
+                                            <div class="floating-label">
+                                                <input class="floating-input" id="searchservice"
+                                                    onkeyup="onSearchMock()" type="text">
+                                                <label class="input-label">Search</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <ul id="tableService"></ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-8">
+                                    <div class="box-content-data">
+                                        <p class="text-start">Service Configuration Status</p>
+                                        <p id="box-content">Search and configure service to begin</p>
+                                        <div class="serviceContainer">
+                                            <div class="someipservicedata" id="hiddenservicedata" hidden></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div hidden id="someip_save" class="floating-btn">
+                        <button class="btn btn-default btn-content" onclick="saveConfig()" style="margin-left : -30% !important;
+border: 1px solid #5EB1F3;border-radius: 2px;color: #5EB1F3;font-size: 16px;
+                                vertical-align: top;background-color: #3B3B39;" type="button">
+                            Save
+                        </button>
                     </div>
                 </div>
             </div>
