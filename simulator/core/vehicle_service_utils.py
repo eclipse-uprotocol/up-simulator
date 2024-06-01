@@ -19,7 +19,6 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 from uprotocol.uri.factory.uentity_factory import UEntityFactory
 
 mock_entity = []
@@ -99,11 +98,14 @@ def start_service(entity, callback):
 
         service = SeatingService(callback)
 
-    if service is not None and service.start():
+    if service is None:
+        return "Not found"
+
+    if service.start():
         mock_entity.append({"name": entity, "entity": service})
-        return True
+        return "Running"
     else:
-        return False
+        return "Error"
 
 
 def get_entity_from_descriptor(entity_descriptor):
