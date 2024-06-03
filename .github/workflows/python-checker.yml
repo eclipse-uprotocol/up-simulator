@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Run Linter/Coverage Test
+name: Run Linter and Formatter Test
 
 on:
   push:
@@ -46,12 +46,13 @@ jobs:
         python -m pip install flake8 pytest coverage cloudevents multimethod protobuf==4.24.2
         python -m pip install -r requirements.txt
 
-    - name: Lint with flake8
+    - name: Lint Python Code with Ruff
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 --ignore E203,W503,W504,F811,E402 --max-line-length=127 --exclude **/*pb2.py
+        ruff check --config ..github/ruff.toml
+
+    - name: Check Python Code Formatting with Ruff
+      run: |
+        ruff format --check --config .github/ruff.toml
 
     - name: Set Up Project
       run: |
