@@ -19,20 +19,19 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import re
 
+from uprotocol.proto.umessage_pb2 import UMessage
+from uprotocol.transport.ulistener import UListener
+
+from simulator.core.abstract_service import BaseService
+from simulator.core.exceptions import ValidationError
 from simulator.target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (
     UpdateTireRequest,
 )
 from simulator.target.protofiles.vehicle.chassis.v1.chassis_topics_pb2 import (
     Tire,
 )
-from uprotocol.proto.umessage_pb2 import UMessage
-from uprotocol.transport.ulistener import UListener
-
-from simulator.core.abstract_service import BaseService
-from simulator.core.exceptions import ValidationError
 from simulator.utils.constant import KEY_URI_PREFIX
 
 
@@ -48,7 +47,6 @@ class ChassisService(BaseService):
     state = {}
 
     def __init__(self, portal_callback=None):
-
         super().__init__("chassis", portal_callback)
         self.init_state()
 
@@ -97,7 +95,7 @@ class ChassisService(BaseService):
         self.state[topic]["leak_state"] = message.leak_state
         self.state[topic]["is_leak_detection_enabled"] = message.is_leak_detection_enabled
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def UpdateTire(self, request, response):
         """
         Handles UpdateTire RPC Calls. Protobuf needs to be updated to add "Tire.Resources resource_name" attribute to

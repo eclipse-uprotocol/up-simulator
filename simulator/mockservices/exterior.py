@@ -23,7 +23,6 @@ from simulator.core.abstract_service import BaseService
 
 
 class VehicleExteriorService(BaseService):
-
     def __init__(self, portal_callback=None):
         """
         VehicleExteriorService constructor

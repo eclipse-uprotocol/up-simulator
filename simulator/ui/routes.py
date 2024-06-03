@@ -24,12 +24,12 @@ import json
 import os
 from urllib.parse import unquote
 
-from flask import redirect, url_for, render_template, request, send_file
+from flask import redirect, render_template, request, send_file, url_for
 
-import simulator.utils.constant as CONSTANTS
 from simulator.core.vehicle_service_utils import get_all_running_service
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
+from simulator.utils import constant
 
 run_directory = os.path.dirname(os.path.abspath(__file__))
 run_directory = run_directory.split(os.sep)[:-2]
@@ -43,7 +43,7 @@ def route_default():
 
 @blueprint.route("/configuration.html")
 def route_configuration():
-    deviceInfo = {"Image": "", "Build_date": "", "Build_id": "", "Model": ""}
+    device_info = {"Image": "", "Build_date": "", "Build_id": "", "Model": ""}
     emu_status = "Emulator is not running.."
     try:
         device = adb_utils.get_emulator_device()
@@ -51,13 +51,10 @@ def route_configuration():
             status = device.shell("getprop init.svc.bootanim")
             if status.__contains__("stopped"):
                 emu_status = "Emulator is running"
-                deviceInfo = {
+                device_info = {
                     "Avd_name": device.shell("getprop ro.boot.qemu.avd_name"),
                     "Image": device.shell("getprop ro.product.bootimage.name"),
-                    "Build_date": device.shell(
-                        "getprop ro.bootimage.build.date"
-                    ),
-                    # 'Build_id': device.shell("getprop ro.bootimage.build.id"),
+                    "Build_date": device.shell("getprop ro.bootimage.build.date"),
                     "Model": device.shell("getprop ro.product.model"),
                 }
             else:
@@ -69,7 +66,7 @@ def route_configuration():
     return render_template(
         "home/configuration.html",
         segment=get_segment(request),
-        deviceInfo=deviceInfo,
+        device_info=device_info,
         emu_status=emu_status,
     )
 
@@ -78,13 +75,13 @@ def route_configuration():
 def route_pubsub():
     services_json_path = os.path.join(
         run_directory,
-        CONSTANTS.UI_JSON_DIR,
-        CONSTANTS.SERVICES_JSON_FILE_NAME,
+        constant.UI_JSON_DIR,
+        constant.SERVICES_JSON_FILE_NAME,
     )
     pubsub_json_path = os.path.join(
         run_directory,
-        CONSTANTS.UI_JSON_DIR,
-        CONSTANTS.PUB_SUB_JSON_FILE_NAME,
+        constant.UI_JSON_DIR,
+        constant.PUB_SUB_JSON_FILE_NAME,
     )
 
     f = open(pubsub_json_path)
@@ -106,19 +103,17 @@ def route_pubsub():
 @blueprint.route("/rpc-logger.html")
 def route_rpc_logger():
     try:
-        f = open(os.path.join(run_directory, "simulator", CONSTANTS.FILENAME_RPC_LOGGER))
+        f = open(os.path.join(run_directory, "simulator", constant.FILENAME_RPC_LOGGER))
         data = f.read()
         f.close()
         data = f"[{data}]"
     except Exception:
         data = ""
-    return render_template(
-        "home/rpc-logger.html", rpc_calls=data, segment=get_segment(request)
-    )
+    return render_template("home/rpc-logger.html", rpc_calls=data, segment=get_segment(request))
 
 
 @blueprint.route("/downloadPubSubReport")
-def download_Pub_file():
+def download_pub_file():
     filename = os.getcwd() + "/pubsub_logger.txt"
     if os.path.isfile(filename):
         return send_file(filename, as_attachment=True)
@@ -127,7 +122,7 @@ def download_Pub_file():
 
 
 @blueprint.route("/downloadRPCReport")
-def download_RPC_file():
+def download_rpc_file():
     filename = os.getcwd() + "/rpc_logger.txt"
     if os.path.isfile(filename):
         return send_file(filename, as_attachment=True)
@@ -138,30 +133,23 @@ def download_RPC_file():
 @blueprint.route("/pubsub-logger.html")
 def route_pubsub_logger():
     try:
-        f = open(
-            os.path.join(run_directory, "simulator", CONSTANTS.FILENAME_PUBSUB_LOGGER)
-        )
+        f = open(os.path.join(run_directory, "simulator", constant.FILENAME_PUBSUB_LOGGER))
         data = f.read()
         f.close()
         data = f"[{data}]"
     except Exception:
-
         data = ""
-    return render_template(
-        "home/pub-sub-logger.html", data=data, segment=get_segment(request)
-    )
+    return render_template("home/pub-sub-logger.html", data=data, segment=get_segment(request))
 
 
 @blueprint.route("/send-rpc.html")
 def route_send_rpc():
     services_json_path = os.path.join(
         run_directory,
-        CONSTANTS.UI_JSON_DIR,
-        CONSTANTS.SERVICES_JSON_FILE_NAME,
+        constant.UI_JSON_DIR,
+        constant.SERVICES_JSON_FILE_NAME,
     )
-    rpc_json_path = os.path.join(
-        run_directory, CONSTANTS.UI_JSON_DIR, CONSTANTS.RPC_JSON_FILE_NAME
-    )
+    rpc_json_path = os.path.join(run_directory, constant.UI_JSON_DIR, constant.RPC_JSON_FILE_NAME)
 
     f = open(rpc_json_path)
     rpcs = json.load(f)
@@ -180,9 +168,7 @@ def route_send_rpc():
 
 @blueprint.route("/mockservice.html")
 def route_mockservices():
-    return render_template(
-        "home/mockservice.html", segment=get_segment(request)
-    )
+    return render_template("home/mockservice.html", segment=get_segment(request))
 
 
 # Helper - Extract current page name from request
@@ -220,8 +206,8 @@ def get_mock_services():
     mockservice_pkgs = []
     json_path = os.path.join(
         run_directory,
-        CONSTANTS.UI_JSON_DIR,
-        CONSTANTS.SERVICES_JSON_FILE_NAME,
+        constant.UI_JSON_DIR,
+        constant.SERVICES_JSON_FILE_NAME,
     )
 
     f = open(json_path)

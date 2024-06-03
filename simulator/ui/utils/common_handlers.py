@@ -28,11 +28,10 @@ from google.protobuf.json_format import MessageToDict
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.rpc.rpcmapper import RpcMapper
 
-import simulator.utils.constant as CONSTANTS
-from simulator.utils import common_util
 from simulator.core import protobuf_autoloader
+from simulator.ui.utils.file_utils import save_pub_sub_data, save_rpc_data
+from simulator.utils import common_util, constant
 from simulator.utils.common_util import flatten_dict
-from simulator.ui.utils.file_utils import save_rpc_data, save_pub_sub_data
 
 total_rpc = 0
 success_rpc = 0
@@ -44,7 +43,7 @@ def rpc_response_handler(socketio, message):
     This callback function get invoked when response received for rpc request
     """
     members = MessageToDict(message, preserving_proto_field_name=True, including_default_value_fields=True)
-    socketio.emit(CONSTANTS.CALLBACK_SENDRPC_RESPONSE, members, namespace=CONSTANTS.NAMESPACE)
+    socketio.emit(constant.CALLBACK_SENDRPC_RESPONSE, members, namespace=constant.NAMESPACE)
 
 
 def rpc_logger_handler(socketio, lock_rpc, rpc_request, method_name, json_data, rpcdata):
@@ -54,24 +53,24 @@ def rpc_logger_handler(socketio, lock_rpc, rpc_request, method_name, json_data, 
         rpc_method_name = method_name
         rpc_request = MessageToDict(rpc_request, preserving_proto_field_name=True, including_default_value_fields=True)
 
-        publishedData = ""
+        published_data = ""
         if len(rpcdata) > 0:
-            publishedData = MessageToDict(
+            published_data = MessageToDict(
                 rpcdata[len(rpcdata) - 1], preserving_proto_field_name=True, including_default_value_fields=True
             )
         total_rpc = total_rpc + 1
         isfailed = True
         if (
-            rpc_response.__contains__(CONSTANTS.KEY_MESSAGE)
-            and rpc_response[CONSTANTS.KEY_MESSAGE].__contains__("OK")
-            or rpc_response.__contains__(CONSTANTS.KEY_CODE)
-            and rpc_response[CONSTANTS.KEY_CODE] == 0
-            or rpc_response.__contains__(CONSTANTS.KEY_STATUS)
-            and type(rpc_response[CONSTANTS.KEY_STATUS]) is dict
-            and rpc_response[CONSTANTS.KEY_STATUS][CONSTANTS.KEY_MESSAGE].__contains__("OK")
-            or rpc_response.__contains__(CONSTANTS.KEY_CODE)
-            and type(rpc_response[CONSTANTS.KEY_CODE]) is dict
-            and rpc_response[CONSTANTS.KEY_CODE][CONSTANTS.KEY_MESSAGE].__contains__("OK")
+            rpc_response.__contains__(constant.KEY_MESSAGE)
+            and rpc_response[constant.KEY_MESSAGE].__contains__("OK")
+            or rpc_response.__contains__(constant.KEY_CODE)
+            and rpc_response[constant.KEY_CODE] == 0
+            or rpc_response.__contains__(constant.KEY_STATUS)
+            and isinstance(rpc_response[constant.KEY_STATUS], dict)
+            and rpc_response[constant.KEY_STATUS][constant.KEY_MESSAGE].__contains__("OK")
+            or rpc_response.__contains__(constant.KEY_CODE)
+            and isinstance(rpc_response[constant.KEY_CODE], dict)
+            and rpc_response[constant.KEY_CODE][constant.KEY_MESSAGE].__contains__("OK")
         ) or method_name == "SayHello":
             success_rpc = success_rpc + 1
             isfailed = False
@@ -79,15 +78,15 @@ def rpc_logger_handler(socketio, lock_rpc, rpc_request, method_name, json_data, 
         now = datetime.now()
         dt_string = now.strftime("%d %b, %Y %H:%M:%S")
         json_res = {
-            CONSTANTS.KEY_METHODNAME: rpc_method_name,
-            CONSTANTS.KEY_REQUEST: rpc_request,
-            CONSTANTS.KEY_RESPONSE: rpc_response,
-            CONSTANTS.KEY_DATA: publishedData,
-            CONSTANTS.KEY_RPCCOUNT: total_rpc,
-            CONSTANTS.KEY_SUCCESSRPC: success_rpc,
-            CONSTANTS.KEY_FAILEDRPC: failed_rpc,
-            CONSTANTS.KEY_ISFAILED: isfailed,
-            CONSTANTS.KEY_TIME: dt_string,
+            constant.KEY_METHODNAME: rpc_method_name,
+            constant.KEY_REQUEST: rpc_request,
+            constant.KEY_RESPONSE: rpc_response,
+            constant.KEY_DATA: published_data,
+            constant.KEY_RPCCOUNT: total_rpc,
+            constant.KEY_SUCCESSRPC: success_rpc,
+            constant.KEY_FAILEDRPC: failed_rpc,
+            constant.KEY_ISFAILED: isfailed,
+            constant.KEY_TIME: dt_string,
         }
         save_rpc_data(socketio, lock_rpc, json_res)
     except Exception as ex:
@@ -105,15 +104,15 @@ def subscribe_status_handler(socketio, lock_pubsub, utransport, topic, status_co
 
         if utransport == "ZENOH":
             message = "Successfully subscribed to  " + topic + " to ZENOH"
-        socketio.emit(CONSTANTS.CALLBACK_SUBSCRIBE_STATUS_SUCCESS, message, namespace=CONSTANTS.NAMESPACE)
+        socketio.emit(constant.CALLBACK_SUBSCRIBE_STATUS_SUCCESS, message, namespace=constant.NAMESPACE)
     else:
         json_res = {"type": "Subscribe", "topic": topic, "status": "Failed"}
         save_pub_sub_data(socketio, lock_pubsub, json_res)
         socketio.emit(
-            CONSTANTS.CALLBACK_SUBSCRIBE_STATUS_FAILED,
+            constant.CALLBACK_SUBSCRIBE_STATUS_FAILED,
             f"Unsuccessful subscription for {topic} as the status code is {status_code} with "
             f"status message {status_message}",
-            namespace=CONSTANTS.NAMESPACE,
+            namespace=constant.NAMESPACE,
         )
 
 
@@ -130,7 +129,7 @@ def publish_status_handler(socketio, lock_pubsub, utransport, topic, status_code
         message = "Successfully published message for " + topic
         if utransport == "ZENOH":
             message = "Successfully published message for " + topic + " to ZENOH"
-        socketio.emit(CONSTANTS.CALLBACK_PUBLISH_STATUS_SUCCESS, {"msg": message}, namespace=CONSTANTS.NAMESPACE)
+        socketio.emit(constant.CALLBACK_PUBLISH_STATUS_SUCCESS, {"msg": message}, namespace=constant.NAMESPACE)
 
     else:
         json_res = {
@@ -142,18 +141,18 @@ def publish_status_handler(socketio, lock_pubsub, utransport, topic, status_code
         }
         save_pub_sub_data(socketio, lock_pubsub, json_res)
         socketio.emit(
-            CONSTANTS.CALLBACK_PUBLISH_STATUS_FAILED,
+            constant.CALLBACK_PUBLISH_STATUS_FAILED,
             {
                 "msg": f"Unsuccessful publish for {topic} as the status code is {status_code} with status message "
                 f"{status_message}"
             },
-            namespace=CONSTANTS.NAMESPACE,
+            namespace=constant.NAMESPACE,
         )
 
 
 def on_receive_event_handler(socketio, lock_pubsub, utransport, topic, payload: UPayload):
     try:
-        topic = CONSTANTS.KEY_URI_PREFIX + topic
+        topic = constant.KEY_URI_PREFIX + topic
         topic_class = protobuf_autoloader.get_topic_map()[topic]
         res = common_util.get_class(topic_class)
         any_message = any_pb2.Any()
@@ -172,9 +171,9 @@ def on_receive_event_handler(socketio, lock_pubsub, utransport, topic, payload: 
 
         time.sleep(0.5)
         socketio.emit(
-            CONSTANTS.CALLBACK_ONEVENT_RECEIVE,
+            constant.CALLBACK_ONEVENT_RECEIVE,
             {"json_data": members, "original_json_data": original_members, "topic": topic},
-            namespace=CONSTANTS.NAMESPACE,
+            namespace=constant.NAMESPACE,
         )
     except Exception as ex:
         logger.error("Exception occurs inside onTopicUpdate:", exc_info=ex)

@@ -19,7 +19,6 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import json
 import logging
 import threading
@@ -30,25 +29,26 @@ from google.protobuf import any_pb2
 from google.protobuf.json_format import MessageToDict
 from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.proto.umessage_pb2 import UMessage
-from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.proto.upayload_pb2 import UPayloadFormat
+from uprotocol.proto.upayload_pb2 import UPayload, UPayloadFormat
 from uprotocol.proto.uri_pb2 import UResource
 from uprotocol.rpc.rpcmapper import RpcMapper
 from uprotocol.transport.ulistener import UListener
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
-import simulator.ui.utils.common_handlers as Handlers
-import simulator.utils.constant as CONSTANTS
 from simulator.core import protobuf_autoloader
-from simulator.core.vehicle_service_utils import get_service_instance_from_entity, \
-    get_entity_from_descriptor, start_service
+from simulator.core.vehicle_service_utils import (
+    get_entity_from_descriptor,
+    get_service_instance_from_entity,
+    start_service,
+)
+from simulator.ui.utils import common_handlers
+from simulator.utils import constant
 from simulator.utils.common_util import verify_all_checks
 
 logger = logging.getLogger("Simulator")
 
 
 class SocketUtility:
-
     def __init__(self, socket_io, transport_layer):
         self.socketio = socket_io
         self.oldtopic = ""
@@ -69,24 +69,16 @@ class SocketUtility:
                 data = json_sendrpc["data"]
                 json_data = json.loads(data)
 
-                req_cls = protobuf_autoloader.get_request_class(
-                    serviceclass, methodname
-                )
-                res_cls = protobuf_autoloader.get_response_class(
-                    serviceclass, methodname
-                )
+                req_cls = protobuf_autoloader.get_request_class(serviceclass, methodname)
+                res_cls = protobuf_autoloader.get_response_class(serviceclass, methodname)
 
                 if bool(mask):
                     json_data["update_mask"] = {"paths": mask}
 
-                message = protobuf_autoloader.populate_message(
-                    serviceclass, req_cls, json_data
-                )
+                message = protobuf_autoloader.populate_message(serviceclass, req_cls, json_data)
                 version = 1
 
-                method_uri = protobuf_autoloader.get_rpc_uri_by_name(
-                    serviceclass, methodname, version
-                )
+                method_uri = protobuf_autoloader.get_rpc_uri_by_name(serviceclass, methodname, version)
                 any_obj = any_pb2.Any()
                 any_obj.Pack(message)
                 payload_data = any_obj.SerializeToString()
@@ -95,47 +87,45 @@ class SocketUtility:
                     format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY,
                 )
                 method_uri = LongUriSerializer().deserialize(method_uri)
-                method_uri.entity.MergeFrom(get_entity_from_descriptor(
-                    protobuf_autoloader.entity_descriptor[method_uri.entity.name]))
+                method_uri.entity.MergeFrom(
+                    get_entity_from_descriptor(protobuf_autoloader.entity_descriptor[method_uri.entity.name])
+                )
 
-                method_uri.resource.MergeFrom(UResource(
-                    id=protobuf_autoloader.get_method_id_from_method_name(
-                        method_uri.entity.name,
-                        method_uri.resource.instance)))
-                res_future = self.transport_layer.invoke_method(method_uri,
-                                                                payload,
-                                                                CallOptions(
-                                                                    ttl=15000))
+                method_uri.resource.MergeFrom(
+                    UResource(
+                        id=protobuf_autoloader.get_method_id_from_method_name(
+                            method_uri.entity.name, method_uri.resource.instance
+                        )
+                    )
+                )
+                res_future = self.transport_layer.invoke_method(method_uri, payload, CallOptions(ttl=15000))
                 sent_data = MessageToDict(message)
 
                 message = "Successfully send rpc request for " + methodname
                 if self.transport_layer.get_transport() == "Zenoh":
-                    message = (
-                        "Successfully send rpc request for "
-                        + methodname
-                        + " to Zenoh"
-                    )
+                    message = "Successfully send rpc request for " + methodname + " to Zenoh"
                 res = {"msg": message, "data": sent_data}
                 self.socketio.emit(
-                    CONSTANTS.CALLBACK_SENDRPC,
+                    constant.CALLBACK_SENDRPC,
                     res,
-                    namespace=CONSTANTS.NAMESPACE,
+                    namespace=constant.NAMESPACE,
                 )
-                response = RpcMapper.map_response(res_future, res_cls)
-                Handlers.rpc_response_handler(self.socketio, response.result())
+                if res_future is not None:
+                    response = RpcMapper.map_response(res_future, res_cls)
+                    common_handlers.rpc_response_handler(self.socketio, response.result())
             else:
                 self.socketio.emit(
-                    CONSTANTS.CALLBACK_GENERIC_ERROR,
+                    constant.CALLBACK_GENERIC_ERROR,
                     status,
-                    namespace=CONSTANTS.NAMESPACE,
+                    namespace=constant.NAMESPACE,
                 )
 
         except Exception:
             log = traceback.format_exc()
             self.socketio.emit(
-                CONSTANTS.CALLBACK_SENDRPC_EXC,
+                constant.CALLBACK_SENDRPC_EXC,
                 log,
-                namespace=CONSTANTS.NAMESPACE,
+                namespace=constant.NAMESPACE,
             )
 
     def execute_publish(self, json_publish):
@@ -147,15 +137,11 @@ class SocketUtility:
                 service_class = json_publish["service_class"]
 
                 json_data = json.loads(data)
-                service_instance = get_service_instance_from_entity(
-                    service_class
-                )
+                service_instance = get_service_instance_from_entity(service_class)
                 if service_instance is not None:
-                    message, status = service_instance.publish(
-                        topic, json_data
-                    )
+                    message, status = service_instance.publish(topic, json_data)
                     self.last_published_data = MessageToDict(message)
-                    Handlers.publish_status_handler(
+                    common_handlers.publish_status_handler(
                         self.socketio,
                         self.lock_pubsub,
                         self.transport_layer.get_transport(),
@@ -166,34 +152,34 @@ class SocketUtility:
                     )
 
                     self.socketio.emit(
-                        CONSTANTS.CALLBACK_PUBLISH_STATUS_SUCCESS,
+                        constant.CALLBACK_PUBLISH_STATUS_SUCCESS,
                         {
-                            "msg" : "Publish Data  ",
+                            "msg": "Publish Data  ",
                             "data": self.last_published_data,
                         },
-                        namespace=CONSTANTS.NAMESPACE,
+                        namespace=constant.NAMESPACE,
                     )
 
                 else:
                     self.socketio.emit(
-                        CONSTANTS.CALLBACK_GENERIC_ERROR,
+                        constant.CALLBACK_GENERIC_ERROR,
                         "Service is not running. Please start mock service.",
-                        namespace=CONSTANTS.NAMESPACE,
+                        namespace=constant.NAMESPACE,
                     )
 
             else:
                 self.socketio.emit(
-                    CONSTANTS.CALLBACK_GENERIC_ERROR,
+                    constant.CALLBACK_GENERIC_ERROR,
                     status,
-                    namespace=CONSTANTS.NAMESPACE,
+                    namespace=constant.NAMESPACE,
                 )
 
         except Exception:
             log = traceback.format_exc()
             self.socketio.emit(
-                CONSTANTS.CALLBACK_EXCEPTION_PUBLISH,
+                constant.CALLBACK_EXCEPTION_PUBLISH,
                 log,
-                namespace=CONSTANTS.NAMESPACE,
+                namespace=constant.NAMESPACE,
             )
 
     def start_mock_service(self, json_service):
@@ -201,7 +187,7 @@ class SocketUtility:
         if status == "":
 
             def handler(rpc_request, method_name, json_data, rpcdata):
-                Handlers.rpc_logger_handler(
+                common_handlers.rpc_logger_handler(
                     self.socketio,
                     self.lock_rpc,
                     rpc_request,
@@ -213,9 +199,9 @@ class SocketUtility:
             try:
                 status = start_service(json_service["entity"], handler)
                 self.socketio.emit(
-                    CONSTANTS.CALLBACK_START_SERVICE,
+                    constant.CALLBACK_START_SERVICE,
                     {"entity": json_service["entity"], "status": status},
-                    namespace=CONSTANTS.NAMESPACE,
+                    namespace=constant.NAMESPACE,
                 )
             except Exception as ex:
                 logger.error("Exception:", exc_info=ex)
@@ -225,17 +211,13 @@ class SocketUtility:
     def execute_subscribe(self, json_subscribe):
         topic = json_subscribe["topic"]
         try:
-
             status = verify_all_checks()
             if status == "":
-
-                # if self.oldtopic != '':
-                #     self.bus_obj_subscribe.unsubscribe(self.oldtopic, self.common_unsubscribe_status_handler)
                 new_topic = LongUriSerializer().deserialize(topic)
-                new_topic.entity.MergeFrom(get_entity_from_descriptor(
-                    protobuf_autoloader.entity_descriptor[new_topic.entity.name]))
-                new_topic.resource.MergeFrom(UResource(
-                    id=protobuf_autoloader.get_topic_id_from_topicuri(topic)))
+                new_topic.entity.MergeFrom(
+                    get_entity_from_descriptor(protobuf_autoloader.entity_descriptor[new_topic.entity.name])
+                )
+                new_topic.resource.MergeFrom(UResource(id=protobuf_autoloader.get_topic_id_from_topicuri(topic)))
 
                 status = self.transport_layer.register_listener(
                     new_topic,
@@ -246,7 +228,7 @@ class SocketUtility:
                     ),
                 )
                 if status is None:
-                    Handlers.subscribe_status_handler(
+                    common_handlers.subscribe_status_handler(
                         self.socketio,
                         self.lock_pubsub,
                         self.transport_layer.get_transport(),
@@ -255,7 +237,7 @@ class SocketUtility:
                         "Ok",
                     )
                 else:
-                    Handlers.subscribe_status_handler(
+                    common_handlers.subscribe_status_handler(
                         self.socketio,
                         self.lock_pubsub,
                         self.transport_layer.get_transport(),
@@ -266,17 +248,17 @@ class SocketUtility:
 
             else:
                 self.socketio.emit(
-                    CONSTANTS.CALLBACK_GENERIC_ERROR,
+                    constant.CALLBACK_GENERIC_ERROR,
                     status,
-                    namespace=CONSTANTS.NAMESPACE,
+                    namespace=constant.NAMESPACE,
                 )
 
         except Exception:
             log = traceback.format_exc()
             self.socketio.emit(
-                CONSTANTS.CALLBACK_EXCEPTION_SUBSCRIBE,
+                constant.CALLBACK_EXCEPTION_SUBSCRIBE,
                 log,
-                namespace=CONSTANTS.NAMESPACE,
+                namespace=constant.NAMESPACE,
             )
 
 
@@ -289,10 +271,7 @@ class SubscribeUListener(UListener):
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(
-        self, socketio: SocketIO, utransport: str,
-        lock_pubsub: threading.Lock
-    ):
+    def __init__(self, socketio: SocketIO, utransport: str, lock_pubsub: threading.Lock):
         if not self._initialized:
             self.__socketio = socketio
             self.__utransport = utransport
@@ -301,7 +280,7 @@ class SubscribeUListener(UListener):
 
     def on_receive(self, msg: UMessage):
         print("onreceive")
-        Handlers.on_receive_event_handler(
+        common_handlers.on_receive_event_handler(
             self.__socketio,
             self.__lock_pubsub,
             self.__utransport,

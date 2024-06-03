@@ -21,14 +21,12 @@ SPDX-License-Identifier: Apache-2.0
 
 import os
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 project_name = "up-simulator"
 
 script_directory = os.path.realpath(os.path.dirname(__file__))
-REQUIREMENTS = [
-    i.strip() for i in open(os.path.join("requirements.txt")).readlines()
-]
+REQUIREMENTS = [i.strip() for i in open(os.path.join("requirements.txt")).readlines()]
 
 setup(
     name=project_name,

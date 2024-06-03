@@ -19,11 +19,11 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import json
-from simulator.core import protobuf_autoloader as autoloader
 import os
-import simulator.utils.constant as CONSTANTS
+
+from simulator.core import protobuf_autoloader as autoloader
+from simulator.utils import constant
 
 result_data = []
 
@@ -58,16 +58,16 @@ def execute():
                 "name": service,
                 "display_name": get_display_name(service),
                 "rpc": list(autoloader.get_methods_by_service(service).keys()),
-                "message": get_messages(service)
+                "message": get_messages(service),
             }
             result_data.append(data_dict)
 
     # Create the directory if it doesn't exist
-    if not os.path.exists(CONSTANTS.UI_JSON_DIR):
-        os.makedirs(CONSTANTS.UI_JSON_DIR)
-    SERVICES_JSON_FILE_PATH = os.path.join(CONSTANTS.UI_JSON_DIR, CONSTANTS.SERVICES_JSON_FILE_NAME)
+    if not os.path.exists(constant.UI_JSON_DIR):
+        os.makedirs(constant.UI_JSON_DIR)
+    services_json_file_path = os.path.join(constant.UI_JSON_DIR, constant.SERVICES_JSON_FILE_NAME)
     # Write JSON data to the services.json
-    with open(SERVICES_JSON_FILE_PATH, 'w') as json_file:
+    with open(services_json_file_path, 'w') as json_file:
         json.dump(result_data, json_file, indent=2)
         print("Service.json is created successfully")
 

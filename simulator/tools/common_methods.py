@@ -25,17 +25,12 @@ from simulator.tools import maxmin_field
 
 
 def get_enum_info(enum_descriptor, field_descriptor, parent_field_name=""):
-    property_name = (
-        f"{parent_field_name}.{field_descriptor.name}"
-        if parent_field_name
-        else field_descriptor.name
-    )
+    property_name = f"{parent_field_name}.{field_descriptor.name}" if parent_field_name else field_descriptor.name
 
     enum_info = {
         "enum_name": enum_descriptor.name,
         "enum_values": [
-            {"label": enum_value.name, "value": enum_value.number}
-            for enum_value in enum_descriptor.values
+            {"label": enum_value.name, "value": enum_value.number} for enum_value in enum_descriptor.values
         ],
         "property": property_name,
     }
@@ -45,44 +40,27 @@ def get_enum_info(enum_descriptor, field_descriptor, parent_field_name=""):
 def get_field_info(field_descriptor, parent_field_name=""):
     field_info = {
         "type_field": field_descriptor.type,
-        "label": (
-            "Repeated"
-            if field_descriptor.label == FieldDescriptor.LABEL_REPEATED
-            else "Non-repeated"
-        ),
+        "label": ("Repeated" if field_descriptor.label == FieldDescriptor.LABEL_REPEATED else "Non-repeated"),
     }
 
-    property_name = (
-        f"{parent_field_name}.{field_descriptor.name}"
-        if parent_field_name
-        else field_descriptor.name
-    )
+    property_name = f"{parent_field_name}.{field_descriptor.name}" if parent_field_name else field_descriptor.name
     field_info["property"] = property_name
 
-    if (
-        field_descriptor.type == FieldDescriptor.TYPE_MESSAGE
-    ):  # If field type is TYPE_MESSAGE
+    if field_descriptor.type == FieldDescriptor.TYPE_MESSAGE:  # If field type is TYPE_MESSAGE
         nested_message_descriptor = field_descriptor.message_type
         field_info["message_name"] = nested_message_descriptor.name
         nested_field_info = {
-            nested_field_descriptor.name: get_field_info(
-                nested_field_descriptor, field_info["property"]
-            )
+            nested_field_descriptor.name: get_field_info(nested_field_descriptor, field_info["property"])
             for nested_field_descriptor in nested_message_descriptor.fields
             if not (
                 nested_field_descriptor.type == FieldDescriptor.TYPE_ENUM
-                and nested_field_descriptor.enum_type.name
-                in ["Resource", "Resources"]
+                and nested_field_descriptor.enum_type.name in ["Resource", "Resources"]
             )
         }
         field_info.update(nested_field_info)
 
-    if (
-        field_descriptor.type == FieldDescriptor.TYPE_ENUM
-    ):  # If field type is TYPE_ENUM
-        enum_info = get_enum_info(
-            field_descriptor.enum_type, field_descriptor, parent_field_name
-        )
+    if field_descriptor.type == FieldDescriptor.TYPE_ENUM:  # If field type is TYPE_ENUM
+        enum_info = get_enum_info(field_descriptor.enum_type, field_descriptor, parent_field_name)
         field_info.update(enum_info)
 
     return field_info
@@ -128,30 +106,19 @@ def get_property_text(input):
         return ""
 
 
-def check_for_recursive_declaration(
-    field_descriptor, field_message_name_hierarchy=""
-):
+def check_for_recursive_declaration(field_descriptor, field_message_name_hierarchy=""):
     check = False
-    if (
-        field_descriptor.type == FieldDescriptor.TYPE_MESSAGE
-    ):  # If field type is TYPE_MESSAGE
+    if field_descriptor.type == FieldDescriptor.TYPE_MESSAGE:  # If field type is TYPE_MESSAGE
         nested_message_descriptor = field_descriptor.message_type
         field_message_name_hierarchy = (
             f"{field_message_name_hierarchy}.{nested_message_descriptor.name}"
             if field_message_name_hierarchy
             else nested_message_descriptor.name
         )
-        if len(field_message_name_hierarchy.split(".")) == len(
-            set(field_message_name_hierarchy.split("."))
-        ):
+        if len(field_message_name_hierarchy.split(".")) == len(set(field_message_name_hierarchy.split("."))):
             for nested_field_descriptor in nested_message_descriptor.fields:
-                if (
-                    nested_field_descriptor.type
-                    == nested_field_descriptor.TYPE_MESSAGE
-                ):
-                    if check_for_recursive_declaration(
-                        nested_field_descriptor, field_message_name_hierarchy
-                    ):
+                if nested_field_descriptor.type == nested_field_descriptor.TYPE_MESSAGE:
+                    if check_for_recursive_declaration(nested_field_descriptor, field_message_name_hierarchy):
                         check = True
         else:
             check = True

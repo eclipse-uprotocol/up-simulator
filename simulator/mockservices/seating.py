@@ -22,13 +22,12 @@ SPDX-License-Identifier: Apache-2.0
 from simulator.core.abstract_service import BaseService
 from simulator.target.protofiles.vehicle.body.seating.v1.seating_service_pb2 import (
     MoveSeatsRequest,
-    SetSeatTemperatureRequest,
     SetSeatMassageRequest,
+    SetSeatTemperatureRequest,
 )
 
 
 class SeatingService(BaseService):
-
     def __init__(self, portal_callback=None):
         """
         EngineService constructor
@@ -43,15 +42,15 @@ class SeatingService(BaseService):
         self.state = {}
 
     # RPC Request Listeners for each RPC method
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def MoveSeats(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SetSeatTemperature(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SetSeatMassage(self, request, response):
         return self.handle_request(request, response)
 

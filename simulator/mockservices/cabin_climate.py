@@ -25,15 +25,15 @@ from google.protobuf.json_format import MessageToDict
 
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
-from simulator.utils.constant import KEY_URI_PREFIX
 from simulator.target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
 from simulator.target.protofiles.vehicle.body.cabin_climate.v1.cabin_climate_service_pb2 import (
-    SetTemperatureRequest,
-    SetFanRequest,
     SetAirDistributionRequest,
-    SetPowerRequest,
+    SetFanRequest,
     SetLockRequest,
+    SetPowerRequest,
+    SetTemperatureRequest,
 )
+from simulator.utils.constant import KEY_URI_PREFIX
 
 
 class CabinClimateService(BaseService):
@@ -89,7 +89,7 @@ class CabinClimateService(BaseService):
             if zone_match:
                 self.number_of_zones += 1
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def ExecuteClimateCommand(self, request, response):
         """
         Handles ExecuteClimateCommand RPC calls
@@ -113,7 +113,7 @@ class CabinClimateService(BaseService):
 
         return response
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def UpdateSystemSettings(self, request, response):
         """
         Handles UpdateSystemSettings RPC calls
@@ -131,28 +131,27 @@ class CabinClimateService(BaseService):
         self.publish_system_settings()
         return response
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SetTemperature(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SetFan(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SetAirDistribution(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SetPower(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SetLock(self, request, response):
         return self.handle_request(request, response)
 
     def handle_request(self, request, response):
-
         # handle SetTemperature request
         if isinstance(request, SetTemperatureRequest):
             # todo return SetTemperatureResponse response, Implement your logic here
@@ -215,7 +214,9 @@ class CabinClimateService(BaseService):
         row = groups.group(1)
         side = groups.group(2)
         mask = set(self.normalize_field_mask(request, zone_str))
-        synced_fields = set(["blower_level", "air_distribution", "air_distribution_auto_state", "auto_on", "is_power_on"])
+        synced_fields = set(
+            ["blower_level", "air_distribution", "air_distribution_auto_state", "auto_on", "is_power_on"]
+        )
         fields_to_update = mask & synced_fields
         if fields_to_update:
             if side == "right":
@@ -246,7 +247,6 @@ class CabinClimateService(BaseService):
 
         # loop through the field mask
         for field in field_mask_normalized:
-
             if self.state[zone_str]["is_power_on"] is False:
                 # power is currently off
                 fields_that_need_is_power_on = list(self.state[zone_str].keys())
@@ -341,8 +341,9 @@ class CabinClimateService(BaseService):
             if field == "estimated_cabin_temperature":
                 self.settings_state[field] = self.get_est_cabin_temp()
             if field == "ac_compressor_setting":
-                if request.settings.ac_compressor_setting == cabin_climate_topics_pb2.SystemSettings.CompressorSetting.Value(
-                    "CS_UNSPECIFIED"
+                if (
+                    request.settings.ac_compressor_setting
+                    == cabin_climate_topics_pb2.SystemSettings.CompressorSetting.Value("CS_UNSPECIFIED")
                 ):
                     raise ValidationError(2, "settings.ac_compressor_setting cannot be set to CS_UNSPECIFIED")
             if field == "heater_setting":
@@ -355,12 +356,15 @@ class CabinClimateService(BaseService):
                 if field == "sync_all" or field == "sync_rear_to_driver" or field == "rear_zone_lockout":
                     raise ValidationError(
                         2,
-                        "sync_all, sync_rear_to_driver, and rear_zone_lockout are not available " "when there is only 1 zone.",
+                        "sync_all, sync_rear_to_driver, and rear_zone_lockout are not available "
+                        "when there is only 1 zone.",
                     )
             if self.number_of_zones < 3:
                 if field == "sync_3rdRow_to_driver" or field == "third_row_zone_lockout":
                     raise ValidationError(
-                        2, "sync_3rdRow_to_driver and third_row_zone_lockout are not available when " "there is no third row."
+                        2,
+                        "sync_3rdRow_to_driver and third_row_zone_lockout are not available when "
+                        "there is no third row.",
                     )
 
             self.settings_state[field] = getattr(request.settings, field)

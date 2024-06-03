@@ -19,7 +19,6 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import csv
 import importlib
 import json
@@ -29,12 +28,11 @@ import pkgutil
 from google._upb._message import RepeatedCompositeContainer
 
 from simulator.target import protofiles as proto
-
 from simulator.utils.constant import (
+    KEY_URI_PREFIX,
+    RESOURCE_CATALOG_CSV_NAME,
     RESOURCE_CATALOG_DIR,
     RESOURCE_CATALOG_JSON_NAME,
-    RESOURCE_CATALOG_CSV_NAME,
-    KEY_URI_PREFIX,
 )
 
 topic_list = []
@@ -149,7 +147,10 @@ def get_protobuf_descriptor_data():
                     for message in messages:
                         message_mod = mod.DESCRIPTOR.message_types_by_name[message]
 
-                        if "Resources" in message_mod.enum_types_by_name or "Resource" in message_mod.enum_types_by_name:
+                        if (
+                            "Resources" in message_mod.enum_types_by_name
+                            or "Resource" in message_mod.enum_types_by_name
+                        ):
                             resources_key = "Resources" if "Resources" in message_mod.enum_types_by_name else "Resource"
                             resources = message_mod.enum_types_by_name[resources_key].values_by_name.keys()
                             value = next((d[message] for d in message_options_dict if message in d), 0)
@@ -162,7 +163,9 @@ def get_protobuf_descriptor_data():
                                         if "resource_name_mask" == field_options.name:
                                             resource_name_mask_value = field_value.rstrip(".*")
                                             if len(resource_name_mask_value) > 0:
-                                                message_resource_prefix_dict.append({f"{message}": resource_name_mask_value})
+                                                message_resource_prefix_dict.append(
+                                                    {f"{message}": resource_name_mask_value}
+                                                )
 
                             for field, value in message_mod.GetOptions().ListFields():
                                 if field.name == "base_topic_id":

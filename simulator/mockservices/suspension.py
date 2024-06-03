@@ -21,13 +21,16 @@ SPDX-License-Identifier: Apache-2.0
 
 import re
 
-from simulator.target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import SetRideHeightRequest
-from simulator.target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import RideHeight, RideHeightSystemStatus
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
+from simulator.target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import SetRideHeightRequest
+from simulator.target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import (
+    RideHeight,
+    RideHeightSystemStatus,
+)
 from simulator.utils.constant import KEY_URI_PREFIX
 
 
@@ -91,7 +94,7 @@ class SuspensionService(BaseService):
         if "ride_height_system_status" in topic:
             self.state[topic]["source"] = message.source
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SetRideHeight(self, request, response):
         return self.handle_request(request, response)
 
@@ -146,19 +149,19 @@ class SuspensionService(BaseService):
             # handle preconditions passed through bdd
 
             if "ride height external control status" in self.state["preconditions"]:
-
                 if self.state["preconditions"]["ride height external control status"] == "active":
-
-                    if self.state["ride_height_system_status"]["source"] == RideHeightSystemStatus.Source.Value("S_USER"):
+                    if self.state["ride_height_system_status"]["source"] == RideHeightSystemStatus.Source.Value(
+                        "S_USER"
+                    ):
                         self.state["ride_height"]["target_height"] = request.command
                         self.state["ride_height"]["current_height"] = request.command
 
-                    elif self.state["ride_height_system_status"]["source"] == RideHeightSystemStatus.Source.Value("S_APP"):
-
+                    elif self.state["ride_height_system_status"]["source"] == RideHeightSystemStatus.Source.Value(
+                        "S_APP"
+                    ):
                         if request.command == RideHeight.RideHeightLevel.Value("RHL_UNSPECIFIED"):
                             raise ValidationError(3, "Command value unspecified.")
                         elif request.command in self.state["ride_height"]["supported_heights"]:
-
                             self.state["ride_height"]["target_height"] = request.command
                             self.state["ride_height"]["current_height"] = request.command
 
