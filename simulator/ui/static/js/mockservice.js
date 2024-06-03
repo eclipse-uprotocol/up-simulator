@@ -42,7 +42,7 @@ function design_mock_services_list_layout(data) {
             if (running_services[k] == data.pkgs_mock[i].entity) {
                 service_status.style.display = "none";
                 design_service_status_layout(data.pkgs_mock[i].name, data.pkgs_mock[i].entity, "Loading")
-                refreshMockServiceStatus(data.pkgs_mock[i].entity, true, true)
+                refreshMockServiceStatus(data.pkgs_mock[i].entity, "Running", true)
                 document.getElementById("cb" + data.pkgs_mock[i].entity).checked = true
                 break;
             }
@@ -233,24 +233,21 @@ function startAllMockServices() {
                 }
             })
 
-
-
     }
 
-
 }
-function refreshMockServiceStatus(key, isSuccess, isAlreadyRunning) {
+function refreshMockServiceStatus(key, status, isAlreadyRunning) {
     // save service running status
 
     changeIconId = key + "Mock";
     changeStatus = document.getElementById(key);
     changeStatusIcon = document.getElementById(changeIconId)
     if (changeStatus) {
-        if (isSuccess) {
-            changeStatus.textContent = "Running";
+        changeStatus.textContent = status;
+
+        if (status == "Running") {
             changeStatus.style.color = "green";
         } else {
-            changeStatus.textContent = "Error";
             changeStatus.style.color = "red";
         }
     }
