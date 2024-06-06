@@ -24,17 +24,17 @@ import os
 
 from google.protobuf.descriptor import FieldDescriptor
 
-import simulator.utils.constant as CONSTANTS
 from simulator.core import protobuf_autoloader as autoloader
 from simulator.tools.common_methods import (
+    check_for_recursive_declaration,
+    get_config_name,
     get_field_info,
     get_max,
     get_min_value,
     get_property_text,
     get_type_in_string,
-    check_for_recursive_declaration,
-    get_config_name,
 )
+from simulator.utils import constant
 
 result_data = {}
 additional_data = {}
@@ -55,11 +55,7 @@ def get_pubsub(service_name):
 
 def get_topics_by_resource_name(resource_name, service_name):
     topics = autoloader.get_topics_by_proto_service_name(service_name)
-    return [
-        topic
-        for topic in topics
-        if topic.lower().split("#")[1] == resource_name.lower()
-    ]
+    return [topic for topic in topics if topic.lower().split("#")[1] == resource_name.lower()]
 
 
 def get_pure_class_type(topic):
@@ -79,9 +75,7 @@ def get_ui_details(topic):
             field_descriptor.type == FieldDescriptor.TYPE_ENUM
             and field_descriptor.enum_type.name in ["Resource", "Resources"]
         ) and not check_for_recursive_declaration(field_descriptor):
-            field_info[field_descriptor.name] = get_field_info(
-                field_descriptor
-            )
+            field_info[field_descriptor.name] = get_field_info(field_descriptor)
     message_name = message_class.DESCRIPTOR.name
     all_field_info[message_name] = field_info
     return all_field_info
@@ -89,21 +83,14 @@ def get_ui_details(topic):
 
 def remove_key_prefix(json_data, prefix):
     if isinstance(json_data, dict):
-        for key, value in list(
-            json_data.items()
-        ):  # Use list() to avoid modifying the dictionary while iterating
+        for key, value in list(json_data.items()):  # Use list() to avoid modifying the dictionary while iterating
             if key == "property" and value.startswith(prefix):
                 # Remove the key prefix
                 value = value[len(prefix) :]
                 json_data[key] = value
                 property_text_key = key + "Text"
-                if (
-                    property_text_key in json_data
-                    and json_data[property_text_key] == value
-                ):
-                    del json_data[
-                        property_text_key
-                    ]  # Remove propertyText key if its value is the same as property
+                if property_text_key in json_data and json_data[property_text_key] == value:
+                    del json_data[property_text_key]  # Remove propertyText key if its value is the same as property
             elif isinstance(value, (dict, list)):
                 remove_key_prefix(value, prefix)
     elif isinstance(json_data, list):
@@ -205,9 +192,7 @@ def extract_fields(data):
                                 {
                                     "type": type_str,
                                     "property": value["property"],
-                                    "minrange": get_min_value(
-                                        value["property"]
-                                    ),
+                                    "minrange": get_min_value(value["property"]),
                                     "maxrange": get_max(value["property"]),
                                 }
                             ],
@@ -290,19 +275,14 @@ def get_ui(pubsub, service_name):
                 ui_det = get_ui_details(configuration[0]["topic"])
                 ui_details = extract_fields(ui_det)
                 if not ui_details:
-                    ui_details = [
-                        {"type": "label", "text": "No protofields available"}
-                    ]
+                    ui_details = [{"type": "label", "text": "No protofields available"}]
 
                 modified_ui_list = ui_details
                 if "Geofence" not in resource_name:
                     modified_ui_list = [
                         item
                         for item in ui_details
-                        if not (
-                            item.get("type") == "string"
-                            and item.get("property") == "name"
-                        )
+                        if not (item.get("type") == "string" and item.get("property") == "name")
                     ]
 
                 part_dict = {
@@ -322,10 +302,10 @@ def check_resource(message):
     field_names = message_class.DESCRIPTOR.fields_by_name.keys()
     for field_name in field_names:
         field_descriptor = message_class.DESCRIPTOR.fields_by_name[field_name]
-        if (
-            field_descriptor.type == FieldDescriptor.TYPE_ENUM
-            and field_descriptor.enum_type.name in ["Resource", "Resources"]
-        ):
+        if field_descriptor.type == FieldDescriptor.TYPE_ENUM and field_descriptor.enum_type.name in [
+            "Resource",
+            "Resources",
+        ]:
             return field_name
     return None
 
@@ -347,13 +327,11 @@ def execute():
                     component["name_key"] = validate
 
     # Create the directory if it doesn't exist
-    if not os.path.exists(CONSTANTS.UI_JSON_DIR):
-        os.makedirs(CONSTANTS.UI_JSON_DIR)
-    PUB_SUB_JSON_FILE_PATH = os.path.join(
-        CONSTANTS.UI_JSON_DIR, CONSTANTS.PUB_SUB_JSON_FILE_NAME
-    )
+    if not os.path.exists(constant.UI_JSON_DIR):
+        os.makedirs(constant.UI_JSON_DIR)
+    pub_sub_json_file_path = os.path.join(constant.UI_JSON_DIR, constant.PUB_SUB_JSON_FILE_NAME)
     # Write JSON data to the pub-sub.json
-    with open(PUB_SUB_JSON_FILE_PATH, "w") as json_file:
+    with open(pub_sub_json_file_path, "w") as json_file:
         json.dump(result_data, json_file, indent=2)
         print("pub-sub.json is created successfully")
 

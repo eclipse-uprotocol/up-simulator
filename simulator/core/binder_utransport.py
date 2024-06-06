@@ -19,7 +19,6 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import json
 import socket
 import threading
@@ -32,12 +31,11 @@ from sys import platform
 from uprotocol.cloudevent.serialize.base64protobufserializer import (
     Base64ProtobufSerializer,
 )
-from uprotocol.proto.uattributes_pb2 import CallOptions
-from uprotocol.proto.uattributes_pb2 import UMessageType, UPriority
+from uprotocol.proto.uattributes_pb2 import CallOptions, UMessageType, UPriority
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.proto.uri_pb2 import UEntity, UUri
-from uprotocol.proto.ustatus_pb2 import UStatus, UCode
+from uprotocol.proto.ustatus_pb2 import UCode, UStatus
 from uprotocol.rpc.rpcclient import RpcClient
 from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
 from uprotocol.transport.ulistener import UListener
@@ -78,9 +76,7 @@ def status_update(s_id: str) -> UStatus:
     if status_event.wait(timeout=10):
         event, status = u_status.get(s_id)
     else:
-        status = UStatus(
-            code=UCode.UNKNOWN, message="Error: Timeout reached"
-        )
+        status = UStatus(code=UCode.UNKNOWN, message="Error: Timeout reached")
     u_status.pop(s_id, None)
     return status
 
@@ -89,13 +85,7 @@ def timeout_counter(response_future, reqid, timeout):
     time.sleep(timeout / 1000)
     if not response_future.done():
         response_future.set_exception(
-            TimeoutError(
-                "Not received response for request "
-                + reqid
-                + " within "
-                + str(timeout / 1000)
-                + " seconds"
-            )
+            TimeoutError("Not received response for request " + reqid + " within " + str(timeout / 1000) + " seconds")
         )
 
 
@@ -126,9 +116,7 @@ class SocketClient:
 
     def __init__(self):
         if not hasattr(self, "initialized"):
-            self.client_socket = socket.socket(
-                socket.AF_INET, socket.SOCK_STREAM
-            )
+            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server_address = ("127.0.0.1", 6095)
             self.connected = False
             self.initialized = True
@@ -139,9 +127,7 @@ class SocketClient:
     def connect(self):
         try:
             if not self.connected:
-                self.client_socket = socket.socket(
-                    socket.AF_INET, socket.SOCK_STREAM
-                )
+                self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.client_socket.connect(self.server_address)
                 self.connected = True
                 print("socket connected")
@@ -155,19 +141,17 @@ class SocketClient:
 
     def __receive_data(self):
         buffered_data = None
-        BUFFER_FLAG = False
+        buffer_flag = False
         while self.connected:
             try:
                 if platform == "linux" or platform == "linux2":
-                    received_data = self.client_socket.recv(
-                        MAX_MESSAGE_SIZE, socket.MSG_DONTWAIT
-                    )
+                    received_data = self.client_socket.recv(MAX_MESSAGE_SIZE, socket.MSG_DONTWAIT)
                 else:
                     received_data = self.client_socket.recv(MAX_MESSAGE_SIZE)
                 for formatted_data in received_data.splitlines():
-                    if BUFFER_FLAG:
+                    if buffer_flag:
                         formatted_data = buffered_data + formatted_data
-                        BUFFER_FLAG = False
+                        buffer_flag = False
                     else:
                         buffered_data = formatted_data
                     if formatted_data != "":
@@ -176,43 +160,27 @@ class SocketClient:
                         json_data = json.loads(data)
                         if "action" in json_data:
                             action = json_data["action"]
-                            serialized_data = (
-                                Base64ProtobufSerializer().serialize(
-                                    json_data["data"]
-                                )
-                            )
+                            serialized_data = Base64ProtobufSerializer().serialize(json_data["data"])
 
                             if action in ["topic_update", "rpc_request"]:
                                 parsed_message = UMessage()
                                 parsed_message.ParseFromString(serialized_data)
                                 if action == "topic_update":
-                                    uri_str = LongUriSerializer().serialize(
-                                        parsed_message.attributes.source
-                                    )
+                                    uri_str = LongUriSerializer().serialize(parsed_message.attributes.source)
 
                                     if uri_str in self.subscribe_callbacks:
-                                        callbacks = self.subscribe_callbacks[
-                                            uri_str
-                                        ]
+                                        callbacks = self.subscribe_callbacks[uri_str]
                                         for callback in callbacks:
                                             callback.on_receive(parsed_message)
                                     else:
-                                        print(
-                                            f"No callback registered for uri: {uri_str}. Discarding!"
-                                        )
+                                        print(f"No callback registered for uri: {uri_str}. Discarding!")
                                 else:
-                                    uri_str = LongUriSerializer().serialize(
-                                        parsed_message.attributes.sink
-                                    )
+                                    uri_str = LongUriSerializer().serialize(parsed_message.attributes.sink)
                                     if uri_str in self.rpc_request_callbacks:
-                                        callback = self.rpc_request_callbacks[
-                                            uri_str
-                                        ]
+                                        callback = self.rpc_request_callbacks[uri_str]
                                         callback.on_receive(parsed_message)
                                     else:
-                                        print(
-                                            f"No callback registered for uri: {uri_str}. Discarding!"
-                                        )
+                                        print(f"No callback registered for uri: {uri_str}. Discarding!")
 
                             elif action in [
                                 "publish_status",
@@ -231,18 +199,12 @@ class SocketClient:
                             elif action == "rpc_response":
                                 parsed_message = UMessage()
                                 parsed_message.ParseFromString(serialized_data)
-                                req_id = (
-                                    LongUuidSerializer.instance().serialize(
-                                        parsed_message.attributes.reqid
-                                    )
-                                )
+                                req_id = LongUuidSerializer.instance().serialize(parsed_message.attributes.reqid)
                                 future_result = m_requests[req_id]
                                 if not future_result.done():
                                     future_result.set_result(parsed_message)
                                 else:
-                                    print(
-                                        "Future result state is already finished or cancelled"
-                                    )
+                                    print("Future result state is already finished or cancelled")
                                 m_requests.pop(req_id)
 
                             elif action in ["create_topic_status"]:
@@ -251,18 +213,9 @@ class SocketClient:
                                 parsed_message = UStatus()
                                 parsed_message.ParseFromString(serialized_data)
                                 topic_uri_str = json_data["topic"]
-                                if (
-                                    topic_uri_str
-                                    in self._create_topic_status_callbacks
-                                ):
-                                    print(
-                                        f"create topic status called {topic_uri_str}"
-                                    )
-                                    callbacks = (
-                                        self._create_topic_status_callbacks[
-                                            topic_uri_str
-                                        ]
-                                    )
+                                if topic_uri_str in self._create_topic_status_callbacks:
+                                    print(f"create topic status called {topic_uri_str}")
+                                    callbacks = self._create_topic_status_callbacks[topic_uri_str]
                                     for callback in callbacks:
                                         callback(
                                             topic_uri_str,
@@ -270,9 +223,7 @@ class SocketClient:
                                             parsed_message.message,
                                         )
                                 else:
-                                    print(
-                                        f"No create topic callback registered for uri: {topic_uri_str}. Discarding!"
-                                    )
+                                    print(f"No create topic callback registered for uri: {topic_uri_str}. Discarding!")
                             elif action == "start_service":
                                 parsed_message = UStatus()
                                 parsed_message.ParseFromString(serialized_data)
@@ -287,10 +238,9 @@ class SocketClient:
             except (socket.timeout, OSError):
                 pass
             except json.decoder.JSONDecodeError:
-                BUFFER_FLAG = True
+                buffer_flag = True
 
     def send_data(self, message):
-
         try:
             self.client_socket.sendall(message.encode("utf-8"))
             return True
@@ -325,7 +275,6 @@ class SocketClient:
 
 
 class AndroidBinder(UTransport, RpcClient):
-
     def __init__(self):
         self.client = SocketClient()
         # Start a separate thread for receiving
@@ -352,9 +301,7 @@ class AndroidBinder(UTransport, RpcClient):
         return False
 
     def create_topic(self, entity, topics, status_callback):
-        self.client.register_create_topic_status_callback(
-            topics, status_callback
-        )
+        self.client.register_create_topic_status_callback(topics, status_callback)
         json_map = {"action": "create_topic", "data": entity, "topics": topics}
         message_to_send = json.dumps(json_map) + "\n"
         return self.client.send_data(message_to_send)
@@ -377,9 +324,7 @@ class AndroidBinder(UTransport, RpcClient):
             umsg.attributes.sink.entity.ClearField("version_minor")
             if not UriValidator.is_rpc_response(umsg.attributes.sink):
                 umsg.attributes.sink.resource.ClearField("id")
-        message_str = Base64ProtobufSerializer().deserialize(
-            umsg.SerializeToString()
-        )
+        message_str = Base64ProtobufSerializer().deserialize(umsg.SerializeToString())
         attributes = umsg.attributes
         topic = attributes.source
         # validate attributes
@@ -418,9 +363,7 @@ class AndroidBinder(UTransport, RpcClient):
         uri.entity.ClearField("version_minor")
         uri.resource.ClearField("id")
 
-        uri_str = Base64ProtobufSerializer().deserialize(
-            uri.SerializeToString()
-        )
+        uri_str = Base64ProtobufSerializer().deserialize(uri.SerializeToString())
 
         try:
             status_id = str(Factories.UPROTOCOL.create())
@@ -443,10 +386,7 @@ class AndroidBinder(UTransport, RpcClient):
         except Exception as e:
             return UStatus(message=str(e), code=UCode.UNKNOWN)
 
-    def invoke_method(
-        self, method_uri: UUri, payload: UPayload, calloptions: CallOptions
-    ) -> Future:
-
+    def invoke_method(self, method_uri: UUri, payload: UPayload, calloptions: CallOptions) -> Future:
         if method_uri is None or method_uri == UUri():
             raise Exception("Method Uri is empty")
         if payload is None:
@@ -457,9 +397,7 @@ class AndroidBinder(UTransport, RpcClient):
         if timeout <= 0:
             raise Exception("TTl is invalid or missing")
 
-        attributes = UAttributesBuilder.request(
-            RESPONSE_URI, method_uri, UPriority.UPRIORITY_CS4, timeout
-        ).build()
+        attributes = UAttributesBuilder.request(RESPONSE_URI, method_uri, UPriority.UPRIORITY_CS4, timeout).build()
         if "COVESA" not in REPO_URL:
             attributes.id.MergeFrom(Factories.UUIDV6.create())
         # check message type,id and ttl

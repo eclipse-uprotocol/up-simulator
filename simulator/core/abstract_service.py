@@ -19,21 +19,19 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import os
 import pickle
 import signal
 import time
 from pathlib import Path
-from sys import platform, exit
+from sys import exit, platform
 from threading import current_thread, main_thread
 
-from google.protobuf import text_format, any_pb2
+from google.protobuf import any_pb2, text_format
 from uprotocol.proto.uattributes_pb2 import UPriority
 from uprotocol.proto.umessage_pb2 import UMessage
-from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.proto.upayload_pb2 import UPayloadFormat
-from uprotocol.proto.uri_pb2 import UEntity, UUri, UResource
+from uprotocol.proto.upayload_pb2 import UPayload, UPayloadFormat
+from uprotocol.proto.uri_pb2 import UEntity, UResource, UUri
 from uprotocol.rpc.rpcmapper import RpcMapper
 from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
 from uprotocol.uri.factory.uresource_builder import UResourceBuilder
@@ -59,10 +57,7 @@ def get_instance(entity):
 
 
 class BaseService(object):
-    # instance = None
-
     def __init__(self, service_name=None, portal_callback=None, use_signal_handler=True):
-
         self.service = service_name
         self.subscriptions = {}
         self.portal_callback = portal_callback
@@ -82,12 +77,12 @@ class BaseService(object):
 
         self.load_state()
 
-    def RequestListener(func):
-        class wrapper:
+    def request_listener(self):
+        class Wrapper:
             @staticmethod
             def on_receive(message: UMessage):
                 global instance
-                print('wrapper on receive')
+                print('Wrapper on receive')
                 attributes = message.attributes
                 topic = attributes.sink
                 entity = topic.entity.name
@@ -98,7 +93,7 @@ class BaseService(object):
                 any_message = any_pb2.Any()
                 any_message.ParseFromString(payload.value)
                 req = RpcMapper.unpack_payload(any_message, req)
-                response = func(get_instance(entity), req, res)
+                response = self(get_instance(entity), req, res)
                 any_obj = any_pb2.Any()
                 any_obj.Pack(response)
                 payload_res = UPayload(value=any_obj.SerializeToString(), format=payload.format)
@@ -107,7 +102,7 @@ class BaseService(object):
                     get_instance(entity).portal_callback(req, method, response, get_instance(entity).publish_data)
                 return TransportLayer().send(UMessage(attributes=attributes, payload=payload_res))
 
-        return wrapper
+        return Wrapper
 
     def start_rpc_service(self) -> bool:
         if self.transport_layer.start_service(self.service):
@@ -124,15 +119,20 @@ class BaseService(object):
                             func = getattr(self, attr)
                             method_uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, attr)
                             method_uri = LongUriSerializer().deserialize(method_uri)
-                            method_uri.entity.MergeFrom(get_entity_from_descriptor(
-                                protobuf_autoloader.entity_descriptor[method_uri.entity.name]))
+                            method_uri.entity.MergeFrom(
+                                get_entity_from_descriptor(
+                                    protobuf_autoloader.entity_descriptor[method_uri.entity.name]
+                                )
+                            )
 
-                            method_uri.resource.MergeFrom(UResource(
-                                id=protobuf_autoloader.get_method_id_from_method_name(
-                                    method_uri.entity.name,
-                                    method_uri.resource.instance)))
-                            status = self.transport_layer.register_listener(
-                                method_uri, func)
+                            method_uri.resource.MergeFrom(
+                                UResource(
+                                    id=protobuf_autoloader.get_method_id_from_method_name(
+                                        method_uri.entity.name, method_uri.resource.instance
+                                    )
+                                )
+                            )
+                            status = self.transport_layer.register_listener(method_uri, func)
                             common_util.print_register_rpc_status(method_uri, status.code, status.message)
 
                             break
@@ -142,7 +142,6 @@ class BaseService(object):
             return False
 
     def publish(self, uri, params={}, is_from_rpc=False):
-
         message_class = protobuf_autoloader.get_request_class_from_topic_uri(uri)
         message = protobuf_autoloader.populate_message(self.service, message_class, params)
         any_obj = any_pb2.Any()
@@ -150,10 +149,10 @@ class BaseService(object):
         payload_data = any_obj.SerializeToString()
         payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY)
         source_uri = LongUriSerializer().deserialize(uri)
-        source_uri.entity.MergeFrom(get_entity_from_descriptor(
-            protobuf_autoloader.entity_descriptor[source_uri.entity.name]))
-        source_uri.resource.MergeFrom(UResource(
-            id=protobuf_autoloader.get_topic_id_from_topicuri(uri)))
+        source_uri.entity.MergeFrom(
+            get_entity_from_descriptor(protobuf_autoloader.entity_descriptor[source_uri.entity.name])
+        )
+        source_uri.resource.MergeFrom(UResource(id=protobuf_autoloader.get_topic_id_from_topicuri(uri)))
         attributes = UAttributesBuilder.publish(source_uri, UPriority.UPRIORITY_CS4).build()
         if "COVESA" not in REPO_URL:
             attributes.id.MergeFrom(Factories.UUIDV6.create())
@@ -174,10 +173,10 @@ class BaseService(object):
                 print(f"Skipping subscription for {uri}")
             self.subscriptions[uri] = listener
             topic_uri = LongUriSerializer().deserialize(uri)
-            topic_uri.entity.MergeFrom(get_entity_from_descriptor(
-                protobuf_autoloader.entity_descriptor[topic_uri.entity.name]))
-            topic_uri.resource.MergeFrom(UResource(
-                id=protobuf_autoloader.get_topic_id_from_topicuri(uri)))
+            topic_uri.entity.MergeFrom(
+                get_entity_from_descriptor(protobuf_autoloader.entity_descriptor[topic_uri.entity.name])
+            )
+            topic_uri.resource.MergeFrom(UResource(id=protobuf_autoloader.get_topic_id_from_topicuri(uri)))
             status = self.transport_layer.register_listener(topic_uri, listener)
             common_util.print_subscribe_status(uri, status.code, status.message)
             time.sleep(1)
@@ -196,12 +195,10 @@ class BaseService(object):
         time.sleep(2)
 
     def print(self, protobuf_obj):
-
         print(f"Message: {protobuf_obj.DESCRIPTOR.full_name}")
         print(text_format.MessageToString(protobuf_obj))
 
     def signal_handler(self, sig, frame):
-
         print("Exiting gracefully....")
         exit()
 

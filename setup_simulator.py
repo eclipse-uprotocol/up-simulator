@@ -28,15 +28,19 @@ def execute_pre_scripts():
     pull_and_compile_protos.execute()
     time.sleep(1)
     from simulator.tools import generate_resource_catalog
+
     generate_resource_catalog.execute()
     time.sleep(1)
     from simulator.tools import create_services_json_for_ui
+
     create_services_json_for_ui.execute()
     time.sleep(1)
     from simulator.tools import create_pub_sub_json_for_ui
+
     create_pub_sub_json_for_ui.execute()
     time.sleep(1)
     from simulator.tools import create_rpc_json_for_ui
+
     create_rpc_json_for_ui.execute()
     time.sleep(1)
 

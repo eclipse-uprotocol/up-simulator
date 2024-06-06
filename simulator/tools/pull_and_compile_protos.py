@@ -19,7 +19,6 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import os
 import re
 import shutil
@@ -30,24 +29,22 @@ from git import Repo
 
 from simulator.utils.constant import (
     PROTO_OUTPUT_DIR,
-    REPO_URL,
     PROTO_REPO_DIR,
+    REPO_URL,
     TAG_NAME,
 )
 
 
-def clone_or_pull(repo_url, PROTO_REPO_DIR):
+def clone_or_pull(repo_url, proto_repo_dir):
     try:
-        repo = Repo.clone_from(repo_url, PROTO_REPO_DIR)
-        print(
-            f"Repository cloned successfully from {repo_url} to {PROTO_REPO_DIR}"
-        )
+        repo = Repo.clone_from(repo_url, proto_repo_dir)
+        print(f"Repository cloned successfully from {repo_url} to {proto_repo_dir}")
         # Checkout the specific tag
         repo.git.checkout(TAG_NAME)
     except git.exc.GitCommandError:
         try:
             git_pull_command = ["git", "pull", "origin", TAG_NAME]
-            subprocess.run(git_pull_command, cwd=PROTO_REPO_DIR, check=True)
+            subprocess.run(git_pull_command, cwd=proto_repo_dir, check=True)
             print("Git pull successful after clone failure.")
         except subprocess.CalledProcessError as pull_error:
             print(f"Error during Git pull: {pull_error}")
@@ -79,9 +76,7 @@ def execute_maven_command(project_dir, command):
                     "python",
                 )
 
-                shutil.copytree(
-                    src_directory, PROTO_OUTPUT_DIR, dirs_exist_ok=True
-                )
+                shutil.copytree(src_directory, PROTO_OUTPUT_DIR, dirs_exist_ok=True)
                 process_python_protofiles(PROTO_OUTPUT_DIR)
     except Exception as e:
         print(f"Error executing Maven command: {e}")

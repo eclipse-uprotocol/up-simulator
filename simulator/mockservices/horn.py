@@ -19,15 +19,14 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
-from simulator.utils.constant import KEY_URI_PREFIX
 from simulator.target.protofiles.vehicle.body.horn.v1.horn_service_pb2 import (
     ActivateHornRequest,
     DeactivateHornRequest,
 )
 from simulator.target.protofiles.vehicle.body.horn.v1.horn_topics_pb2 import HornStatus
+from simulator.utils.constant import KEY_URI_PREFIX
 
 
 class HornService(BaseService):
@@ -51,11 +50,11 @@ class HornService(BaseService):
         """
         self.state["horn_status"] = self.init_message_state(HornStatus)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def ActivateHorn(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def DeactivateHorn(self, request, response):
         return self.handle_request(request, response)
 

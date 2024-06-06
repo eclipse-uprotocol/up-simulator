@@ -19,7 +19,6 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 from datetime import datetime
 from threading import Thread
 
@@ -28,8 +27,8 @@ from google.protobuf.text_format import MessageToString
 from google.type.timeofday_pb2 import TimeOfDay
 
 from simulator.core.abstract_service import BaseService
-from simulator.utils.constant import KEY_URI_PREFIX
 from simulator.target.protofiles.example.hello_world.v1.hello_world_topics_pb2 import Timer
+from simulator.utils.constant import KEY_URI_PREFIX
 
 
 class HelloWorldService(BaseService):
@@ -62,7 +61,7 @@ class HelloWorldService(BaseService):
         timer_pub_thread = Thread(target=self.PublishTimerMessage(), daemon=True)
         timer_pub_thread.start()
 
-    # The UltifiLink.RequestListener decorator is used to define an RPC
+    # The UltifiLink.request_listener decorator is used to define an RPC
     # handler. This decorator registers the method by using the method name.
     # The method must have same name as the RPC method.
     # When an rpc call is made for this
@@ -72,7 +71,7 @@ class HelloWorldService(BaseService):
     # response (a HelloResponse message).
     # The response object will be sent to the caller as the RPC response
     # after it returns from this method.
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SayHello(self, request, response):
         """
         Handles SayHello RPC calls. This method is called whenever a SayHello
@@ -92,7 +91,7 @@ class HelloWorldService(BaseService):
         print(MessageToString(response))
         return response
 
-    def PublishTimerMessage(service):
+    def PublishTimerMessage(self):
         """
         Publishes a Timer message based on the current timestamp after every second and every minute
         """
@@ -113,6 +112,6 @@ class HelloWorldService(BaseService):
                 if time_of_day.minutes != current_time.minute:
                     time_of_day.minutes = current_time.minute
                     # publish one minute topic with payload every minute
-                    service.publish(one_min_topic, MessageToDict(Timer(time=time_of_day)))
+                    self.publish(one_min_topic, MessageToDict(Timer(time=time_of_day)))
                 # publish one second topic with payload every second
-                service.publish(one_sec_topic, MessageToDict(Timer(time=time_of_day)))
+                self.publish(one_sec_topic, MessageToDict(Timer(time=time_of_day)))

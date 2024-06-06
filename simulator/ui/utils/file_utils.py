@@ -19,15 +19,14 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import json
 import os
 
-import simulator.utils.constant as CONSTANTS
+from simulator.utils import constant
 
 
 def save_rpc_data(socketio, lock_rpc, json_res):
-    rpc_file = CONSTANTS.FILENAME_RPC_LOGGER
+    rpc_file = constant.FILENAME_RPC_LOGGER
     lock_rpc.acquire()
     try:
         with open(rpc_file, 'a') as f:
@@ -42,18 +41,18 @@ def save_rpc_data(socketio, lock_rpc, json_res):
         lock_rpc.release()
 
     try:
-        with open(CONSTANTS.FILENAME_RPC_LOGGER, 'r') as fp:
+        with open(constant.FILENAME_RPC_LOGGER, 'r') as fp:
             data = fp.read()
             if data:
                 # Append square brackets to make it a valid JSON array
                 data = f'[{data}]'
-                socketio.emit(CONSTANTS.CALLBACK_RPCLOGGER, data, namespace=CONSTANTS.NAMESPACE)
+                socketio.emit(constant.CALLBACK_RPCLOGGER, data, namespace=constant.NAMESPACE)
     except IOError as exc:
         print(exc)
 
 
 def save_pub_sub_data(socketio, lock_pubsub, json_res):
-    pubsub_file = CONSTANTS.FILENAME_PUBSUB_LOGGER
+    pubsub_file = constant.FILENAME_PUBSUB_LOGGER
     lock_pubsub.acquire()
     try:
         with open(pubsub_file, 'a') as f:
@@ -73,6 +72,6 @@ def save_pub_sub_data(socketio, lock_pubsub, json_res):
             if data:
                 # Append square brackets to make it a valid JSON array
                 data = f'[{data}]'
-                socketio.emit(CONSTANTS.CALLBACK_PUBSUB_LOGGER, data, namespace=CONSTANTS.NAMESPACE)
+                socketio.emit(constant.CALLBACK_PUBSUB_LOGGER, data, namespace=constant.NAMESPACE)
     except IOError as exc:
         print(exc)

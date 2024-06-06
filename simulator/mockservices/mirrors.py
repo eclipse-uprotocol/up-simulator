@@ -20,22 +20,20 @@ SPDX-License-Identifier: Apache-2.0
 """
 
 from simulator.core.abstract_service import BaseService
-
 from simulator.target.protofiles.vehicle.body.mirrors.v1.mirrors_service_pb2 import (
-    SlideSideMirrorRequest,
-    FoldSideMirrorRequest,
-    UnfoldSideMirrorRequest,
-    TiltSideMirrorRequest,
-    UntiltSideMirrorRequest,
     ActivateHeatedSideMirrorRequest,
     DeactivateHeatedSideMirrorRequest,
-    UpdateSideMirrorMovementSettingsRequest,
+    FoldSideMirrorRequest,
+    SlideSideMirrorRequest,
+    TiltSideMirrorRequest,
+    UnfoldSideMirrorRequest,
+    UntiltSideMirrorRequest,
     UpdateHeatedSideMirrorsSettingsRequest,
+    UpdateSideMirrorMovementSettingsRequest,
 )
 
 
 class BodyMirrorsService(BaseService):
-
     def __init__(self, portal_callback=None):
         """
         BodyMirrorsService constructor
@@ -50,44 +48,43 @@ class BodyMirrorsService(BaseService):
         self.state = {}
 
     # RPC Request Listeners for each RPC method
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SlideSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def FoldSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def UnfoldSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def TiltSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def UntiltSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def ActivateHeatedSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def DeactivateHeatedSideMirror(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def UpdateSideMirrorMovementSettings(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def UpdateHeatedSideMirrorsSettings(self, request, response):
         return self.handle_request(request, response)
 
     def handle_request(self, request, response):
-
         # handle SlideSideMirror request
         if isinstance(request, SlideSideMirrorRequest):
             # todo return SlideSideMirrorResponse response, Implement your logic here

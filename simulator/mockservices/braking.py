@@ -19,7 +19,6 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import re
 
 from uprotocol.proto.umessage_pb2 import UMessage
@@ -28,8 +27,10 @@ from uprotocol.transport.ulistener import UListener
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
 from simulator.target.protofiles.common.health_state_pb2 import HealthState
-from simulator.target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import ResetHealthRequest, \
-    ManageHealthMonitoringRequest
+from simulator.target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import (
+    ManageHealthMonitoringRequest,
+    ResetHealthRequest,
+)
 from simulator.target.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
 from simulator.utils.constant import KEY_URI_PREFIX
 
@@ -95,11 +96,11 @@ class BrakingService(BaseService):
         self.state["brake_pads.front"]["health"]["state"] = message.health.state
         self.state["brake_pads.rear"]["health"]["state"] = message.health.state
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def ResetHealth(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def ManageHealthMonitoring(self, request, response):
         return self.handle_request(request, response)
 
@@ -154,9 +155,9 @@ class BrakingService(BaseService):
             if request.name not in ["brake_pads.front", "brake_pads.rear"]:
                 raise ValidationError(12, f"Unsupported brake name: {request.name}")
 
-            elif self.state["brake_pads.front"]["health"]["state"] == HealthState.State.Value("S_UNSUPPORTED") and self.state[
-                "brake_pads.rear"
-            ]["health"]["state"] == HealthState.State.Value("S_UNSUPPORTED"):
+            elif self.state["brake_pads.front"]["health"]["state"] == HealthState.State.Value(
+                "S_UNSUPPORTED"
+            ) and self.state["brake_pads.rear"]["health"]["state"] == HealthState.State.Value("S_UNSUPPORTED"):
                 raise ValidationError(2, "Health monitoring unsupported.")
 
             elif (

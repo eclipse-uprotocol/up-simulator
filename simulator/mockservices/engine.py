@@ -20,14 +20,12 @@ SPDX-License-Identifier: Apache-2.0
 """
 
 from simulator.core.abstract_service import BaseService
-
 from simulator.target.protofiles.vehicle.propulsion.engine.v1.engine_service_pb2 import (
     ResetHealthRequest,
 )
 
 
 class EngineService(BaseService):
-
     def __init__(self, portal_callback=None):
         """
         EngineService constructor
@@ -42,7 +40,7 @@ class EngineService(BaseService):
         self.state = {}
 
     # RPC Request Listeners for each RPC method
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def ResetHealth(self, request, response):
         return self.handle_request(request, response)
 

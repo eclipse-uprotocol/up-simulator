@@ -19,22 +19,21 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import json
 import os
 
 from google.protobuf.descriptor import FieldDescriptor
 
-import simulator.utils.constant as CONSTANTS
 from simulator.core import protobuf_autoloader as autoloader
 from simulator.tools.common_methods import (
+    get_config_name,
     get_field_info,
     get_max,
     get_min_value,
     get_property_text,
     get_type_in_string,
-    get_config_name,
 )
+from simulator.utils import constant
 
 result_data = {}
 additional_data = {}
@@ -59,13 +58,9 @@ def find_enum_values(enum_descriptor):
 
 def get_enums_without_fields(message_class):
     try:
-        enum_values = message_class.DESCRIPTOR.enum_types_by_name.get(
-            "Resources", None
-        )
+        enum_values = message_class.DESCRIPTOR.enum_types_by_name.get("Resources", None)
         if enum_values is None:
-            enum_values = message_class.DESCRIPTOR.enum_types_by_name.get(
-                "Resource", None
-            )
+            enum_values = message_class.DESCRIPTOR.enum_types_by_name.get("Resource", None)
         if enum_values:
             return [enum_value.name for enum_value in enum_values.values]
     except KeyError:
@@ -78,28 +73,17 @@ def get_resources_from_message_class(message_class):
         nested_enum_names.extend(get_enums_without_fields(message_class))
     for field_name in message_class.DESCRIPTOR.fields_by_name.keys():
         field_descriptor = message_class.DESCRIPTOR.fields_by_name[field_name]
-        if (
-            field_descriptor.enum_type is not None
-            and field_descriptor.enum_type.containing_type is not None
-        ):
-            nested_message_class = autoloader.find_message(
-                field_descriptor.enum_type.containing_type.full_name
-            )
+        if field_descriptor.enum_type is not None and field_descriptor.enum_type.containing_type is not None:
+            nested_message_class = autoloader.find_message(field_descriptor.enum_type.containing_type.full_name)
             if get_enums_without_fields(nested_message_class) is not None:
-                nested_enum_names.extend(
-                    get_enums_without_fields(nested_message_class)
-                )
+                nested_enum_names.extend(get_enums_without_fields(nested_message_class))
 
         if (
             field_descriptor.type == FieldDescriptor.TYPE_MESSAGE
         ):  # Assuming type FieldDescriptor.TYPE_MESSAGE corresponds to a nested message
-            nested_message_class = (
-                field_descriptor.message_type._concrete_class
-            )
+            nested_message_class = field_descriptor.message_type._concrete_class
             if get_enums_without_fields(nested_message_class) is not None:
-                nested_enum_names.extend(
-                    get_enums_without_fields(nested_message_class)
-                )
+                nested_enum_names.extend(get_enums_without_fields(nested_message_class))
 
     return nested_enum_names
 
@@ -109,28 +93,17 @@ def find_enum_fields_recursive(message_class):
     enum_fields = []
     for field_name in message_class.DESCRIPTOR.fields_by_name.keys():
         field_descriptor = message_class.DESCRIPTOR.fields_by_name[field_name]
-        if (
-            field_descriptor.enum_type is not None
-            and field_descriptor.enum_type.name in ["Resource", "Resources"]
-        ):
+        if field_descriptor.enum_type is not None and field_descriptor.enum_type.name in ["Resource", "Resources"]:
             enum_values = find_enum_values(field_descriptor.enum_type)
-            enum_fields.append(
-                {"field_name": field_name, "enum_values": enum_values}
-            )
+            enum_fields.append({"field_name": field_name, "enum_values": enum_values})
         elif (
             field_descriptor.type == FieldDescriptor.TYPE_MESSAGE
         ):  # FieldDescriptor.TYPE_MESSAGE corresponds to FieldDescriptor.TYPE_MESSAGE
-            nested_message_class = (
-                field_descriptor.message_type._concrete_class
-            )
-            nested_enum_fields = find_enum_fields_recursive(
-                nested_message_class
-            )
+            nested_message_class = field_descriptor.message_type._concrete_class
+            nested_enum_fields = find_enum_fields_recursive(nested_message_class)
             if nested_enum_fields:
                 for nested_enum_field in nested_enum_fields:
-                    nested_field_name = (
-                        f"{field_name}.{nested_enum_field['field_name']}"
-                    )
+                    nested_field_name = f"{field_name}.{nested_enum_field['field_name']}"
                     enum_fields.append(
                         {
                             "field_name": nested_field_name,
@@ -144,21 +117,16 @@ def find_enum_fields_recursive(message_class):
 def get_ui_details(resource_name, service_name):
     all_field_info = {}
     try:
-        message_class = autoloader.get_request_class(
-            service_name, resource_name
-        )
+        message_class = autoloader.get_request_class(service_name, resource_name)
         field_names = message_class.DESCRIPTOR.fields_by_name.keys()
         field_info = {}
         for field_name in field_names:
             if field_name == "update_mask":
                 pass
             else:
-                field_descriptor = message_class.DESCRIPTOR.fields_by_name[
-                    field_name
-                ]
+                field_descriptor = message_class.DESCRIPTOR.fields_by_name[field_name]
                 if field_descriptor.type == FieldDescriptor.TYPE_ENUM and (
-                    field_descriptor.enum_type.name == "Resource"
-                    or field_descriptor.enum_type.name == "Resources"
+                    field_descriptor.enum_type.name == "Resource" or field_descriptor.enum_type.name == "Resources"
                 ):
                     pass
                 else:
@@ -173,9 +141,7 @@ def get_ui_details(resource_name, service_name):
 
 def remove_key_prefix(json_data, prefix):
     if isinstance(json_data, dict):
-        for key, value in list(
-            json_data.items()
-        ):  # Use list() to avoid modifying the dictionary while iterating
+        for key, value in list(json_data.items()):  # Use list() to avoid modifying the dictionary while iterating
             if key == "property":
                 del json_data["property"]
             elif key == "rpcproperty" and value.startswith(prefix):
@@ -286,9 +252,7 @@ def extract_fields(data):
                                 {
                                     "type": type_str,
                                     "property": value["property"],
-                                    "minrange": get_min_value(
-                                        value["property"]
-                                    ),
+                                    "minrange": get_min_value(value["property"]),
                                     "maxrange": get_max(value["property"]),
                                 }
                             ],
@@ -330,7 +294,6 @@ def extract_fields(data):
                         }
                     )
             if check:
-
                 check = False
             else:
                 result.extend(extract_fields(value))
@@ -360,9 +323,7 @@ def get_ui(resources, service_name):
         name = "N"
         display_name = resource_name
         rpc_method = resource_name
-        message_class = autoloader.get_request_class(
-            service_name, resource_name
-        )
+        message_class = autoloader.get_request_class(service_name, resource_name)
         configuration = []
         enum_fields = find_enum_fields_recursive(message_class)
         if enum_fields == [] or enum_fields is None:
@@ -422,12 +383,7 @@ def get_ui(resources, service_name):
         modified_ui_list = ui_details
         if "SayHello" != rpc_method and "Geofence" not in resource_name:
             modified_ui_list = [
-                item
-                for item in ui_details
-                if not (
-                    item.get("type") == "string"
-                    and item.get("property") == "name"
-                )
+                item for item in ui_details if not (item.get("type") == "string" and item.get("property") == "name")
             ]
         part_dict = {
             resource_name: {
@@ -448,13 +404,11 @@ def execute():
                 result_data[service] = data
 
         # Create the directory if it doesn't exist
-    if not os.path.exists(CONSTANTS.UI_JSON_DIR):
-        os.makedirs(CONSTANTS.UI_JSON_DIR)
-    RPC_JSON_FILE_PATH = os.path.join(
-        CONSTANTS.UI_JSON_DIR, CONSTANTS.RPC_JSON_FILE_NAME
-    )
+    if not os.path.exists(constant.UI_JSON_DIR):
+        os.makedirs(constant.UI_JSON_DIR)
+    rpc_json_file_path = os.path.join(constant.UI_JSON_DIR, constant.RPC_JSON_FILE_NAME)
     # Write JSON data to the pub-sub.json
-    with open(RPC_JSON_FILE_PATH, "w") as json_file:
+    with open(rpc_json_file_path, "w") as json_file:
         json.dump(result_data, json_file, indent=2)
         print("rpc.json is created successfully")
 

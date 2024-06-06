@@ -19,16 +19,15 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import re
 
-from simulator.target.protofiles.vehicle.v1.vehicle_service_pb2 import ResetTripMeterRequest, SetTransportModeRequest
-from simulator.target.protofiles.vehicle.v1.vehicle_topics_pb2 import TripMeter, VehicleUsage
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
 from simulator.core.abstract_service import BaseService
 from simulator.core.exceptions import ValidationError
+from simulator.target.protofiles.vehicle.v1.vehicle_service_pb2 import ResetTripMeterRequest, SetTransportModeRequest
+from simulator.target.protofiles.vehicle.v1.vehicle_topics_pb2 import TripMeter, VehicleUsage
 from simulator.utils.constant import KEY_URI_PREFIX
 
 
@@ -98,11 +97,11 @@ class VehicleService(BaseService):
             self.state["transport_mode"]["is_setting_change_allowed"] = message.is_setting_change_allowed
             self.state["transport_mode"]["is_active"] = message.is_active
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def ResetTripMeter(self, request, response):
         return self.handle_request(request, response)
 
-    @BaseService.RequestListener
+    @BaseService.request_listener
     def SetTransportMode(self, request, response):
         return self.handle_request(request, response)
 

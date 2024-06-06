@@ -19,11 +19,11 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 import logging
 from importlib import import_module
-from simulator.ui.utils import adb_utils
+
 from simulator.core.transport_layer import TransportLayer
+from simulator.ui.utils import adb_utils
 
 logger = logging.getLogger("CommonUtil")
 reg_id = []
@@ -61,7 +61,7 @@ def flatten_dict(in_dict, prefix=""):
     new_dict = {}
     for k in in_dict.keys():
         v = in_dict[k]
-        if type(v) is dict:
+        if isinstance(v, dict):
             new_prefix = prefix + "." + k if prefix else k
             new_dict.update(flatten_dict(v, prefix=new_prefix))
 
@@ -88,9 +88,7 @@ def get_class(full_name):
 
 def print_subscribe_status(topic, status_code, status_message):
     logger.debug("subscribe_status: Topic contents...")
-    logger.debug(
-        f"Topic: {topic}, Status Code: {status_code}, Status Message: {status_message}"
-    )
+    logger.debug(f"Topic: {topic}, Status Code: {status_code}, Status Message: {status_message}")
     if status_code == 0:
         logger.debug(f"Successfully subscribed for {topic}")
     else:
@@ -102,9 +100,7 @@ def print_subscribe_status(topic, status_code, status_message):
 
 def print_publish_status(topic, status_code, status_message):
     logger.debug("publish_status: Topic contents...")
-    logger.debug(
-        f"Topic: {topic}, Status Code: {status_code}, Status Message: {status_message}"
-    )
+    logger.debug(f"Topic: {topic}, Status Code: {status_code}, Status Message: {status_message}")
     if status_code == 0:
         logger.debug(f"Successfully published for {topic}")
     else:
@@ -116,9 +112,7 @@ def print_publish_status(topic, status_code, status_message):
 
 def print_register_rpc_status(methoduri, status_code, status_message):
     logger.debug("register_rpc_status: contents...")
-    logger.debug(
-        f"Method uri: {methoduri}, Status Code: {status_code}, Status Message: {status_message}"
-    )
+    logger.debug(f"Method uri: {methoduri}, Status Code: {status_code}, Status Message: {status_message}")
     if status_code == 0:
         logger.debug(f"Successfully subscribed for {methoduri}")
     else:
@@ -130,13 +124,11 @@ def print_register_rpc_status(methoduri, status_code, status_message):
 
 def print_create_topic_status_handler(topic, status_code, status_message):
     logger.debug("create_topic_status: Topic contents...")
-    logger.debug(
-        f"Topic: {topic}, Status Code: {status_code}, Status Message: {status_message}"
-    )
+    logger.debug(f"Topic: {topic}, Status Code: {status_code}, Status Message: {status_message}")
     if status_code == 0:
         logger.debug(f"Successfully Created topic for {topic}")
     else:
         logger.error(
-            f"Unsuccessful Creation of topic for {topic} as the status code is {status_code} " +
-            f"with status message {status_message}"
+            f"Unsuccessful Creation of topic for {topic} as the status code is {status_code} "
+            + f"with status message {status_message}"
         )

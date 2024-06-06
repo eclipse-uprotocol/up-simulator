@@ -25,9 +25,9 @@
 # -------------------------------------------------------------------------
 
 
-from flask import Flask
 from importlib import import_module
-from flask import Blueprint
+
+from flask import Blueprint, Flask
 
 
 def register_blueprints(app):
@@ -43,9 +43,5 @@ def create_app(config):
 
 
 blueprint = Blueprint(
-    'simulator_blueprint',
-    __name__,
-    url_prefix='',
-    template_folder='templates',
-    static_folder='static'
+    'simulator_blueprint', __name__, url_prefix='', template_folder='templates', static_folder='static'
 )
