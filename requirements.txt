@@ -7,4 +7,4 @@ protobuf>=4.24.2
 pyaxmlparser==0.3.30
 up-python==0.1.2-dev
 googleapis-common-protos==1.62.0
-up-client-zenoh-python @ git+https://github.com/eclipse-uprotocol/up-client-zenoh-python.git
+up-client-zenoh-python @ git+https://github.com/eclipse-uprotocol/up-client-zenoh-python.git@0501a7771ca3cc9caa31df9de0548a32d670d8d2

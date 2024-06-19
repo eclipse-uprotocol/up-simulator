@@ -26,12 +26,8 @@ from urllib.parse import unquote
 
 from flask import redirect, render_template, request, send_file, url_for
 
-from simulator.core.vehicle_service_utils import get_all_running_service
 from simulator.core import vehicle_service_utils
-from simulator.core.vehicle_service_utils import (
-    get_all_running_service,
-    get_all_configured_someip_service,
-)
+from simulator.core.vehicle_service_utils import get_all_configured_someip_service, get_all_running_service
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
 from simulator.utils import constant
@@ -60,7 +56,6 @@ def route_configuration():
                     "Avd_name": device.shell("getprop ro.boot.qemu.avd_name"),
                     "Image": device.shell("getprop ro.product.bootimage.name"),
                     "Build_date": device.shell("getprop ro.bootimage.build.date"),
-                    # 'Build_id': device.shell("getprop ro.bootimage.build.id"),
                     "Model": device.shell("getprop ro.product.model"),
                 }
             else:
@@ -109,9 +104,7 @@ def route_pubsub():
 @blueprint.route("/rpc-logger.html")
 def route_rpc_logger():
     try:
-        f = open(
-            os.path.join(run_directory, "simulator", CONSTANTS.FILENAME_RPC_LOGGER)
-        )
+        f = open(os.path.join(run_directory, "simulator", constant.FILENAME_RPC_LOGGER))
         data = f.read()
         f.close()
         data = f"[{data}]"
@@ -227,11 +220,7 @@ def get_mock_services():
             "core.udiscovery",
             "core.utelemetry",
             "core.usubscription",
-        ] and (
-            m["name"] in vehicle_service_utils.someip_entity
-            or env == "Someip"
-            or transport != "SOME/IP"
-        ):
+        ] and (m["name"] in vehicle_service_utils.someip_entity or env == "Someip" or transport != "SOME/IP"):
             pkgs = {"entity": m["name"], "name": m["display_name"]}
             mockservice_pkgs.append(pkgs)
     if env == "Someip":

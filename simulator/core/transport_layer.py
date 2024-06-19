@@ -20,10 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 """
 
 import json
-import os
-import pathlib
 from concurrent.futures import Future
-from typing import List
 
 from uprotocol.proto.uattributes_pb2 import CallOptions
 from uprotocol.proto.umessage_pb2 import UMessage
@@ -32,64 +29,19 @@ from uprotocol.proto.uri_pb2 import UAuthority, UEntity, UUri
 from uprotocol.proto.ustatus_pb2 import UStatus
 from uprotocol.transport.ulistener import UListener
 
-from simulator.core import vehicle_service_utils
-
 try:
     from uprotocol_vsomeip.vsomeip_utransport import (
-        VsomeipTransport,
         VsomeipHelper,
+        VsomeipTransport,
     )
+
+    from simulator.core.someip_helper import SomeipHelper
 except ImportError:
     pass
 
+from uprotocol.uri.factory.uresource_builder import UResourceBuilder
+
 from simulator.core.binder_utransport import AndroidBinder
-from simulator.utils.constant import RESOURCE_CATALOG_JSON_NAME
-
-
-class Helper(VsomeipHelper):
-
-    def services_info(self) -> List[VsomeipHelper.UEntityInfo]:
-        entity_info = []
-        cwd = pathlib.Path(__file__).parent.resolve()
-        # Specify the relative path to the CSV file
-        relative_path = os.path.abspath(os.path.join(cwd, "../target/resource_catalog"))
-        # Combine the current working directory and the relative path
-        json_file_path = relative_path + os.sep + RESOURCE_CATALOG_JSON_NAME
-        with open(json_file_path, "r") as json_file:
-            json_data = json_file.read()
-            resource_catalog = json.loads(json_data)
-            port = 30509
-            for data in resource_catalog["node"]:
-                # Extract service id, name, and topic ids
-                topic_ids = []
-                if (
-                    "node" in data
-                    and "id" in data["node"]
-                    and "type" in data["node"]
-                    and data["node"]["type"] == "service"
-                ):
-                    service_name = data["node"]["uri"].split("/")[1]
-
-                    service_id = data["node"]["id"]
-                    for node in data["node"]["node"]:
-                        if "type" in node and node["type"] == "topic":
-                            topic_ids.append(int(node["id"]))
-                    for property in data["node"]["properties"]:
-                        if property["name"] == "version_major":
-                            major_version = property["value"]
-                            break
-                    if service_name in vehicle_service_utils.someip_entity:
-                        entity_info.append(
-                            VsomeipHelper.UEntityInfo(
-                                Name=service_name,
-                                Id=int(service_id),
-                                Events=topic_ids,
-                                Port=port,
-                                MajorVersion=major_version,
-                            )
-                        )
-                    port = port + 1
-        return entity_info
 
 
 class TransportLayer:
@@ -108,6 +60,8 @@ class TransportLayer:
             self.__instance = None
             self.__ZENOH_IP = "10.0.3.3"
             self.__ZENOH_PORT = 9090
+            self.__SOMEIP_UNICAST_IP = "127.0.0.1"
+            self.__SOMEIP_MULTICAST_IP = "224.224.224.245"
             self.__utransport = "BINDER"
             self._update_instance()
 
@@ -126,6 +80,7 @@ class TransportLayer:
         return self.__utransport
 
     def set_zenoh_config(self, ip, port):
+        self.__utransport = "ZENOH"
         if self.__ZENOH_PORT != port or self.__ZENOH_IP != ip:
             self.__ZENOH_PORT = port
             self.__ZENOH_IP = ip
@@ -133,6 +88,8 @@ class TransportLayer:
 
     def set_someip_config(self, localip, multicast):
         self.__utransport = "SOME/IP"
+        self.__SOMEIP_UNICAST_IP = localip
+        self.__SOMEIP_MULTICAST_IP = multicast
         self._update_instance()
 
     def _update_instance(self):
@@ -150,18 +107,25 @@ class TransportLayer:
                 conf.insert_json5(zenoh.config.MODE_KEY, json.dumps("client"))
                 conf.insert_json5(zenoh.config.CONNECT_KEY, json.dumps(endpoint))
             from up_client_zenoh.upclientzenoh import UPClientZenoh
-            
+
             self.__instance = UPClientZenoh(
-                conf, UAuthority(name="test_authority"), UEntity(name="test_entity", version_major=1)
+                conf, UAuthority(name="simulator_authority"), UEntity(name="simulator_entity", version_major=1)
             )
 
         elif self.__utransport == "SOME/IP":
             self.__helper = VsomeipHelper()
-            self.__instance = VsomeipTransport(helper=Helper())
+            self.__instance = VsomeipTransport(
+                helper=SomeipHelper(),
+                source=UUri(
+                    authority=UAuthority(name="simulator_authority"),
+                    entity=UEntity(name="simulator_entity", version_major=1),
+                    resource=UResourceBuilder.for_rpc_response(),
+                ),
+                unicast=self.__SOMEIP_UNICAST_IP,
+                multicast=(self.__SOMEIP_MULTICAST_IP, 30490),
+            )
 
-    def invoke_method(
-        self, topic: UUri, payload: UPayload, calloptions: CallOptions
-    ) -> Future:
+    def invoke_method(self, topic: UUri, payload: UPayload, calloptions: CallOptions) -> Future:
         return self.__instance.invoke_method(topic, payload, calloptions)
 
     def send(self, umessage: UMessage) -> UStatus:

@@ -11,3 +11,5 @@ simulator/target
 simulator/oem_mockservices
 *.sh
 .ruff_cache
+simulator/vsomeip.json
+vsomeip.json
