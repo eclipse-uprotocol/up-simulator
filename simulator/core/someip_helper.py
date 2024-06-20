@@ -54,7 +54,7 @@ class SomeipHelper(VsomeipHelper):
                     service_id = data["node"]["id"]
                     for node in data["node"]["node"]:
                         if "type" in node and node["type"] == "topic":
-                            topic_ids.append(int(node["id"]))
+                            topic_ids.append(int(node["id"]) + 32768)
                     for property in data["node"]["properties"]:
                         if property["name"] == "version_major":
                             major_version = property["value"]
