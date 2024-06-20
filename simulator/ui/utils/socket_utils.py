@@ -37,6 +37,7 @@ from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
 from simulator.core import protobuf_autoloader
 from simulator.core.vehicle_service_utils import (
+    configure_someip_service,
     get_entity_from_descriptor,
     get_service_instance_from_entity,
     start_service,
@@ -181,6 +182,14 @@ class SocketUtility:
                 log,
                 namespace=constant.NAMESPACE,
             )
+
+    def configure_service_someip(self, json_service):
+        configure_someip_service(json_service["entity"])
+        self.socketio.emit(
+            constant.CALLBACK_CONFIGURE_SOMEIP_SERVICE,
+            {"entity": json_service["entity"], "status": True},
+            namespace=constant.NAMESPACE,
+        )
 
     def start_mock_service(self, json_service):
         status = verify_all_checks()

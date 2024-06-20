@@ -55,6 +55,15 @@ This step is essential for establishing a connection between the emulator and th
 +
 image::screenshots/zenoh_router.png[]
 
+=== SOME/IP
+* Install vsomeip, refer to this https://github.com/eclipse-uprotocol/up-transport-vsomeip-python?tab=readme-ov-file#prerequisites[link] for the installation instructions.
+* Once vsomeip is installed, execute the following command to install up-transport-vsomeip-python.
++
+[source]
+----
+python3 -m pip install 'uprotocol-vsomeip-python @git+https://github.com/eclipse-uprotocol/up-transport-vsomeip-python.git@db101d4'
+----
+
 == How to Setup the up-Simulator
 
 To set up the simulator, follow the steps below:
@@ -106,7 +115,7 @@ To start and use the `up-simulator`, follow the steps below:
 python3 simulator/run.py
 ----
 
-. On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it supports Android and Zenoh clients. You can choose either one.
+. On the uP Simulator web interface, you will see a dropdown to select the uP client. Currently, it supports Android, SOME/IP and Zenoh clients. You can choose any one of them.
 .. Android
 +
 image::screenshots/configuration.png[]
@@ -115,7 +124,11 @@ image::screenshots/configuration.png[]
 image::screenshots/zenoh_config.png[]
 +
 You need to set the Zenoh router's IP address and port number.
-
+.. SOME/IP
++
+image::screenshots/someip_config.png[]
++
+You need to set the SOME/IP unicast and multicast IP addresses, configure the service that you want SOME/IP to offer, and then click the `SAVE` button
 
 . To use the publish and subscribe functionality, click on the "Publish-Subscribe" menu. Within this menu, you will find a list of Covesa services.
 +

@@ -1,3 +1,17 @@
+/*
+SPDX-FileCopyrightText: 2024 Contributors to the Eclipse Foundation
+
+See the NOTICE file(s) distributed with this work for additional
+information regarding copyright ownership.
+
+This program and the accompanying materials are made available under the
+terms of the Apache License Version 2.0 which is available at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
 function myFunctionmock() {
     var input, filter, ul, li, a, i, txtValue;
     searchinput = document.getElementById("searchmock");
@@ -16,7 +30,7 @@ function myFunctionmock() {
 }
 
 function getMockServices() {
-    fetch("/getmockservices")
+    fetch("/getmockservices?transport=" + localStorage.getItem("utransportConfig"))
         .then((res) => res.json())
         .then((data) => {
             if (data.result) {
@@ -215,7 +229,7 @@ function startAllMockServices() {
             }
         }
     } else {
-        fetch("/getmockservices")
+        fetch("/getmockservices?transport=" + localStorage.getItem("utransportConfig"))
             .then((res) => res.json())
             .then((data) => {
                 if (data.result) {

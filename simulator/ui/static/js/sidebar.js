@@ -1,26 +1,17 @@
 /*
- * Copyright (c) 2023 General Motors GTO LLC
- *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- * SPDX-FileType: SOURCE
- * SPDX-FileCopyrightText: 2023 General Motors GTO LLC
- * SPDX-License-Identifier: Apache-2.0
- */
+SPDX-FileCopyrightText: 2024 Contributors to the Eclipse Foundation
+
+See the NOTICE file(s) distributed with this work for additional
+information regarding copyright ownership.
+
+This program and the accompanying materials are made available under the
+terms of the Apache License Version 2.0 which is available at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
 
 
 function setTransport(value) {
@@ -46,8 +37,15 @@ function resetViews(value) {
         document.getElementById('zenoh_config_div').hidden = true
         document.getElementById('mqtt_config_div').hidden = true
         document.getElementById('vehicle_config_div').hidden = true
+        document.getElementById("configservicesdialog").hidden = true
+        document.getElementById("someip_save").hidden = true
+        document.getElementById("register_ve_config").className = "card Services box-content-data config-firstRow"
         if (value == "SOME/IP") {
             document.getElementById('someip_config_div').hidden = false
+            document.getElementById("configservicesdialog").hidden = false
+            document.getElementById("someip_save").hidden = false
+            document.getElementById("register_ve_config").className = "card Services box-content-data config-someip"
+
 
         } else if (value == "ZENOH") {
             document.getElementById('zenoh_config_div').hidden = false
