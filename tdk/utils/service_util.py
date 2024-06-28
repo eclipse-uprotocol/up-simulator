@@ -18,6 +18,7 @@ limitations under the License.
 SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
+
 import logging
 
 from uprotocol.uri.factory.uentity_factory import UEntityFactory

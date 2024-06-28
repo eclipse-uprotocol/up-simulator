@@ -34,6 +34,7 @@ def configure_someip_service(entity_name):
     global temp_someip_entity
     temp_someip_entity.append(entity_name)
 
+
 class SomeipHelper(VsomeipHelper):
     def services_info(self) -> List[VsomeipHelper.UEntityInfo]:
         entity_info = []

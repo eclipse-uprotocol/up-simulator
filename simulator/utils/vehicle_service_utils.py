@@ -19,7 +19,6 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-
 from tdk.transport.someip_helper import someip_entity, temp_someip_entity
 
 mock_entity = []

@@ -102,7 +102,8 @@ class BaseService(object):
                 if get_instance(entity).portal_callback is not None:
                     get_instance(entity).portal_callback(req, method, response, get_instance(entity).publish_data)
                 return CommunicationLayer(TransportConfiguration()).send(
-                    UMessage(attributes=attributes, payload=payload_res))
+                    UMessage(attributes=attributes, payload=payload_res)
+                )
 
         return Wrapper
 
@@ -113,8 +114,9 @@ class BaseService(object):
             topics = protobuf_autoloader.get_topics_by_proto_service_name(self.service)
             # for topic in topics:
             if len(topics) >= 0:
-                self.communication_layer.create_topic(self.service, topics,
-                                                      service_util.print_create_topic_status_handler)
+                self.communication_layer.create_topic(
+                    self.service, topics, service_util.print_create_topic_status_handler
+                )
             for attr in dir(self):
                 if callable(getattr(self, attr)) and isinstance(getattr(self, attr), type):
                     for attr1 in dir(getattr(self, attr)):

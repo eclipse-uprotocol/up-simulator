@@ -151,13 +151,13 @@ class SuspensionService(BaseService):
             if "ride height external control status" in self.state["preconditions"]:
                 if self.state["preconditions"]["ride height external control status"] == "active":
                     if self.state["ride_height_system_status"]["source"] == RideHeightSystemStatus.Source.Value(
-                            "S_USER"
+                        "S_USER"
                     ):
                         self.state["ride_height"]["target_height"] = request.command
                         self.state["ride_height"]["current_height"] = request.command
 
                     elif self.state["ride_height_system_status"]["source"] == RideHeightSystemStatus.Source.Value(
-                            "S_APP"
+                        "S_APP"
                     ):
                         if request.command == RideHeight.RideHeightLevel.Value("RHL_UNSPECIFIED"):
                             raise ValidationError(3, "Command value unspecified.")

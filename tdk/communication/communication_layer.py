@@ -18,6 +18,7 @@ limitations under the License.
 SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
+
 from concurrent.futures import Future
 
 from uprotocol.proto.uattributes_pb2 import CallOptions
@@ -31,7 +32,6 @@ from tdk.transport.transport_configuration import TransportConfiguration
 
 
 class CommunicationLayer:
-
     def __init__(self, tc: TransportConfiguration):
         self._tc = tc
 
