@@ -24,8 +24,8 @@ import re
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
-from tdk.core.abstract_service import BaseService
 from simulator.utils.exceptions import ValidationError
+from tdk.core.abstract_service import BaseService
 from tdk.target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import SetRideHeightRequest
 from tdk.target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import (
     RideHeight,
@@ -151,13 +151,13 @@ class SuspensionService(BaseService):
             if "ride height external control status" in self.state["preconditions"]:
                 if self.state["preconditions"]["ride height external control status"] == "active":
                     if self.state["ride_height_system_status"]["source"] == RideHeightSystemStatus.Source.Value(
-                        "S_USER"
+                            "S_USER"
                     ):
                         self.state["ride_height"]["target_height"] = request.command
                         self.state["ride_height"]["current_height"] = request.command
 
                     elif self.state["ride_height_system_status"]["source"] == RideHeightSystemStatus.Source.Value(
-                        "S_APP"
+                            "S_APP"
                     ):
                         if request.command == RideHeight.RideHeightLevel.Value("RHL_UNSPECIFIED"):
                             raise ValidationError(3, "Command value unspecified.")

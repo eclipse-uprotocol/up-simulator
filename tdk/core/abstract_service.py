@@ -101,7 +101,8 @@ class BaseService(object):
                 attributes = UAttributesBuilder.response(attributes).build()
                 if get_instance(entity).portal_callback is not None:
                     get_instance(entity).portal_callback(req, method, response, get_instance(entity).publish_data)
-                return CommunicationLayer(TransportConfiguration()).send(UMessage(attributes=attributes, payload=payload_res))
+                return CommunicationLayer(TransportConfiguration()).send(
+                    UMessage(attributes=attributes, payload=payload_res))
 
         return Wrapper
 

@@ -35,13 +35,13 @@ from uprotocol.rpc.rpcmapper import RpcMapper
 from uprotocol.transport.ulistener import UListener
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
+from simulator.ui.utils import common_handlers
+from simulator.utils import constant
+from simulator.utils.common_util import verify_all_checks
 from simulator.utils.vehicle_service_utils import (
     get_service_instance_from_entity,
     start_service,
 )
-from simulator.ui.utils import common_handlers
-from simulator.utils import constant
-from simulator.utils.common_util import verify_all_checks
 from tdk.communication.communication_layer import CommunicationLayer
 from tdk.core import protobuf_autoloader
 from tdk.transport.someip_helper import configure_someip_service

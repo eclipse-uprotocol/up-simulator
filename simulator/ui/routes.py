@@ -26,10 +26,10 @@ from urllib.parse import unquote
 
 from flask import redirect, render_template, request, send_file, url_for
 
-from simulator.utils.vehicle_service_utils import get_all_configured_someip_service, get_all_running_service
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
 from simulator.utils import constant
+from simulator.utils.vehicle_service_utils import get_all_configured_someip_service, get_all_running_service
 from tdk.transport import someip_helper
 
 run_directory = os.path.dirname(os.path.abspath(__file__))
