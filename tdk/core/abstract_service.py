@@ -38,12 +38,12 @@ from uprotocol.uri.factory.uresource_builder import UResourceBuilder
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 from uprotocol.uuid.factory.uuidfactory import Factories
 
-from simulator.core import protobuf_autoloader
-from simulator.core.exceptions import SimulationError
-from simulator.core.transport_layer import TransportLayer
-from simulator.core.vehicle_service_utils import get_entity_from_descriptor
-from simulator.utils import common_util
-from simulator.utils.constant import REPO_URL
+from tdk.communication.communication_layer import CommunicationLayer
+from tdk.core import protobuf_autoloader
+from tdk.transport.transport_configuration import TransportConfiguration
+from tdk.utils import service_util
+from tdk.utils.constant import REPO_URL
+from tdk.utils.service_util import SimulationError, get_entity_from_descriptor
 
 RESPONSE_URI = UUri(entity=UEntity(name="simulator", version_major=1), resource=UResourceBuilder.for_rpc_response())
 
@@ -61,7 +61,8 @@ class BaseService(object):
         self.service = service_name
         self.subscriptions = {}
         self.portal_callback = portal_callback
-        self.transport_layer = TransportLayer()
+        self.transport_layer = TransportConfiguration()
+        self.communication_layer = CommunicationLayer(self.transport_layer)
         self.publish_data = []
         self.state = {}  # default variable to keep track of the mock service's state
         self.state_dir = os.path.join(str(Path.home()), ".sdv")  # location of serialized state
@@ -100,18 +101,22 @@ class BaseService(object):
                 attributes = UAttributesBuilder.response(attributes).build()
                 if get_instance(entity).portal_callback is not None:
                     get_instance(entity).portal_callback(req, method, response, get_instance(entity).publish_data)
-                return TransportLayer().send(UMessage(attributes=attributes, payload=payload_res))
+                return CommunicationLayer(TransportConfiguration()).send(
+                    UMessage(attributes=attributes, payload=payload_res)
+                )
 
         return Wrapper
 
     def start_rpc_service(self) -> bool:
-        if self.transport_layer.start_service(self.service):
+        if self.communication_layer.start_service(self.service):
             covesa_services.append({'name': self.service, 'entity': self})
             # create topic
             topics = protobuf_autoloader.get_topics_by_proto_service_name(self.service)
             # for topic in topics:
             if len(topics) >= 0:
-                self.transport_layer.create_topic(self.service, topics, common_util.print_create_topic_status_handler)
+                self.communication_layer.create_topic(
+                    self.service, topics, service_util.print_create_topic_status_handler
+                )
             for attr in dir(self):
                 if callable(getattr(self, attr)) and isinstance(getattr(self, attr), type):
                     for attr1 in dir(getattr(self, attr)):
@@ -132,8 +137,8 @@ class BaseService(object):
                                     )
                                 )
                             )
-                            status = self.transport_layer.register_listener(method_uri, func)
-                            common_util.print_register_rpc_status(method_uri, status.code, status.message)
+                            status = self.communication_layer.register_listener(method_uri, func)
+                            service_util.print_register_rpc_status(method_uri, status.code, status.message)
 
                             break
             self.subscribe()
@@ -156,8 +161,8 @@ class BaseService(object):
         attributes = UAttributesBuilder.publish(source_uri, UPriority.UPRIORITY_CS4).build()
         if "COVESA" not in REPO_URL:
             attributes.id.MergeFrom(Factories.UUIDV6.create())
-        status = self.transport_layer.send(UMessage(payload=payload, attributes=attributes))
-        common_util.print_publish_status(uri, status.code, status.message)
+        status = self.communication_layer.send(UMessage(payload=payload, attributes=attributes))
+        service_util.print_publish_status(uri, status.code, status.message)
         if is_from_rpc:
             self.publish_data.clear()
             self.publish_data.append(message)
@@ -178,7 +183,7 @@ class BaseService(object):
             )
             topic_uri.resource.MergeFrom(UResource(id=protobuf_autoloader.get_topic_id_from_topicuri(uri)))
             status = self.transport_layer.register_listener(topic_uri, listener)
-            common_util.print_subscribe_status(uri, status.code, status.message)
+            service_util.print_subscribe_status(uri, status.code, status.message)
             time.sleep(1)
 
     def start(self) -> bool:

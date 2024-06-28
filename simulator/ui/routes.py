@@ -26,11 +26,11 @@ from urllib.parse import unquote
 
 from flask import redirect, render_template, request, send_file, url_for
 
-from simulator.core import vehicle_service_utils
-from simulator.core.vehicle_service_utils import get_all_configured_someip_service, get_all_running_service
 from simulator.ui import blueprint
 from simulator.ui.utils import adb_utils
 from simulator.utils import constant
+from simulator.utils.vehicle_service_utils import get_all_configured_someip_service, get_all_running_service
+from tdk.transport import someip_helper
 
 run_directory = os.path.dirname(os.path.abspath(__file__))
 run_directory = run_directory.split(os.sep)[:-2]
@@ -104,7 +104,7 @@ def route_pubsub():
 @blueprint.route("/rpc-logger.html")
 def route_rpc_logger():
     try:
-        f = open(os.path.join(run_directory, "simulator", constant.FILENAME_RPC_LOGGER))
+        f = open(os.path.join(os.getcwd(), constant.FILENAME_RPC_LOGGER))
         data = f.read()
         f.close()
         data = f"[{data}]"
@@ -134,7 +134,7 @@ def download_rpc_file():
 @blueprint.route("/pubsub-logger.html")
 def route_pubsub_logger():
     try:
-        f = open(os.path.join(run_directory, "simulator", constant.FILENAME_PUBSUB_LOGGER))
+        f = open(os.path.join(os.getcwd(), constant.FILENAME_PUBSUB_LOGGER))
         data = f.read()
         f.close()
         data = f"[{data}]"
@@ -220,12 +220,12 @@ def get_mock_services():
             "core.udiscovery",
             "core.utelemetry",
             "core.usubscription",
-        ] and (m["name"] in vehicle_service_utils.someip_entity or env == "Someip" or transport != "SOME/IP"):
+        ] and (m["name"] in someip_helper.someip_entity or env == "Someip" or transport != "SOME/IP"):
             pkgs = {"entity": m["name"], "name": m["display_name"]}
             mockservice_pkgs.append(pkgs)
     if env == "Someip":
         running_services = get_all_configured_someip_service()
-        vehicle_service_utils.temp_someip_entity = running_services
+        someip_helper.temp_someip_entity = running_services
     else:
         running_services = get_all_running_service()
 
@@ -241,7 +241,7 @@ def update_service_status():
     entity_to_remove = request.args["entity"]
     print(entity_to_remove)
     try:
-        from simulator.core.vehicle_service_utils import stop_service
+        from simulator.utils.vehicle_service_utils import stop_service
 
         stop_service(entity_to_remove)
     except Exception:
@@ -254,7 +254,7 @@ def update_someip_service_status():
     entity_to_remove = request.args["entity"]
     print(entity_to_remove)
     try:
-        from simulator.core.vehicle_service_utils import remove_service_from_someip
+        from simulator.utils.vehicle_service_utils import remove_service_from_someip
 
         remove_service_from_someip(entity_to_remove)
     except Exception:

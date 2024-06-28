@@ -21,13 +21,13 @@ SPDX-License-Identifier: Apache-2.0
 
 import time
 
-from simulator.tools import pull_and_compile_protos
+from tdk.tools import pull_and_compile_protos
 
 
 def execute_pre_scripts():
     pull_and_compile_protos.execute()
     time.sleep(1)
-    from simulator.tools import generate_resource_catalog
+    from tdk.tools import generate_resource_catalog
 
     generate_resource_catalog.execute()
     time.sleep(1)

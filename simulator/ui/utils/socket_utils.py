@@ -35,26 +35,28 @@ from uprotocol.rpc.rpcmapper import RpcMapper
 from uprotocol.transport.ulistener import UListener
 from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
 
-from simulator.core import protobuf_autoloader
-from simulator.core.vehicle_service_utils import (
-    configure_someip_service,
-    get_entity_from_descriptor,
-    get_service_instance_from_entity,
-    start_service,
-)
 from simulator.ui.utils import common_handlers
 from simulator.utils import constant
 from simulator.utils.common_util import verify_all_checks
+from simulator.utils.vehicle_service_utils import (
+    get_service_instance_from_entity,
+    start_service,
+)
+from tdk.communication.communication_layer import CommunicationLayer
+from tdk.core import protobuf_autoloader
+from tdk.transport.someip_helper import configure_someip_service
+from tdk.utils.service_util import get_entity_from_descriptor
 
 logger = logging.getLogger("Simulator")
 
 
 class SocketUtility:
-    def __init__(self, socket_io, transport_layer):
+    def __init__(self, socket_io, transport_config):
         self.socketio = socket_io
         self.oldtopic = ""
         self.last_published_data = None
-        self.transport_layer = transport_layer
+        self.transport_config = transport_config
+        self.communication_layer = CommunicationLayer(self.transport_config)
         self.lock_pubsub = threading.Lock()
         self.lock_rpc = threading.Lock()
         self.lock_pubsub = threading.Lock()
@@ -99,11 +101,11 @@ class SocketUtility:
                         )
                     )
                 )
-                res_future = self.transport_layer.invoke_method(method_uri, payload, CallOptions(ttl=15000))
+                res_future = self.communication_layer.invoke_method(method_uri, payload, CallOptions(ttl=15000))
                 sent_data = MessageToDict(message)
 
                 message = "Successfully send rpc request for " + methodname
-                if self.transport_layer.get_transport() == "Zenoh":
+                if self.transport_config.get_transport() == "Zenoh":
                     message = "Successfully send rpc request for " + methodname + " to Zenoh"
                 res = {"msg": message, "data": sent_data}
                 self.socketio.emit(
@@ -145,7 +147,7 @@ class SocketUtility:
                     common_handlers.publish_status_handler(
                         self.socketio,
                         self.lock_pubsub,
-                        self.transport_layer.get_transport(),
+                        self.transport_config.get_transport(),
                         topic,
                         status.code,
                         status.message,
@@ -228,11 +230,11 @@ class SocketUtility:
                 )
                 new_topic.resource.MergeFrom(UResource(id=protobuf_autoloader.get_topic_id_from_topicuri(topic)))
 
-                status = self.transport_layer.register_listener(
+                status = self.communication_layer.register_listener(
                     new_topic,
                     SubscribeUListener(
                         self.socketio,
-                        self.transport_layer.get_transport(),
+                        self.transport_config.get_transport(),
                         self.lock_pubsub,
                     ),
                 )
@@ -240,7 +242,7 @@ class SocketUtility:
                     common_handlers.subscribe_status_handler(
                         self.socketio,
                         self.lock_pubsub,
-                        self.transport_layer.get_transport(),
+                        self.transport_config.get_transport(),
                         topic,
                         0,
                         "Ok",
@@ -249,7 +251,7 @@ class SocketUtility:
                     common_handlers.subscribe_status_handler(
                         self.socketio,
                         self.lock_pubsub,
-                        self.transport_layer.get_transport(),
+                        self.transport_config.get_transport(),
                         topic,
                         status.code,
                         status.message,

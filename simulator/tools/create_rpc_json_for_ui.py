@@ -24,7 +24,6 @@ import os
 
 from google.protobuf.descriptor import FieldDescriptor
 
-from simulator.core import protobuf_autoloader as autoloader
 from simulator.tools.common_methods import (
     get_config_name,
     get_field_info,
@@ -34,6 +33,7 @@ from simulator.tools.common_methods import (
     get_type_in_string,
 )
 from simulator.utils import constant
+from tdk.core import protobuf_autoloader as autoloader
 
 result_data = {}
 additional_data = {}
