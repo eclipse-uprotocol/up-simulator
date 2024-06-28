@@ -37,6 +37,7 @@ setup(
     packages=find_packages(),
     package_data={
         'simulator': ['**'],
+        'tdk': ['**'],
     },
     include_package_data=True,
     install_requires=REQUIREMENTS,

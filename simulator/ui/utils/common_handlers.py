@@ -28,10 +28,11 @@ from google.protobuf.json_format import MessageToDict
 from uprotocol.proto.upayload_pb2 import UPayload
 from uprotocol.rpc.rpcmapper import RpcMapper
 
-from simulator.core import protobuf_autoloader
 from simulator.ui.utils.file_utils import save_pub_sub_data, save_rpc_data
 from simulator.utils import common_util, constant
 from simulator.utils.common_util import flatten_dict
+from tdk.core import protobuf_autoloader
+from tdk.utils.constant import KEY_URI_PREFIX
 
 total_rpc = 0
 success_rpc = 0
@@ -152,7 +153,7 @@ def publish_status_handler(socketio, lock_pubsub, utransport, topic, status_code
 
 def on_receive_event_handler(socketio, lock_pubsub, utransport, topic, payload: UPayload):
     try:
-        topic = constant.KEY_URI_PREFIX + topic
+        topic = KEY_URI_PREFIX + topic
         topic_class = protobuf_autoloader.get_topic_map()[topic]
         res = common_util.get_class(topic_class)
         any_message = any_pb2.Any()

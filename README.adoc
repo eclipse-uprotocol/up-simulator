@@ -93,7 +93,7 @@ python3 setup_simulator.py
 This script automates the following tasks:
 
 1. **Cloning and Compilation of Protos:**
-   Clones the `covesa` protos from the specified repository URL, compiles them, and generates Python protofiles in the simulator/target folder.
+   Clones the `covesa` protos from the specified repository URL, compiles them, and generates Python protofiles in the tdk/target folder.
 
 2. **Resource Catalog Generation:**
    Iterates through all protofiles to create a resource catalog in the target folder.

@@ -23,17 +23,17 @@ import re
 
 from google.protobuf.json_format import MessageToDict
 
-from simulator.core.abstract_service import BaseService
-from simulator.core.exceptions import ValidationError
-from simulator.target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
-from simulator.target.protofiles.vehicle.body.cabin_climate.v1.cabin_climate_service_pb2 import (
+from simulator.utils.exceptions import ValidationError
+from tdk.core.abstract_service import BaseService
+from tdk.target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
+from tdk.target.protofiles.vehicle.body.cabin_climate.v1.cabin_climate_service_pb2 import (
     SetAirDistributionRequest,
     SetFanRequest,
     SetLockRequest,
     SetPowerRequest,
     SetTemperatureRequest,
 )
-from simulator.utils.constant import KEY_URI_PREFIX
+from tdk.utils.constant import KEY_URI_PREFIX
 
 
 class CabinClimateService(BaseService):

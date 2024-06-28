@@ -32,9 +32,9 @@ from collections import defaultdict
 
 from google.protobuf.descriptor import FieldDescriptor
 
-from simulator.target import protofiles as proto
-from simulator.utils import constant
-from simulator.utils.constant import (
+from tdk.target import protofiles as proto
+from tdk.utils import constant
+from tdk.utils.constant import (
     RESOURCE_CATALOG_CSV_NAME,
     RESOURCE_CATALOG_JSON_NAME,
 )

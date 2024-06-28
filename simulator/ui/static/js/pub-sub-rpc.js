@@ -171,7 +171,7 @@ function onTopicUpdateSomeIP(json_proto, json_proto_original, topic, port, destp
 function onTopicUpdate(json_proto, json_proto_original, topic) {
     if (JSON.stringify(json_proto, null, 2).length > 2) {
         if (topic == selectedTopic) {
-            if (localStorage.getItem("utransportConfig") == "BINDER") {
+            if (localStorage.getItem("utransportConfig") == "SOCKET") {
                 msg = "Received topic update from up-core-android Service"
             } else {
                 msg = "Received topic update"
@@ -268,7 +268,7 @@ function onConfigClick(rb) {
     if (rb.checked) {
         setvalues({}, 'true')
         selectedTopic = rb.getAttribute("topic")
-        //        if (localStorage.getItem("utransportConfig") in ["BINDER", "VEHICLE"]) {
+        //        if (localStorage.getItem("utransportConfig") in ["SOCKET", "VEHICLE"]) {
         //            execute_subscribe(rb.getAttribute("topic"))
         //        }
 
@@ -446,7 +446,7 @@ function callPublishApi(data, topic, serviceclass) {
     if (topic.includes("dynamic_topic")) {
         topic = topic.replace("dynamic_topic", JSON.parse(data)['name'])
         selectedTopic = topic
-        if (localStorage.getItem("utransportConfig") in ["BINDER", "VEHICLE"]) {
+        if (localStorage.getItem("utransportConfig") in ["SOCKET", "VEHICLE"]) {
             execute_subscribe(topic)
         }
         var jsonpublish = { "service_class": serviceclass, "topic": topic, "data": data }

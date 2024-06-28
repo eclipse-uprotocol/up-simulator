@@ -26,9 +26,9 @@ from google.protobuf.json_format import MessageToDict
 from google.protobuf.text_format import MessageToString
 from google.type.timeofday_pb2 import TimeOfDay
 
-from simulator.core.abstract_service import BaseService
-from simulator.target.protofiles.example.hello_world.v1.hello_world_topics_pb2 import Timer
-from simulator.utils.constant import KEY_URI_PREFIX
+from tdk.core.abstract_service import BaseService
+from tdk.target.protofiles.example.hello_world.v1.hello_world_topics_pb2 import Timer
+from tdk.utils.constant import KEY_URI_PREFIX
 
 
 class HelloWorldService(BaseService):

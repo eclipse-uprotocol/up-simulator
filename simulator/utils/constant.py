@@ -30,15 +30,6 @@ SERVICES_JSON_FILE_NAME = "services.json"
 PUB_SUB_JSON_FILE_NAME = "pub-sub.json"
 RPC_JSON_FILE_NAME = "rpc.json"
 
-REPO_URL = "https://github.com/COVESA/uservices.git"
-TAG_NAME = "f42900216f9c3b92147a1b0c14697262f8811ab3"
-PROTO_REPO_DIR = os.path.join("simulator", "target", "protos")
-PROTO_OUTPUT_DIR = os.path.join("simulator", "target", "protofiles")
-RESOURCE_CATALOG_DIR = os.path.join("simulator", "target", "resource_catalog")
-
-RESOURCE_CATALOG_CSV_NAME = "resource_catalog.csv"
-RESOURCE_CATALOG_JSON_NAME = "resource_catalog.json"
-
 FILENAME_RPC_LOGGER = "rpc_logger.txt"
 FILENAME_PUBSUB_LOGGER = "pubsub_logger.txt"
 
@@ -82,5 +73,3 @@ KEY_SUCCESSRPC = "successrpc"
 KEY_FAILEDRPC = "failedrpc"
 KEY_ISFAILED = "isfailed"
 KEY_TIME = "time"
-KEY_PROTO_ENTITY_NAME = "uprotocol"
-KEY_URI_PREFIX = "up:"

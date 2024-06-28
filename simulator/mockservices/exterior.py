@@ -19,7 +19,7 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-from simulator.core.abstract_service import BaseService
+from tdk.core.abstract_service import BaseService
 
 
 class VehicleExteriorService(BaseService):

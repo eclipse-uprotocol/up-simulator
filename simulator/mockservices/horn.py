@@ -19,14 +19,14 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-from simulator.core.abstract_service import BaseService
-from simulator.core.exceptions import ValidationError
-from simulator.target.protofiles.vehicle.body.horn.v1.horn_service_pb2 import (
+from simulator.utils.exceptions import ValidationError
+from tdk.core.abstract_service import BaseService
+from tdk.target.protofiles.vehicle.body.horn.v1.horn_service_pb2 import (
     ActivateHornRequest,
     DeactivateHornRequest,
 )
-from simulator.target.protofiles.vehicle.body.horn.v1.horn_topics_pb2 import HornStatus
-from simulator.utils.constant import KEY_URI_PREFIX
+from tdk.target.protofiles.vehicle.body.horn.v1.horn_topics_pb2 import HornStatus
+from tdk.utils.constant import KEY_URI_PREFIX
 
 
 class HornService(BaseService):
