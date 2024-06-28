@@ -17,8 +17,7 @@ import os
 import pathlib
 from typing import List
 
-from simulator.core import vehicle_service_utils
-from simulator.utils.constant import RESOURCE_CATALOG_JSON_NAME
+from tdk.utils.constant import RESOURCE_CATALOG_JSON_NAME
 
 try:
     from uprotocol_vsomeip.vsomeip_utransport import (
@@ -27,6 +26,13 @@ try:
 except ImportError:
     pass
 
+someip_entity = []
+temp_someip_entity = []
+
+
+def configure_someip_service(entity_name):
+    global temp_someip_entity
+    temp_someip_entity.append(entity_name)
 
 class SomeipHelper(VsomeipHelper):
     def services_info(self) -> List[VsomeipHelper.UEntityInfo]:
@@ -59,7 +65,7 @@ class SomeipHelper(VsomeipHelper):
                         if property["name"] == "version_major":
                             major_version = property["value"]
                             break
-                    if service_name in vehicle_service_utils.someip_entity:
+                    if service_name in someip_entity:
                         entity_info.append(
                             VsomeipHelper.UEntityInfo(
                                 Name=service_name,

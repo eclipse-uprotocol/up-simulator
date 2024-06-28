@@ -46,7 +46,7 @@ from uprotocol.uri.validator.urivalidator import UriValidator
 from uprotocol.uuid.factory.uuidfactory import Factories
 from uprotocol.uuid.serializer.longuuidserializer import LongUuidSerializer
 
-from simulator.utils.constant import REPO_URL
+from tdk.utils.constant import REPO_URL
 
 # Dictionary to store requests
 m_requests = {}
@@ -274,7 +274,7 @@ class SocketClient:
         return self._rpc_request_callbacks
 
 
-class AndroidBinder(UTransport, RpcClient):
+class SocketTransport(UTransport, RpcClient):
     def __init__(self):
         self.client = SocketClient()
         # Start a separate thread for receiving

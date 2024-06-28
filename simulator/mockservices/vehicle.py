@@ -24,11 +24,11 @@ import re
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
-from simulator.core.abstract_service import BaseService
-from simulator.core.exceptions import ValidationError
-from simulator.target.protofiles.vehicle.v1.vehicle_service_pb2 import ResetTripMeterRequest, SetTransportModeRequest
-from simulator.target.protofiles.vehicle.v1.vehicle_topics_pb2 import TripMeter, VehicleUsage
-from simulator.utils.constant import KEY_URI_PREFIX
+from tdk.core.abstract_service import BaseService
+from simulator.utils.exceptions import ValidationError
+from tdk.target.protofiles.vehicle.v1.vehicle_service_pb2 import ResetTripMeterRequest, SetTransportModeRequest
+from tdk.target.protofiles.vehicle.v1.vehicle_topics_pb2 import TripMeter, VehicleUsage
+from tdk.utils.constant import KEY_URI_PREFIX
 
 
 class VehicleService(BaseService):

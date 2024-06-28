@@ -24,14 +24,14 @@ import re
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
-from simulator.core.abstract_service import BaseService
-from simulator.core.exceptions import ValidationError
-from simulator.target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import SetRideHeightRequest
-from simulator.target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import (
+from tdk.core.abstract_service import BaseService
+from simulator.utils.exceptions import ValidationError
+from tdk.target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import SetRideHeightRequest
+from tdk.target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import (
     RideHeight,
     RideHeightSystemStatus,
 )
-from simulator.utils.constant import KEY_URI_PREFIX
+from tdk.utils.constant import KEY_URI_PREFIX
 
 
 class SuspensionService(BaseService):

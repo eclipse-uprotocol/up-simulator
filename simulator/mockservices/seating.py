@@ -19,8 +19,8 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-from simulator.core.abstract_service import BaseService
-from simulator.target.protofiles.vehicle.body.seating.v1.seating_service_pb2 import (
+from tdk.core.abstract_service import BaseService
+from tdk.target.protofiles.vehicle.body.seating.v1.seating_service_pb2 import (
     MoveSeatsRequest,
     SetSeatMassageRequest,
     SetSeatTemperatureRequest,

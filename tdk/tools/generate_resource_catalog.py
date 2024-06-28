@@ -27,8 +27,8 @@ import pkgutil
 
 from google._upb._message import RepeatedCompositeContainer
 
-from simulator.target import protofiles as proto
-from simulator.utils.constant import (
+from tdk.target import protofiles as proto
+from tdk.utils.constant import (
     KEY_URI_PREFIX,
     RESOURCE_CATALOG_CSV_NAME,
     RESOURCE_CATALOG_DIR,

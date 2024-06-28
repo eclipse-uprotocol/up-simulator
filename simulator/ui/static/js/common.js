@@ -18,7 +18,7 @@ var socket = null
 
 if (localStorage.getItem("utransportConfig") == null || localStorage.getItem("utransportConfig") == "" ||
     localStorage.getItem("utransportConfig") == 'undefined') {
-    localStorage.setItem("utransportConfig", "BINDER")
+    localStorage.setItem("utransportConfig", "SOCKET")
 }
 
 if (localStorage.getItem("ip_local") == null || localStorage.getItem("ip_local") == "" ||

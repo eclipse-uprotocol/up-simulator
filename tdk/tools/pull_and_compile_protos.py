@@ -27,7 +27,7 @@ import subprocess
 import git
 from git import Repo
 
-from simulator.utils.constant import (
+from tdk.utils.constant import (
     PROTO_OUTPUT_DIR,
     PROTO_REPO_DIR,
     REPO_URL,
@@ -101,27 +101,27 @@ def process_python_protofiles(directory):
                 replace_in_file(
                     file_path,
                     r"from vehicle",
-                    "from simulator.target.protofiles.vehicle",
+                    "from tdk.target.protofiles.vehicle",
                 )
                 replace_in_file(
                     file_path,
                     r"from example",
-                    "from simulator.target.protofiles.example",
+                    "from tdk.target.protofiles.example",
                 )
                 replace_in_file(
                     file_path,
                     r"from common",
-                    "from simulator.target.protofiles.common",
+                    "from tdk.target.protofiles.common",
                 )
                 replace_in_file(
                     file_path,
                     r"import uservices_options_pb2",
-                    "import simulator.target.protofiles.uservices_options_pb2",
+                    "import tdk.target.protofiles.uservices_options_pb2",
                 )
                 replace_in_file(
                     file_path,
                     r"import units_pb2",
-                    "import simulator.target.protofiles.units_pb2",
+                    "import tdk.target.protofiles.units_pb2",
                 )
                 replace_in_file(
                     file_path,
