@@ -13,3 +13,4 @@ simulator/oem_mockservices
 .ruff_cache
 simulator/vsomeip.json
 vsomeip.json
+tdk/target

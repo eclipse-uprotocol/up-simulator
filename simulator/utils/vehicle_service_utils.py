@@ -19,11 +19,9 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-from uprotocol.uri.factory.uentity_factory import UEntityFactory
+from tdk.helper.someip_helper import someip_entity, temp_someip_entity
 
 mock_entity = []
-someip_entity = []
-temp_someip_entity = []
 
 
 def stop_service(name):
@@ -35,7 +33,6 @@ def stop_service(name):
 
 
 def remove_service_from_someip(name):
-    global temp_someip_entity
     for index, entity_name in enumerate(temp_someip_entity):
         if entity_name == name:
             temp_someip_entity.pop(index)
@@ -125,12 +122,3 @@ def start_service(entity, callback):
         return "Running"
     else:
         return "Error"
-
-
-def configure_someip_service(entity_name):
-    global temp_someip_entity
-    temp_someip_entity.append(entity_name)
-
-
-def get_entity_from_descriptor(entity_descriptor):
-    return UEntityFactory.from_proto(entity_descriptor)

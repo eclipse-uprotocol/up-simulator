@@ -23,17 +23,18 @@ import os
 import sys
 import time
 
+from tdk.helper import someip_helper
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from flask import request
 from flask_socketio import SocketIO
 
-from simulator.core import vehicle_service_utils
-from simulator.core.transport_layer import TransportLayer
 from simulator.ui import create_app
 from simulator.ui.config import config_dict
 from simulator.ui.utils.socket_utils import SocketUtility
 from simulator.utils import constant
+from tdk.helper.transport_configuration import TransportConfiguration
 
 debug = False
 get_config_mode = "Debug" if debug else "Production"
@@ -45,7 +46,7 @@ app = create_app(app_config)
 socketio = SocketIO(app)
 
 is_reset = True
-transport_layer = TransportLayer()
+transport_layer = TransportConfiguration()
 
 socket_utility = SocketUtility(socketio, transport_layer)
 
@@ -57,8 +58,8 @@ def set_transport(selected_utransport):
 
 @socketio.on(constant.API_SET_SOMEIP_CONFIG, namespace=constant.NAMESPACE)
 def set_someip_config(localip, multicastip):
-    vehicle_service_utils.someip_entity = vehicle_service_utils.temp_someip_entity
-    vehicle_service_utils.temp_someip_entity = []
+    someip_helper.someip_entity = someip_helper.temp_someip_entity
+    someip_helper.temp_someip_entity = []
     transport_layer.set_someip_config(localip, multicastip)
     time.sleep(0.5)
     socketio.emit(

@@ -48,12 +48,3 @@ class AndroidError(Exception):
 
     def __init__(self, message="Emulator Error."):
         super().__init__(message)
-
-
-class SimulationError(Exception):
-    '''
-    A generic exception for handling issues with the simulation tool
-    '''
-
-    def __init__(self, message="Simulation Error."):
-        super().__init__(message)

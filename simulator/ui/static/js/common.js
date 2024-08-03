@@ -12,7 +12,6 @@ terms of the Apache License Version 2.0 which is available at
 SPDX-License-Identifier: Apache-2.0
 */
 
-
 var segment = null
 var socket = null
 
@@ -47,14 +46,11 @@ function unload() {
     socket.close()
 }
 
-
 function setSocketInitialized(sgmt) {
     segment = sgmt;
     setupAllSockets()
 
-
 }
-
 
 function setupAllSockets() {
     if (socket === null) {
@@ -63,8 +59,6 @@ function setupAllSockets() {
     else if (!socket.connected) {
         setupSocket()
     }
-
-    setTransport(localStorage.getItem("utransportConfig"))
 
 };
 
@@ -77,11 +71,7 @@ function setupSocket() {
         transport_value = ''
 
         socket.emit("set_transport", localStorage.getItem("utransportConfig"))
-        //        socket.emit("set_someip_config", localStorage.getItem("ip_local"), localStorage.getItem("ip_multicast"))
-//        console.log('zenoh before emit')
-//        console.log(localStorage.getItem("zenoh_router_port"))
 
-//        socket.emit("set_zenoh_config", localStorage.getItem("zenoh_router_ip"), localStorage.getItem("zenoh_router_port"))
         if (segment.includes('configuration')) {
             document.getElementById("localip").value = localStorage.getItem("ip_local")
             document.getElementById("multicastip").value = localStorage.getItem("ip_multicast")
@@ -140,12 +130,17 @@ function setupSocket() {
         onPubSubError(errormessage)
     });
     socket.on('pub_sub_logger_callback', function (res) {
+        hideSpinner()
+
         if (document.getElementById("table_pub_sub")) {
             setPubSubDataOnPageLoad(res);
         }
+
     });
     socket.on('publish_callback_success', function (res) {
+
         onPubCallBackSuccess(res)
+
     });
     socket.on('publish_callback_fail', function (res) {
         onPubCallBackFail(res)
@@ -155,6 +150,7 @@ function setupSocket() {
         onPubException(ex)
     });
     socket.on('onTopicUpdate', function (json_res) {
+     hideSpinner()
         onTopicUpdate(json_res.json_data, json_res.original_json_data, json_res.topic)
     });
 

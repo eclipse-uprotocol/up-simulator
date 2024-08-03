@@ -22,8 +22,8 @@ SPDX-License-Identifier: Apache-2.0
 import json
 import os
 
-from simulator.core import protobuf_autoloader as autoloader
 from simulator.utils import constant
+from tdk.core import protobuf_autoloader as autoloader
 
 result_data = []
 
