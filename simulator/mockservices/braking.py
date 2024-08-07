@@ -24,15 +24,15 @@ import re
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
-from simulator.core.abstract_service import BaseService
-from simulator.core.exceptions import ValidationError
-from simulator.target.protofiles.common.health_state_pb2 import HealthState
-from simulator.target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import (
+from simulator.utils.exceptions import ValidationError
+from tdk.core.abstract_service import BaseService
+from tdk.target.protofiles.common.health_state_pb2 import HealthState
+from tdk.target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import (
     ManageHealthMonitoringRequest,
     ResetHealthRequest,
 )
-from simulator.target.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
-from simulator.utils.constant import KEY_URI_PREFIX
+from tdk.target.protofiles.vehicle.chassis.braking.v1.braking_topics_pb2 import BrakePads
+from tdk.utils.constant import KEY_URI_PREFIX
 
 
 class BrakingService(BaseService):

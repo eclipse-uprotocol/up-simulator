@@ -32,11 +32,12 @@ setup(
     name=project_name,
     author="Neelam Kushwah",
     author_email="neelam.kushwah@gm.com",
-    version="0.1.0-dev",
+    version="0.1.1-dev",
     python_requires=">=3.8",
     packages=find_packages(),
     package_data={
         'simulator': ['**'],
+        'tdk': ['**'],
     },
     include_package_data=True,
     install_requires=REQUIREMENTS,
