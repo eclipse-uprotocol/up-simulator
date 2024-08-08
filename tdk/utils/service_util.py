@@ -14,13 +14,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import logging
 
-from uprotocol.uri.factory.uentity_factory import UEntityFactory
-
 logger = logging.getLogger("ServiceUtil")
-
-
-def get_entity_from_descriptor(entity_descriptor):
-    return UEntityFactory.from_proto(entity_descriptor)
 
 
 def print_subscribe_status(topic, status_code, status_message):
@@ -51,10 +45,11 @@ def print_register_rpc_status(methoduri, status_code, status_message):
     logger.debug("register_rpc_status: contents...")
     logger.debug(f"Method uri: {methoduri}, Status Code: {status_code}, Status Message: {status_message}")
     if status_code == 0:
-        logger.debug(f"Successfully subscribed for {methoduri}")
+        logger.debug(f"Successfully registered request handler for {methoduri}")
     else:
         logger.error(
-            f"Unsuccessful subscription for {methoduri} as the status code is {status_code} with status message "
+            f"Unsuccessful registration of request handler for {methoduri} as the status "
+            f"code is {status_code} with status message "
             f"{status_message}"
         )
 

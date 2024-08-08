@@ -34,6 +34,7 @@ topic_list = []
 def create_service_json(service_name, version, service_id, properties):
     json_structure = {
         "uri": f"{KEY_URI_PREFIX}/{service_name}/{version}",
+        "uri_id": f"{KEY_URI_PREFIX}/{service_id}/{version}",
         "id": f"{service_id}",
         "type": "service",
     }
@@ -42,28 +43,36 @@ def create_service_json(service_name, version, service_id, properties):
     return json_structure
 
 
-def create_method_json(service_uri, method_name, method_id):
+def create_method_json(service_uri, service_uri_id, method_name, method_id):
     json_structure = {
         "uri": f"{service_uri}/rpc.{method_name}",
+        "uri_id": f"{service_uri_id}/{method_id}",
         "id": f"{method_id}",
         "type": "method",
     }
     return json_structure
 
 
-def create_topic_json(service_uri, resource, message, topic_id, full_name, message_resource_prefix_dict):
-    prefix = next((d[message] for d in message_resource_prefix_dict if message in d), "")
-    if len(prefix) > 0:
-        prefix = prefix + "."
-    resource = prefix + resource
+def create_topic_json(service_uri, service_uri_id, resource_name, message, topic_id, full_name):
     json_structure = {
-        "uri": f"{service_uri}/{resource}#{message}",
+        "uri": f"{service_uri}/{resource_name}#{message}",
+        "uri_id": f"{service_uri_id}/{topic_id}",
         "id": f"{topic_id}",
         "type": "topic",
     }
     topic_list.append({"uri": json_structure["uri"], "package": full_name})
 
     return json_structure
+
+
+def get_package_name(full_name):
+    # Find the last dot in the fully qualified name
+    last_dot_index = full_name.rfind('.')
+    if last_dot_index == -1:
+        # No dot found, return the whole name (or handle as needed)
+        return ''
+    # Return the substring up to and including the last dot
+    return full_name[: last_dot_index + 1]
 
 
 def get_protobuf_descriptor_data():
@@ -88,12 +97,12 @@ def get_protobuf_descriptor_data():
                 options = service_descriptor.GetOptions()
                 properties = []
                 for field, value in options.ListFields():
-                    if field.name == "id":
+                    if field.name in ["service_id", "id"]:
                         service_id = value
-                    elif field.name == "name":
+                    elif field.name in ["service_name", "name"]:
                         service_name = value
                     else:
-                        if field.name == "version_major":
+                        if field.name in ["service_version_major", "version_major"]:
                             version = value
                         if isinstance(value, RepeatedCompositeContainer):
                             continue
@@ -108,7 +117,12 @@ def get_protobuf_descriptor_data():
                         if field.name == "method_id":
                             method_id = value
                             method_nodes.append(
-                                create_method_json(f"{KEY_URI_PREFIX}/{service_name}/{version}", method, method_id)
+                                create_method_json(
+                                    f"{KEY_URI_PREFIX}/{service_name}/{version}",
+                                    service_json["node"]["uri_id"],
+                                    method,
+                                    method_id,
+                                )
                             )
                 message_option_descriptor = mod.DESCRIPTOR.message_types_by_name
                 for message in message_option_descriptor.keys():
@@ -134,54 +148,37 @@ def get_protobuf_descriptor_data():
 
             try:
                 if service_json["node"] != {}:
-                    messages = mod.DESCRIPTOR.message_types_by_name.keys()
                     topic_nodes = []
-                    # Process messages
-                    for message in messages:
-                        message_mod = mod.DESCRIPTOR.message_types_by_name[message]
-
-                        if (
-                            "Resources" in message_mod.enum_types_by_name
-                            or "Resource" in message_mod.enum_types_by_name
-                        ):
-                            resources_key = "Resources" if "Resources" in message_mod.enum_types_by_name else "Resource"
-                            resources = message_mod.enum_types_by_name[resources_key].values_by_name.keys()
-                            value = next((d[message] for d in message_options_dict if message in d), 0)
-                            base_topic_id = value
-                            for field_key in message_mod.fields_by_name.keys():
-                                if "resource" in field_key:
-                                    for field_options, field_value in (
-                                        message_mod.fields_by_name[field_key].GetOptions().ListFields()
-                                    ):
-                                        if "resource_name_mask" == field_options.name:
-                                            resource_name_mask_value = field_value.rstrip(".*")
-                                            if len(resource_name_mask_value) > 0:
-                                                message_resource_prefix_dict.append(
-                                                    {f"{message}": resource_name_mask_value}
-                                                )
-
-                            for field, value in message_mod.GetOptions().ListFields():
-                                if field.name == "base_topic_id":
-                                    base_topic_id = value
-                                    break
-                            for resource in resources:
-                                topic_id = (
-                                    base_topic_id
-                                    + message_mod.enum_types_by_name[resources_key].values_by_name[resource].number
-                                )
+                    package_name = get_package_name(service_descriptor.full_name)
+                    for field, value in service_descriptor.GetOptions().ListFields():
+                        if field.name == "publish_topic":
+                            for uservice_topic in value:
+                                topic_id = uservice_topic.id
+                                resource_name = uservice_topic.name
+                                message = uservice_topic.message
+                                # TODO: remove after BrakeAssistance message available in proto
+                                if message in [
+                                    "BrakeAssistance",
+                                    "ObjectDataGroup",
+                                    "FunctionalStatus",
+                                    "ObjectDataGroup",
+                                    "FunctionalStatus",
+                                    "RadarDetectionDataHeader",
+                                ]:
+                                    continue
                                 topic_nodes.append(
                                     create_topic_json(
                                         f"{KEY_URI_PREFIX}/{service_name}/{version}",
-                                        resource,
-                                        message_mod.name,
+                                        service_json["node"]["uri_id"],
+                                        resource_name,
+                                        message,
                                         topic_id,
-                                        message_mod.full_name,
-                                        message_resource_prefix_dict,
+                                        full_name=package_name + message,
                                     )
                                 )
-
-                    if service_json and topic_nodes and len(topic_nodes) > 0:
-                        service_json["node"]["node"] = service_json["node"]["node"] + topic_nodes
+                    if service_json:
+                        if topic_nodes and len(topic_nodes) > 0:
+                            service_json["node"]["node"] = service_json["node"]["node"] + topic_nodes
                         node_json.append(service_json)
                         service_json = None
             except Exception:

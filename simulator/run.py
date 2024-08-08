@@ -19,11 +19,12 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
+import asyncio
 import os
 import sys
 import time
 
-from tdk.helper import someip_helper
+from tdk.apis.apis import TdkApis
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -34,33 +35,39 @@ from simulator.ui import create_app
 from simulator.ui.config import config_dict
 from simulator.ui.utils.socket_utils import SocketUtility
 from simulator.utils import constant
+from tdk.helper import someip_helper
 from tdk.helper.transport_configuration import TransportConfiguration
 
-debug = False
+debug = True
 get_config_mode = "Debug" if debug else "Production"
 app_config = config_dict[get_config_mode.capitalize()]
 
 app = create_app(app_config)
 
 # turn the flask apps into a socketio apps
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='threading')
 
 is_reset = True
-transport_layer = TransportConfiguration()
+transport_config = TransportConfiguration()
+tdk_apis = TdkApis(transport_config)
 
-socket_utility = SocketUtility(socketio, transport_layer)
+socket_utility = SocketUtility(socketio, transport_config, tdk_apis)
 
 
 @socketio.on(constant.API_SET_UTRANSPORT, namespace=constant.NAMESPACE)
 def set_transport(selected_utransport):
-    transport_layer.set_transport(selected_utransport.upper())
+    print(selected_utransport.upper())
+    transport_config.set_transport(selected_utransport.upper())
+    tdk_apis.refresh_transport(transport_config)
 
 
 @socketio.on(constant.API_SET_SOMEIP_CONFIG, namespace=constant.NAMESPACE)
 def set_someip_config(localip, multicastip):
+    print(f"set set_someip_config called {localip}, {multicastip}")
     someip_helper.someip_entity = someip_helper.temp_someip_entity
     someip_helper.temp_someip_entity = []
-    transport_layer.set_someip_config(localip, multicastip)
+    transport_config.set_someip_config(localip, multicastip)
+    tdk_apis.refresh_transport(transport_config)
     time.sleep(0.5)
     socketio.emit(
         constant.CALLBACK_ON_SET_TRANSPORT,
@@ -71,7 +78,9 @@ def set_someip_config(localip, multicastip):
 
 @socketio.on(constant.API_SET_ZENOH_CONFIG, namespace=constant.NAMESPACE)
 def set_zenoh_config(routerip, port):
-    transport_layer.set_zenoh_config(routerip, port)
+    print(f"set set_zenoh_config called {routerip}, {port}")
+    transport_config.set_zenoh_config(routerip, port)
+    tdk_apis.refresh_transport(transport_config)
     time.sleep(0.5)
     socketio.emit(
         constant.CALLBACK_ON_SET_TRANSPORT,
@@ -85,13 +94,13 @@ def subscribe(json_subscribe):
     print("received subscribe json " + str(json_subscribe))
     app.config["SID"] = request.sid
     set_reset_flag()
-    socket_utility.execute_subscribe(json_subscribe)
+    asyncio.run(socket_utility.execute_subscribe(json_subscribe))
 
 
 @socketio.on(constant.API_SENDRPC, namespace=constant.NAMESPACE)
 def sendrpc(json_sendrpc):
     set_reset_flag()
-    socket_utility.execute_send_rpc(json_sendrpc)
+    asyncio.run(socket_utility.execute_send_rpc(json_sendrpc))
 
 
 @socketio.on(constant.API_PUBLISH, namespace=constant.NAMESPACE)
@@ -99,14 +108,14 @@ def publish(json_publish):
     set_reset_flag()
     print("received publish json " + str(json_publish))
     app.config["SID"] = request.sid
-    socket_utility.execute_publish(json_publish)
+    asyncio.run(socket_utility.execute_publish(json_publish))
 
 
 @socketio.on(constant.API_START_SERVICE, namespace=constant.NAMESPACE)
 def start_mock_services(json_service):
     print("start mock services json " + str(json_service))
     set_reset_flag()
-    socket_utility.start_mock_service(json_service)
+    asyncio.run(socket_utility.start_mock_service(json_service))
 
 
 @socketio.on(constant.API_STOP_ALL_SERVICE, namespace=constant.NAMESPACE)
@@ -124,6 +133,7 @@ def configure_someip_service(json_service):
 
 @socketio.on(constant.API_RESET, namespace=constant.NAMESPACE)
 def reset():
+    print('socket reconnected')
     global is_reset
     if is_reset:
         try:

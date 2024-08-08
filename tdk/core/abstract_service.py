@@ -12,6 +12,7 @@ terms of the Apache License Version 2.0 which is available at
 SPDX-License-Identifier: Apache-2.0
 """
 
+import asyncio
 import os
 import pickle
 import signal
@@ -21,41 +22,50 @@ from sys import exit, platform
 from threading import current_thread, main_thread
 
 from google.protobuf import any_pb2, text_format
-from uprotocol.proto.uattributes_pb2 import UPriority
-from uprotocol.proto.umessage_pb2 import UMessage
-from uprotocol.proto.upayload_pb2 import UPayload, UPayloadFormat
-from uprotocol.proto.uri_pb2 import UEntity, UResource, UUri
-from uprotocol.rpc.rpcmapper import RpcMapper
-from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
-from uprotocol.uri.factory.uresource_builder import UResourceBuilder
-from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
+from uprotocol.communication.upayload import UPayload
 from uprotocol.uuid.factory.uuidfactory import Factories
+from uprotocol.v1.uattributes_pb2 import UPayloadFormat
+from uprotocol.v1.umessage_pb2 import UMessage
 
 from tdk.apis.apis import TdkApis
 from tdk.core import protobuf_autoloader
 from tdk.helper.transport_configuration import TransportConfiguration
 from tdk.utils import service_util
 from tdk.utils.constant import REPO_URL
-from tdk.utils.service_util import SimulationError, get_entity_from_descriptor
-
-RESPONSE_URI = UUri(entity=UEntity(name="simulator", version_major=1), resource=UResourceBuilder.for_rpc_response())
+from tdk.utils.service_util import SimulationError
 
 covesa_services = []
 
 
-def get_instance(entity):
+def get_instance(service_id):
+    if not isinstance(service_id, str):
+        service_id = str(service_id)
     for entity_dict in covesa_services:
-        if entity_dict.get('name') == entity:
+        if entity_dict.get('id') == service_id:
             return entity_dict.get('entity')
 
 
 class BaseService(object):
-    def __init__(self, service_name=None, portal_callback=None, use_signal_handler=True):
+    def __init__(
+        self,
+        service_name=None,
+        portal_callback=None,
+        transport_config: TransportConfiguration = None,
+        tdk_apis: TdkApis = None,
+        use_signal_handler=True,
+    ):
         self.service = service_name
+        self.service_id = protobuf_autoloader.get_entity_id_from_entity_name(service_name)
         self.subscriptions = {}
         self.portal_callback = portal_callback
-        self.transport_config = TransportConfiguration()
-        self.communication_layer = TdkApis(self.transport_config)
+        print('save portal callback')
+        print(self.portal_callback)
+        if transport_config is None or tdk_apis is None:
+            self.transport_config = TransportConfiguration()
+            self.tdk_apis = TdkApis(self.transport_config)
+        else:
+            self.tdk_apis = tdk_apis
+            self.transport_config = transport_config
         self.publish_data = []
         self.state = {}  # default variable to keep track of the mock service's state
         self.state_dir = os.path.join(str(Path.home()), ".sdv")  # location of serialized state
@@ -74,93 +84,76 @@ class BaseService(object):
     def request_listener(self):
         class Wrapper:
             @staticmethod
-            def on_receive(message: UMessage):
+            def handle_request(message: UMessage):
                 global instance
                 print('Wrapper on receive')
                 attributes = message.attributes
-                topic = attributes.sink
-                entity = topic.entity.name
-                method = topic.resource.instance
+                topic_uri = attributes.sink
+                service_id = topic_uri.ue_id
+                method_id = topic_uri.resource_id
+                method_name = protobuf_autoloader.get_method_name_from_method_id(service_id, method_id)
                 payload = message.payload
-                req = protobuf_autoloader.get_request_class(entity, method)
-                res = protobuf_autoloader.get_response_class(entity, method)()
-                any_message = any_pb2.Any()
-                any_message.ParseFromString(payload.value)
-                req = RpcMapper.unpack_payload(any_message, req)
-                response = self(get_instance(entity), req, res)
-                any_obj = any_pb2.Any()
-                any_obj.Pack(response)
-                payload_res = UPayload(value=any_obj.SerializeToString(), format=payload.format)
-                attributes = UAttributesBuilder.response(attributes).build()
-                if get_instance(entity).portal_callback is not None:
-                    get_instance(entity).portal_callback(req, method, response, get_instance(entity).publish_data)
-                return TdkApis(TransportConfiguration()).send(UMessage(attributes=attributes, payload=payload_res))
+                req = protobuf_autoloader.get_request_class(service_id, method_name)
+                res = protobuf_autoloader.get_response_class(service_id, method_name)()
+                req = UPayload.unpack_data_format(payload, attributes.payload_format, req)
+                response = self(get_instance(service_id), req, res)
+
+                payload_res: UPayload = UPayload.pack_to_any(response)
+
+                if get_instance(service_id).portal_callback is not None:
+                    get_instance(service_id).portal_callback(
+                        req, method_name, response, get_instance(service_id).publish_data
+                    )
+
+                return payload_res
 
         return Wrapper
 
-    def start_rpc_service(self) -> bool:
-        if self.communication_layer.start_service(self.service):
-            covesa_services.append({'name': self.service, 'entity': self})
+    async def start_rpc_service(self) -> bool:
+        if self.transport_config.start_service(self.service):
+            covesa_services.append({'id': self.service_id, 'entity': self})
             # create topic
-            topics = protobuf_autoloader.get_topics_by_proto_service_name(self.service)
+            topics = protobuf_autoloader.get_topics_by_proto_service_id(self.service_id)
             # for topic in topics:
             if len(topics) >= 0:
-                self.communication_layer.create_topic(
-                    self.service, topics, service_util.print_create_topic_status_handler
-                )
+                self.transport_config.create_topic(self.service, topics, service_util.print_create_topic_status_handler)
             for attr in dir(self):
                 if callable(getattr(self, attr)) and isinstance(getattr(self, attr), type):
                     for attr1 in dir(getattr(self, attr)):
-                        if attr1 == 'on_receive':
+                        if attr1 == 'handle_request':
                             func = getattr(self, attr)
-                            method_uri = protobuf_autoloader.get_rpc_uri_by_name(self.service, attr)
-                            method_uri = LongUriSerializer().deserialize(method_uri)
-                            method_uri.entity.MergeFrom(
-                                get_entity_from_descriptor(
-                                    protobuf_autoloader.entity_descriptor[method_uri.entity.name]
-                                )
-                            )
+                            method_uri_str = protobuf_autoloader.get_rpc_uri_by_name(self.service_id, attr)
+                            method_uri = protobuf_autoloader.get_uuri_from_name(method_uri_str)
 
-                            method_uri.resource.MergeFrom(
-                                UResource(
-                                    id=protobuf_autoloader.get_method_id_from_method_name(
-                                        method_uri.entity.name, method_uri.resource.instance
-                                    )
-                                )
-                            )
-                            status = self.communication_layer.register_listener(method_uri, func)
-                            service_util.print_register_rpc_status(method_uri, status.code, status.message)
+                            status = await self.tdk_apis.register_request_handler(method_uri, func)
+                            service_util.print_register_rpc_status(method_uri_str, status.code, status.message)
 
                             break
-            self.subscribe()
+            await self.subscribe()
             return True
         else:
             return False
 
-    def publish(self, uri, params={}, is_from_rpc=False):
+    async def publish(self, uri, params={}, is_from_rpc=False):
         message_class = protobuf_autoloader.get_request_class_from_topic_uri(uri)
         message = protobuf_autoloader.populate_message(self.service, message_class, params)
         any_obj = any_pb2.Any()
         any_obj.Pack(message)
         payload_data = any_obj.SerializeToString()
-        payload = UPayload(value=payload_data, format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY)
-        source_uri = LongUriSerializer().deserialize(uri)
-        source_uri.entity.MergeFrom(
-            get_entity_from_descriptor(protobuf_autoloader.entity_descriptor[source_uri.entity.name])
-        )
-        source_uri.resource.MergeFrom(UResource(id=protobuf_autoloader.get_topic_id_from_topicuri(uri)))
-        attributes = UAttributesBuilder.publish(source_uri, UPriority.UPRIORITY_CS4).build()
+        payload = UPayload(format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY, data=payload_data)
+        source_uri = protobuf_autoloader.get_uuri_from_name(uri)
+
         if "COVESA" not in REPO_URL:
-            attributes.id.MergeFrom(Factories.UUIDV6.create())
-        status = self.communication_layer.send(UMessage(payload=payload, attributes=attributes))
+            message.attributes.id = Factories.UUIDV6.create()
+        status = await self.tdk_apis.publish(topic=source_uri, payload=payload)
         service_util.print_publish_status(uri, status.code, status.message)
         if is_from_rpc:
             self.publish_data.clear()
             self.publish_data.append(message)
-        time.sleep(0.25)
+        await asyncio.sleep(0.25)
         return message, status
 
-    def subscribe(self, uris=None, listener=None):
+    async def subscribe(self, uris=None, listener=None):
         if uris is None or listener is None:
             return
         for uri in uris:
@@ -168,23 +161,19 @@ class BaseService(object):
                 print(f"Warning: there already exists an object subscribed to {uri}")
                 print(f"Skipping subscription for {uri}")
             self.subscriptions[uri] = listener
-            topic_uri = LongUriSerializer().deserialize(uri)
-            topic_uri.entity.MergeFrom(
-                get_entity_from_descriptor(protobuf_autoloader.entity_descriptor[topic_uri.entity.name])
-            )
-            topic_uri.resource.MergeFrom(UResource(id=protobuf_autoloader.get_topic_id_from_topicuri(uri)))
-            status = self.transport_config.register_listener(topic_uri, listener)
+            topic_uri = protobuf_autoloader.get_uuri_from_name(uri)
+            status = await self.tdk_apis.register_listener(topic_uri, listener)
             service_util.print_subscribe_status(uri, status.code, status.message)
-            time.sleep(1)
+            await asyncio.sleep(1)
 
-    def start(self) -> bool:
+    async def start(self) -> bool:
         if self.service is None:
             print("Unable to start mock service without specifying the service name.")
             print("You must set the service name in the BaseService constructor")
             raise SimulationError("service_name not specified for mock service")
         print("Waiting for events...")
 
-        return self.start_rpc_service()
+        return await self.start_rpc_service()
 
     def disconnect(self):
         # todo write logic to unregister the rpc listener

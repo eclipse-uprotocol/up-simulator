@@ -45,16 +45,16 @@ def get_config_display_name(name):
     return name.rsplit(".", 1)[-1]
 
 
-def get_pubsub(service_name):
+def get_pubsub(service_id):
     output = set()
-    for item in autoloader.get_topics_by_proto_service_name(service_name):
+    for item in autoloader.get_topics_by_proto_service_id(service_id):
         status = item.split("#")[-1]
         output.add(status)
     return list(output)
 
 
-def get_topics_by_resource_name(resource_name, service_name):
-    topics = autoloader.get_topics_by_proto_service_name(service_name)
+def get_topics_by_resource_name(resource_name, service_id):
+    topics = autoloader.get_topics_by_proto_service_id(service_id)
     return [topic for topic in topics if topic.lower().split("#")[1] == resource_name.lower()]
 
 
@@ -69,6 +69,8 @@ def get_ui_details(topic):
     all_field_info = {}
     class_type = get_pure_class_type(topic)
     message_class = autoloader.find_message(class_type)
+    if message_class is None:
+        return all_field_info
     field_info = {}
     for field_descriptor in message_class.DESCRIPTOR.fields:
         if not (
@@ -249,15 +251,16 @@ def extract_fields(data):
     return unique_ui
 
 
-def get_ui(pubsub, service_name):
+def get_ui(pubsub, service_id):
     ui_item = []
+    service_name = autoloader.get_entity_name_from_entity_id(service_id)
     if service_name not in [
         "core.utelemetry",
         "core.usubscription",
         "core.udiscovery",
     ]:
         for resource_name in pubsub:
-            topics = get_topics_by_resource_name(resource_name, service_name)
+            topics = get_topics_by_resource_name(resource_name, service_id)
             if len(topics) > 0:
                 configuration = []
                 for i in range(len(topics)):
@@ -266,11 +269,7 @@ def get_ui(pubsub, service_name):
                     if name == display_name:
                         configuration_dict = {"name": name, "topic": topics[i]}
                     else:
-                        configuration_dict = {
-                            "name": name,
-                            "display_name": display_name,
-                            "topic": topics[i],
-                        }
+                        configuration_dict = {"name": name, "display_name": display_name, "topic": topics[i]}
                     configuration.append(configuration_dict)
                 ui_det = get_ui_details(configuration[0]["topic"])
                 ui_details = extract_fields(ui_det)
@@ -299,6 +298,8 @@ def check_resource(message):
     topic = message[0]["topic"]
     class_type = get_pure_class_type(topic)
     message_class = autoloader.find_message(class_type)
+    if message_class is None:
+        return None
     field_names = message_class.DESCRIPTOR.fields_by_name.keys()
     for field_name in field_names:
         field_descriptor = message_class.DESCRIPTOR.fields_by_name[field_name]
@@ -312,10 +313,10 @@ def check_resource(message):
 
 def execute():
     # Process services
-    for service in services:
-        data = get_ui(get_pubsub(service), service)
+    for service_id in services:
+        data = get_ui(get_pubsub(service_id), service_id)
         if len(data) > 0:
-            result_data[service] = data
+            result_data[autoloader.get_entity_name_from_entity_id(service_id)] = data
 
     # Validate and modify configuration
     for service_dict in result_data.values():

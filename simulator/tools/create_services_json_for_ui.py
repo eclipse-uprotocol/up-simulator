@@ -28,9 +28,9 @@ from tdk.core import protobuf_autoloader as autoloader
 result_data = []
 
 
-def get_messages(service_name):
+def get_messages(service_id):
     output = []
-    for item in autoloader.get_topics_by_proto_service_name(service_name):
+    for item in autoloader.get_topics_by_proto_service_id(service_id):
         status = item.split('#')[-1]
         output.append(status)
     unique_element = []
@@ -53,10 +53,11 @@ def get_display_name(input_str):
 
 def execute():
     for service in autoloader.get_services():
-        if service not in ["core.utelemetry", "core.usubscription", "core.udiscovery"]:
+        service_name = autoloader.get_entity_name_from_entity_id(service)
+        if service_name not in ["core.utelemetry", "core.usubscription", "core.udiscovery"]:
             data_dict = {
-                "name": service,
-                "display_name": get_display_name(service),
+                "name": service_name,
+                "display_name": get_display_name(service_name),
                 "rpc": list(autoloader.get_methods_by_service(service).keys()),
                 "message": get_messages(service),
             }

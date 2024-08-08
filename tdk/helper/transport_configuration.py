@@ -14,100 +14,92 @@ SPDX-License-Identifier: Apache-2.0
 
 import json
 
-from uprotocol.proto.uri_pb2 import UAuthority, UEntity, UUri
-
-try:
-    from uprotocol_vsomeip.vsomeip_utransport import (
-        VsomeipHelper,
-        VsomeipTransport,
-    )
-
-    from tdk.transport.someip_helper import SomeipHelper
-except ImportError:
-    pass
-
-from uprotocol.uri.factory.uresource_builder import UResourceBuilder
+from up_transport_zenoh.uptransportzenoh import UPTransportZenoh
+from uprotocol.transport.utransport import UTransport
+from uprotocol.v1.uri_pb2 import UUri
 
 from tdk.helper.binder_utransport import SocketTransport
 
+try:
+    from uprotocol_vsomeip.vsomeip_utransport import (
+        VsomeipTransport,
+    )
+
+    from tdk.helper.someip_helper import SomeipHelper
+except ImportError:
+    pass
+
 
 class TransportConfiguration:
-    _instance = None
-    _initialized = False
-
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
     def __init__(self):
-        if not self._initialized:
-            # Initialize the singleton instance
-            self._initialized = True
-            self.ut_instance = None
-            self.__ZENOH_IP = "10.0.3.3"
-            self.__ZENOH_PORT = 9090
-            self.__SOMEIP_UNICAST_IP = "127.0.0.1"
-            self.__SOMEIP_MULTICAST_IP = "224.224.224.245"
-            self.utransport = "BINDER"
-            self._update_instance()
+        self.__SOURCE = UUri(authority_name="tdk", ue_id=99999, ue_version_major=1)
+        self.__ZENOH_IP = "10.0.0.33"
+        self.__ZENOH_PORT = 9090
+        self.__SOMEIP_UNICAST_IP = "127.0.0.1"
+        self.__SOMEIP_MULTICAST_IP = "224.224.224.245"
+        self.__transport = self._update_instance("BINDER")
 
-    def set_transport(self, transport: str):
-        if self.utransport != transport:
-            print(
-                "set transport, previous is",
-                self.utransport,
-                "current is",
-                transport,
-            )
-            self.utransport = transport
-            self._update_instance()
-
-    def get_transport(self):
-        return self.utransport
-
-    def set_zenoh_config(self, ip, port):
-        self.utransport = "ZENOH"
-        if self.__ZENOH_PORT != port or self.__ZENOH_IP != ip:
-            self.__ZENOH_PORT = port
-            self.__ZENOH_IP = ip
-            self._update_instance()
-
-    def set_someip_config(self, localip, multicast):
-        self.utransport = "SOME/IP"
-        self.__SOMEIP_UNICAST_IP = localip
-        self.__SOMEIP_MULTICAST_IP = multicast
-        self._update_instance()
-
-    def _update_instance(self):
-        if self.utransport == "BINDER":
-            self.ut_instance = SocketTransport()
-        elif self.utransport == "ZENOH":
+    def _update_instance(self, transport_name="BINDER") -> UTransport:
+        if transport_name == "BINDER":
+            return SocketTransport(self.__SOURCE)
+        elif transport_name == "ZENOH":
             import zenoh
 
-            zenoh_ip = self.__ZENOH_IP
-            zenoh_port = self.__ZENOH_PORT
             conf = zenoh.Config()
-            if zenoh_ip is not None:
-                endpoint = [f"tcp/{zenoh_ip}:{zenoh_port}"]
-                print(f"EEE: {endpoint}")
+            if self.__ZENOH_IP is not None:
+                endpoint = [f"tcp/{self.__ZENOH_IP}:{self.__ZENOH_PORT}"]
+                print(f"endpoint: {endpoint}")
                 conf.insert_json5(zenoh.config.MODE_KEY, json.dumps("client"))
                 conf.insert_json5(zenoh.config.CONNECT_KEY, json.dumps(endpoint))
-            from up_client_zenoh.upclientzenoh import UPClientZenoh
 
-            self.ut_instance = UPClientZenoh(
-                conf, UAuthority(name="simulator_authority"), UEntity(name="simulator_entity", version_major=1)
+            return UPTransportZenoh.new(conf, self.__SOURCE)
+        elif transport_name == "SOME/IP":
+            return VsomeipTransport(
+                source=self.__SOURCE, multicast=(self.__SOMEIP_MULTICAST_IP, 30490), helper=SomeipHelper()
             )
 
-        elif self.utransport == "SOME/IP":
-            self.__helper = VsomeipHelper()
-            self.ut_instance = VsomeipTransport(
-                helper=SomeipHelper(),
-                source=UUri(
-                    authority=UAuthority(name="simulator_authority"),
-                    entity=UEntity(name="simulator_entity", version_major=1),
-                    resource=UResourceBuilder.for_rpc_response(),
-                ),
-                unicast=self.__SOMEIP_UNICAST_IP,
-                multicast=(self.__SOMEIP_MULTICAST_IP, 30490),
-            )
+    def get_transport(self) -> UTransport:
+        return self.__transport
+
+    def get_transport_env(self) -> str:
+        if isinstance(self.__transport, UPTransportZenoh):
+            return "ZENOH"
+        try:
+            if isinstance(self.__transport, VsomeipTransport):
+                return "SOME/IP"
+        except Exception:
+            pass
+
+        return "BINDER"
+
+    def set_zenoh_config(self, ip, port):
+        self.__ZENOH_PORT = port
+        self.__ZENOH_IP = ip
+        self.__transport = self._update_instance("ZENOH")
+
+    def set_someip_config(self, localip, multicast):
+        self.__SOMEIP_UNICAST_IP = localip
+        self.__SOMEIP_MULTICAST_IP = multicast
+        self.__transport = self._update_instance("SOME/IP")
+
+    def set_transport(self, env):
+        if self.get_transport_env() != env:
+            print(f"previously selected transport is {self.get_transport_env()} and now is {env}")
+            if env == "SOME/IP":
+                self.set_someip_config(self.__SOMEIP_UNICAST_IP, self.__SOMEIP_MULTICAST_IP)
+            elif env == "ZENOH":
+                self.set_zenoh_config(self.__ZENOH_IP, self.__ZENOH_PORT)
+            else:
+                self.__transport = self._update_instance("BINDER")
+
+    def start_service(self, entity) -> bool:
+        if self.get_transport_env() == "BINDER":
+            return self.start_service(entity)
+        else:
+            return True
+
+    def create_topic(self, entity, topics, listener):
+        if self.get_transport_env() == "BINDER":
+            return self.create_topic(entity, topics, listener)
+        else:
+            return True

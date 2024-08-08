@@ -19,7 +19,10 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
-from tdk.helper.someip_helper import someip_entity, temp_someip_entity
+try:
+    from tdk.helper.someip_helper import someip_entity, temp_someip_entity
+except Exception:
+    pass
 
 mock_entity = []
 
@@ -61,63 +64,63 @@ def get_all_configured_someip_service():
     return configured_service
 
 
-def start_service(entity, callback):
+async def start_service(entity, callback, transport_config, tdk_apis):
     global service
     service = None
 
     if entity == "chassis.braking":
         from simulator.mockservices.braking import BrakingService
 
-        service = BrakingService(callback)
+        service = BrakingService(callback, transport_config, tdk_apis)
     elif entity == "body.cabin_climate":
         from simulator.mockservices.cabin_climate import CabinClimateService
 
-        service = CabinClimateService(callback)
+        service = CabinClimateService(callback, transport_config, tdk_apis)
     elif entity == "chassis":
         from simulator.mockservices.chassis import ChassisService
 
-        service = ChassisService(callback)
+        service = ChassisService(callback, transport_config, tdk_apis)
     elif entity == "propulsion.engine":
         from simulator.mockservices.engine import EngineService
 
-        service = EngineService(callback)
+        service = EngineService(callback, transport_config, tdk_apis)
     elif entity == "vehicle.exterior":
         from simulator.mockservices.exterior import VehicleExteriorService
 
-        service = VehicleExteriorService(callback)
+        service = VehicleExteriorService(callback, transport_config, tdk_apis)
     elif entity == "example.hello_world":
         from simulator.mockservices.hello_world import HelloWorldService
 
-        service = HelloWorldService(callback)
+        service = HelloWorldService(callback, transport_config, tdk_apis)
     elif entity == "body.horn":
         from simulator.mockservices.horn import HornService
 
-        service = HornService(callback)
+        service = HornService(callback, transport_config, tdk_apis)
     elif entity == "body.mirrors":
         from simulator.mockservices.mirrors import BodyMirrorsService
 
-        service = BodyMirrorsService(callback)
+        service = BodyMirrorsService(callback, transport_config, tdk_apis)
     elif entity == "chassis.suspension":
         from simulator.mockservices.suspension import SuspensionService
 
-        service = SuspensionService(callback)
+        service = SuspensionService(callback, transport_config, tdk_apis)
     elif entity == "propulsion.transmission":
         from simulator.mockservices.transmission import TransmissionService
 
-        service = TransmissionService(callback)
+        service = TransmissionService(callback, transport_config, tdk_apis)
     elif entity == "vehicle":
         from simulator.mockservices.vehicle import VehicleService
 
-        service = VehicleService(callback)
+        service = VehicleService(callback, transport_config, tdk_apis)
     elif entity == "body.seating":
         from simulator.mockservices.seating import SeatingService
 
-        service = SeatingService(callback)
+        service = SeatingService(callback, transport_config, tdk_apis)
 
     if service is None:
         return "Not found"
 
-    if service.start():
+    if await service.start():
         mock_entity.append({"name": entity, "entity": service})
         return "Running"
     else:

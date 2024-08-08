@@ -27,13 +27,13 @@ import traceback
 from flask_socketio import SocketIO
 from google.protobuf import any_pb2
 from google.protobuf.json_format import MessageToDict
-from uprotocol.proto.uattributes_pb2 import CallOptions
-from uprotocol.proto.umessage_pb2 import UMessage
-from uprotocol.proto.upayload_pb2 import UPayload, UPayloadFormat
-from uprotocol.proto.uri_pb2 import UResource
-from uprotocol.rpc.rpcmapper import RpcMapper
+from uprotocol.communication.calloptions import CallOptions
+from uprotocol.communication.rpcmapper import RpcMapper
+from uprotocol.communication.upayload import UPayload
 from uprotocol.transport.ulistener import UListener
-from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
+from uprotocol.uri.serializer.uriserializer import UriSerializer
+from uprotocol.v1.uattributes_pb2 import UPayloadFormat
+from uprotocol.v1.umessage_pb2 import UMessage
 
 from simulator.ui.utils import common_handlers
 from simulator.utils import constant
@@ -45,67 +45,57 @@ from simulator.utils.vehicle_service_utils import (
 from tdk.apis.apis import TdkApis
 from tdk.core import protobuf_autoloader
 from tdk.helper.someip_helper import configure_someip_service
-from tdk.utils.service_util import get_entity_from_descriptor
+from tdk.helper.transport_configuration import TransportConfiguration
 
 logger = logging.getLogger("Simulator")
 
 
 class SocketUtility:
-    def __init__(self, socket_io, transport_config):
+    def __init__(self, socket_io, transport_config: TransportConfiguration, tdk_apis: TdkApis):
         self.socketio = socket_io
         self.oldtopic = ""
         self.last_published_data = None
         self.transport_config = transport_config
-        self.tdk_apis = TdkApis(self.transport_config)
+        self.tdk_apis = tdk_apis
         self.lock_pubsub = threading.Lock()
         self.lock_rpc = threading.Lock()
         self.lock_pubsub = threading.Lock()
         self.lock_service = threading.Lock()
 
-    def execute_send_rpc(self, json_sendrpc):
+    async def execute_send_rpc(self, json_sendrpc):
         try:
-            status = verify_all_checks()
+            status = verify_all_checks(self.transport_config.get_transport_env())
             if status == "":
                 methodname = json_sendrpc["methodname"]
-                serviceclass = json_sendrpc["serviceclass"]
+                service_name = json_sendrpc["serviceclass"]
                 mask = json.loads(json_sendrpc["mask"])
                 data = json_sendrpc["data"]
                 json_data = json.loads(data)
-
-                req_cls = protobuf_autoloader.get_request_class(serviceclass, methodname)
-                res_cls = protobuf_autoloader.get_response_class(serviceclass, methodname)
+                service_id = protobuf_autoloader.get_entity_id_from_entity_name(service_name)
+                req_cls = protobuf_autoloader.get_request_class(service_id, methodname)
+                res_cls = protobuf_autoloader.get_response_class(service_id, methodname)
 
                 if bool(mask):
                     json_data["update_mask"] = {"paths": mask}
 
-                message = protobuf_autoloader.populate_message(serviceclass, req_cls, json_data)
+                message = protobuf_autoloader.populate_message(service_name, req_cls, json_data)
                 version = 1
 
-                method_uri = protobuf_autoloader.get_rpc_uri_by_name(serviceclass, methodname, version)
+                method_uri = protobuf_autoloader.get_rpc_uri_by_name(service_id, methodname, version)
                 any_obj = any_pb2.Any()
                 any_obj.Pack(message)
                 payload_data = any_obj.SerializeToString()
                 payload = UPayload(
-                    value=payload_data,
+                    data=payload_data,
                     format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY,
                 )
-                method_uri = LongUriSerializer().deserialize(method_uri)
-                method_uri.entity.MergeFrom(
-                    get_entity_from_descriptor(protobuf_autoloader.entity_descriptor[method_uri.entity.name])
-                )
+                method_uri = protobuf_autoloader.get_uuri_from_name(method_uri)
 
-                method_uri.resource.MergeFrom(
-                    UResource(
-                        id=protobuf_autoloader.get_method_id_from_method_name(
-                            method_uri.entity.name, method_uri.resource.instance
-                        )
-                    )
-                )
-                res_future = self.tdk_apis.invoke_method(method_uri, payload, CallOptions(ttl=15000))
+                upayload = self.tdk_apis.invoke_method(method_uri, payload, CallOptions(timeout=2000))
                 sent_data = MessageToDict(message)
 
                 message = "Successfully send rpc request for " + methodname
-                if self.transport_config.get_transport() == "Zenoh":
+                if self.transport_config.get_transport() == "ZENOH":
                     message = "Successfully send rpc request for " + methodname + " to Zenoh"
                 res = {"msg": message, "data": sent_data}
                 self.socketio.emit(
@@ -113,9 +103,9 @@ class SocketUtility:
                     res,
                     namespace=constant.NAMESPACE,
                 )
-                if res_future is not None:
-                    response = RpcMapper.map_response(res_future, res_cls)
-                    common_handlers.rpc_response_handler(self.socketio, response.result())
+                if upayload is not None:
+                    response = await RpcMapper.map_response(upayload, res_cls)
+                    common_handlers.rpc_response_handler(self.socketio, response)
             else:
                 self.socketio.emit(
                     constant.CALLBACK_GENERIC_ERROR,
@@ -131,9 +121,9 @@ class SocketUtility:
                 namespace=constant.NAMESPACE,
             )
 
-    def execute_publish(self, json_publish):
+    async def execute_publish(self, json_publish):
         try:
-            status = verify_all_checks()
+            status = verify_all_checks(self.transport_config.get_transport_env())
             if status == "":
                 topic = json_publish["topic"]
                 data = json_publish["data"]
@@ -142,12 +132,12 @@ class SocketUtility:
                 json_data = json.loads(data)
                 service_instance = get_service_instance_from_entity(service_class)
                 if service_instance is not None:
-                    message, status = service_instance.publish(topic, json_data)
+                    message, status = await service_instance.publish(topic, json_data)
                     self.last_published_data = MessageToDict(message)
                     common_handlers.publish_status_handler(
                         self.socketio,
                         self.lock_pubsub,
-                        self.transport_config.get_transport(),
+                        self.transport_config.get_transport_env(),
                         topic,
                         status.code,
                         status.message,
@@ -193,8 +183,8 @@ class SocketUtility:
             namespace=constant.NAMESPACE,
         )
 
-    def start_mock_service(self, json_service):
-        status = verify_all_checks()
+    async def start_mock_service(self, json_service):
+        status = verify_all_checks(self.transport_config.get_transport_env())
         if status == "":
 
             def handler(rpc_request, method_name, json_data, rpcdata):
@@ -208,7 +198,7 @@ class SocketUtility:
                 )
 
             try:
-                status = start_service(json_service["entity"], handler)
+                status = await start_service(json_service["entity"], handler, self.transport_config, self.tdk_apis)
                 self.socketio.emit(
                     constant.CALLBACK_START_SERVICE,
                     {"entity": json_service["entity"], "status": status},
@@ -219,22 +209,18 @@ class SocketUtility:
         else:
             print(status)
 
-    def execute_subscribe(self, json_subscribe):
+    async def execute_subscribe(self, json_subscribe):
         topic = json_subscribe["topic"]
         try:
-            status = verify_all_checks()
+            status = verify_all_checks(self.transport_config.get_transport_env())
             if status == "":
-                new_topic = LongUriSerializer().deserialize(topic)
-                new_topic.entity.MergeFrom(
-                    get_entity_from_descriptor(protobuf_autoloader.entity_descriptor[new_topic.entity.name])
-                )
-                new_topic.resource.MergeFrom(UResource(id=protobuf_autoloader.get_topic_id_from_topicuri(topic)))
+                new_topic = protobuf_autoloader.get_uuri_from_name(topic)
 
-                status = self.tdk_apis.register_listener(
+                status = await self.tdk_apis.register_listener(
                     new_topic,
                     SubscribeUListener(
                         self.socketio,
-                        self.transport_config.get_transport(),
+                        self.transport_config.get_transport_env(),
                         self.lock_pubsub,
                     ),
                 )
@@ -242,7 +228,7 @@ class SocketUtility:
                     common_handlers.subscribe_status_handler(
                         self.socketio,
                         self.lock_pubsub,
-                        self.transport_config.get_transport(),
+                        self.transport_config.get_transport_env(),
                         topic,
                         0,
                         "Ok",
@@ -251,7 +237,7 @@ class SocketUtility:
                     common_handlers.subscribe_status_handler(
                         self.socketio,
                         self.lock_pubsub,
-                        self.transport_config.get_transport(),
+                        self.transport_config.get_transport_env(),
                         topic,
                         status.code,
                         status.message,
@@ -285,16 +271,35 @@ class SubscribeUListener(UListener):
     def __init__(self, socketio: SocketIO, utransport: str, lock_pubsub: threading.Lock):
         if not self._initialized:
             self.__socketio = socketio
-            self.__utransport = utransport
+            self.__utransport_name = utransport
             self.__lock_pubsub = lock_pubsub
             self._initialized = True
 
-    def on_receive(self, msg: UMessage):
+    async def on_receive(self, msg: UMessage):
         print("onreceive")
         common_handlers.on_receive_event_handler(
             self.__socketio,
             self.__lock_pubsub,
-            self.__utransport,
-            LongUriSerializer().serialize(msg.attributes.source),
-            msg.payload,
+            self.__utransport_name,
+            self.convert_hex_to_int_in_string(UriSerializer.serialize(msg.attributes.source)),
+            UPayload.pack_from_data_and_format(msg.payload, msg.attributes.payload_format),
         )
+        return None
+
+    def convert_hex_to_int_in_string(self, stri: str):
+        segments = stri.split('/')
+        new_segments = []
+
+        for segment in segments:
+            if segment:  # Check if segment is not empty
+                try:
+                    # Try to interpret the segment as a hexadecimal value
+                    int_value = int(segment, 16)
+                    new_segments.append(str(int_value))
+                except ValueError:
+                    # If it's not a hex value, keep it as is
+                    new_segments.append(segment)
+            else:
+                new_segments.append(segment)
+
+        return '/'.join(new_segments)
