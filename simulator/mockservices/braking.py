@@ -19,13 +19,16 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
+import asyncio
 import re
 
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
 from simulator.utils.exceptions import ValidationError
+from tdk.apis.apis import TdkApis
 from tdk.core.abstract_service import BaseService
+from tdk.helper.transport_configuration import TransportConfiguration
 from tdk.target.protofiles.common.health_state_pb2 import HealthState
 from tdk.target.protofiles.vehicle.chassis.braking.v1.braking_service_pb2 import (
     ManageHealthMonitoringRequest,
@@ -44,16 +47,16 @@ class BrakingService(BaseService):
     timeout = 9  # timeout time in seconds for discovery service
     state = {}
 
-    def __init__(self, portal_callback=None):
+    def __init__(self, portal_callback=None, transport_config: TransportConfiguration = None, tdk_apis: TdkApis = None):
         """
         BrakingService constructor
         """
 
-        super().__init__("chassis.braking", portal_callback)
+        super().__init__("chassis.braking", portal_callback, transport_config, tdk_apis)
         self.init_state()
 
-    def subscribe(self):
-        super().subscribe(
+    async def subscribe(self):
+        await super().subscribe(
             [
                 KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.front#BrakePads",
                 KEY_URI_PREFIX + "/chassis.braking/1/brake_pads.rear#BrakePads",
@@ -104,7 +107,7 @@ class BrakingService(BaseService):
     def ManageHealthMonitoring(self, request, response):
         return self.handle_request(request, response)
 
-    def handle_request(self, request, response):
+    async def handle_request(self, request, response):
         """
         Generic function for all braking RPC calls
 
@@ -125,7 +128,7 @@ class BrakingService(BaseService):
         response.code = 0
         response.message = "OK"
 
-        self.publish_brake(request)
+        asyncio.create_task(self.publish_brake(request))
         return response
 
     def validate_braking_req(self, request):
@@ -178,7 +181,7 @@ class BrakingService(BaseService):
 
         return True
 
-    def publish_brake(self, request):
+    async def publish_brake(self, request):
         """
         Publishes a brake message based on the current state.
 
@@ -190,20 +193,20 @@ class BrakingService(BaseService):
 
         if isinstance(request, ResetHealthRequest):
             topic = topic_prefix + request.name + "#BrakePads"
-            self.publish(topic, self.state[request.name], True)
+            await self.publish(topic, self.state[request.name], True)
         else:
             topic = topic_prefix + "brake_pads.front#BrakePads"
-            self.publish(topic, self.state["brake_pads.front"], True)
+            await self.publish(topic, self.state["brake_pads.front"], True)
 
             topic = topic_prefix + "brake_pads.rear#BrakePads"
-            self.publish(topic, self.state["brake_pads.rear"], True)
+            await self.publish(topic, self.state["brake_pads.rear"], True)
 
 
 class BrakingPreconditions(UListener):
     def __init__(self, braking_service):
         self.braking_service = braking_service
 
-    def on_receive(self, umsg: UMessage):
+    async def on_receive(self, umsg: UMessage):
         print("on receive braking called")
         print(umsg.payload)
         print(umsg.attributes.source)

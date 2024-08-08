@@ -19,12 +19,15 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
+import asyncio
 import re
 
 from google.protobuf.json_format import MessageToDict
 
 from simulator.utils.exceptions import ValidationError
+from tdk.apis.apis import TdkApis
 from tdk.core.abstract_service import BaseService
+from tdk.helper.transport_configuration import TransportConfiguration
 from tdk.target.protofiles.vehicle.body.cabin_climate.v1 import cabin_climate_topics_pb2
 from tdk.target.protofiles.vehicle.body.cabin_climate.v1.cabin_climate_service_pb2 import (
     SetAirDistributionRequest,
@@ -45,12 +48,12 @@ class CabinClimateService(BaseService):
     state = {}  # state for all zones
     settings_state = {}  # state for system settings
 
-    def __init__(self, portal_callback=None):
+    def __init__(self, portal_callback=None, transport_config: TransportConfiguration = None, tdk_apis: TdkApis = None):
         """
         CabinClimateService constructor
         """
 
-        super().__init__("body.cabin_climate", portal_callback)
+        super().__init__("body.cabin_climate", portal_callback, transport_config, tdk_apis)
 
         self.init_state()
 
@@ -108,8 +111,8 @@ class CabinClimateService(BaseService):
         response.code = 0
         response.message = "OK"
         # publish message from request data
-        self.publish_synced_fields(request, zone_str)
-        self.publish_zone(zone_str)
+        asyncio.create_task(self.publish_synced_fields(request, zone_str))
+        asyncio.create_task(self.publish_zone(zone_str))
 
         return response
 
@@ -202,7 +205,7 @@ class CabinClimateService(BaseService):
 
         return field_mask_normalized
 
-    def publish_synced_fields(self, request, zone_str):
+    async def publish_synced_fields(self, request, zone_str):
         """
         If "blower_level", "air_distribution", "air_distribution_auto_state", or "auto_on" fields
         are sent with a resource of rowX_left, we need to publish on rowX_right as well.
@@ -225,7 +228,7 @@ class CabinClimateService(BaseService):
                 new_row = row + "_right"
             for field in mask & synced_fields:
                 self.state[new_row][field] = self.state[zone_str][field]
-            self.publish_zone(new_row)
+            await self.publish_zone(new_row)
 
     def validate_zone_req(self, request, zone_str):
         """
@@ -301,13 +304,13 @@ class CabinClimateService(BaseService):
 
         return True
 
-    def publish_zone(self, zone_name):
+    async def publish_zone(self, zone_name):
         """
         Publishes a system settings message based on the current state
         """
         # publish zone info based on current state
         topic = KEY_URI_PREFIX + "/body.cabin_climate/1/" + zone_name + "#Zone"
-        self.publish(topic, self.state[zone_name], True)
+        await self.publish(topic, self.state[zone_name], True)
 
     def get_est_cabin_temp(self):
         """

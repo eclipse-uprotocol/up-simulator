@@ -19,8 +19,12 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
+import asyncio
+
 from simulator.utils.exceptions import ValidationError
+from tdk.apis.apis import TdkApis
 from tdk.core.abstract_service import BaseService
+from tdk.helper.transport_configuration import TransportConfiguration
 from tdk.target.protofiles.vehicle.body.horn.v1.horn_service_pb2 import (
     ActivateHornRequest,
     DeactivateHornRequest,
@@ -36,12 +40,12 @@ class HornService(BaseService):
 
     state = {}
 
-    def __init__(self, portal_callback=None):
+    def __init__(self, portal_callback=None, transport_config: TransportConfiguration = None, tdk_apis: TdkApis = None):
         """
         HornService constructor:
         """
 
-        super().__init__("body.horn", portal_callback)
+        super().__init__("body.horn", portal_callback, transport_config, tdk_apis)
         self.init_state()
 
     def init_state(self):
@@ -79,7 +83,7 @@ class HornService(BaseService):
         response.status.code = 0
         response.status.message = "OK"
 
-        self.publish_horn(request)
+        asyncio.create_task(self.publish_horn(request))
         return response
 
     def validate_horn_req(self, request):
@@ -96,7 +100,7 @@ class HornService(BaseService):
         if isinstance(request, DeactivateHornRequest):
             pass
 
-    def publish_horn(self, request):
+    async def publish_horn(self, request):
         """
         Publishes a horn message based on the current state.
 
@@ -105,4 +109,4 @@ class HornService(BaseService):
         """
 
         topic = KEY_URI_PREFIX + "/body.horn/1/horn#HornStatus"
-        self.publish(topic, self.state["horn_status"], True)
+        await self.publish(topic, self.state["horn_status"], True)

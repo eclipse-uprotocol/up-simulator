@@ -58,8 +58,6 @@ class BaseService(object):
         self.service_id = protobuf_autoloader.get_entity_id_from_entity_name(service_name)
         self.subscriptions = {}
         self.portal_callback = portal_callback
-        print('save portal callback')
-        print(self.portal_callback)
         if transport_config is None or tdk_apis is None:
             self.transport_config = TransportConfiguration()
             self.tdk_apis = TdkApis(self.transport_config)
