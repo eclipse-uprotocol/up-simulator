@@ -24,9 +24,9 @@ import traceback
 from collections import defaultdict
 
 from google.protobuf.descriptor import FieldDescriptor
+from uprotocol.v1.uri_pb2 import UUri
 
 from tdk.target import protofiles as proto
-from tdk.utils import constant
 from tdk.utils.constant import (
     RESOURCE_CATALOG_CSV_NAME,
     RESOURCE_CATALOG_JSON_NAME,
@@ -39,6 +39,7 @@ topic_messages = []
 message_to_module = {}
 service_id = {}
 entity_descriptor = {}
+events_to_event_id_url = {}
 
 
 # Protobuf autoloader functions. This module will automatically
@@ -57,8 +58,6 @@ def populate_protobuf_classes():
     global topic_messages
     global rpc_fullname_methods
     global service_id
-    # see comment below.
-    rpc_methods[None] = {}
 
     cwd = pathlib.Path(__file__).parent.resolve()
     # Specify the relative path to the CSV file
@@ -88,11 +87,12 @@ def populate_protobuf_classes():
 
                 topics_list = [item[0] for item in topic_messages]
                 for endpoint in service_node["node"]:
+                    events_to_event_id_url[endpoint["uri"]] = endpoint["uri_id"]
                     # Get the id of topic and store it- this id is needed for SOME IP integration
                     if endpoint["type"] == "topic":
                         uri = endpoint["uri"]
                         topics_list.index(uri)
-                        topic_messages[topics_list.index(endpoint["uri"])].append(endpoint["id"])
+                        topic_messages[topics_list.index(endpoint["uri"])].append(endpoint["uri_id"])
 
                     if endpoint["type"] == "method":
                         uri = endpoint["uri"]
@@ -108,23 +108,26 @@ def populate_protobuf_classes():
                             if name not in rpc_topics[service_name].keys():
                                 rpc_topics[service_name][name] = {
                                     "uri": [],
+                                    "uri_id": [],
                                     "versions": [],
                                     "id": "",
                                 }
                                 rpc_topics[service_name][name]["versions"].append(api_version)
                                 rpc_topics[service_name][name]["uri"].append(uri)
                                 rpc_topics[service_name][name]["id"] = endpoint["id"]
+                                rpc_topics[service_name][name]["uri_id"] = endpoint["uri_id"]
                             elif api_version not in rpc_topics[service_name][name]["versions"]:
                                 rpc_topics[service_name][name]["versions"].append(api_version)
                                 rpc_topics[service_name][name]["uri"].append(uri)
                                 rpc_topics[service_name][name]["id"] = endpoint["id"]
+                                rpc_topics[service_name][name]["uri_id"] = endpoint["uri_id"]
 
                             else:
                                 print(f"Warning: possible duplicate method name detected for {uri}")
                         else:
                             print(f"Warning: RPC method name and service name could not be determined for {uri}")
         except Exception:
-            print("Warning: except occured during parsing of Resource Catalog:")
+            print("Warning: except occurred during parsing of Resource Catalog:")
             traceback.print_exc()
 
         get_protobuf_descriptor_data()
@@ -132,14 +135,52 @@ def populate_protobuf_classes():
         return rpc_methods
 
 
-def get_topic_id_from_topicuri(given_topic):
-    for topic in topic_messages:
-        if given_topic in topic:
-            return int(topic[2])
+# ex- given_uri="/999/1/32768"
+def get_uuri_from_id(given_uri: str) -> UUri:
+    split_parts = given_uri.split('/')
+    return UUri(
+        authority_name=split_parts[0],
+        ue_id=int(split_parts[1]),
+        ue_version_major=int(split_parts[2]),
+        resource_id=int(split_parts[3]),
+    )
 
 
-def get_method_id_from_method_name(entity, rpc_method_name):
-    return int(rpc_topics[entity][rpc_method_name]["id"])
+# ex- given_uri="/example.hello_world/1/one_second#Timer"
+def get_uuri_from_name(given_uri: str) -> UUri:
+    if given_uri in events_to_event_id_url:
+        return get_uuri_from_id(events_to_event_id_url[given_uri])
+    return UUri()
+
+
+def get_uri_str_from_uuri(given_uri: UUri) -> str:
+    for key, value in events_to_event_id_url.items():
+        if value == given_uri:
+            return key
+
+
+def get_entity_name_from_entity_id(id):
+    for key in service_id:
+        if service_id[key] == id:
+            return key
+
+
+def get_entity_id_from_entity_name(service_name):
+    return service_id[service_name]
+
+
+def get_method_uri_id_from_method_name(entity, rpc_method_name) -> str:
+    return rpc_topics[entity][rpc_method_name]["uri_id"]
+
+
+def get_method_name_from_method_id(entity_id, rpc_method_id):
+    if not isinstance(entity_id, str):
+        entity_id = str(entity_id)
+    if not isinstance(rpc_method_id, str):
+        rpc_method_id = str(rpc_method_id)
+    for method_name, method_dict in rpc_methods[entity_id].items():
+        if method_dict["id"] == rpc_method_id:
+            return method_name
 
 
 def get_protobuf_descriptor_data():
@@ -156,17 +197,12 @@ def get_protobuf_descriptor_data():
             continue
         services = []
         for service in _services:
-            options = str(mod.DESCRIPTOR.services_by_name[service].GetOptions())
-            groups = re.search(
-                r"^\[" + constant.KEY_PROTO_ENTITY_NAME + '\\.name\\]:\\s"([\\w.]+)"$',
-                options,
-                re.MULTILINE,
-            )
-            try:
-                protobuf_service = groups.group(1)
-            except Exception:
-                print(options)
-                continue
+            for field, value in mod.DESCRIPTOR.services_by_name[service].GetOptions().ListFields():
+                if field.name in ["service_name", "name"]:
+                    protobuf_service = value
+                if field.name in ["service_id", "id"]:
+                    protobuf_id = str(value)
+
             entity_descriptor[protobuf_service] = mod.DESCRIPTOR.services_by_name[service]
             services.append((service, protobuf_service))
         messages = mod.DESCRIPTOR.message_types_by_name.keys()
@@ -185,61 +221,54 @@ def get_protobuf_descriptor_data():
                 rpc_info = parse_method(protobuf_service, rpc_method=m, containing_module=modname)
                 if rpc_info is None:
                     continue
-                if rpc_info["full_name"] in rpc_methods.keys():
-                    if rpc_info["full_name"] != rpc_methods[rpc_info["name"]]["full_name"]:
-                        print("*" * 60)
-                        print(f"WARNING: Duplicate RPC method name detected: {m.name}:")
-                        print("If you see this message, please email neelam.kushwah@gm.com")
-                        print(f"{rpc_info['full_name']}")
-                        print(f"{rpc_methods[rpc_info['name']]['full_name']}")
-                        print("*" * 60)
-                if protobuf_service not in rpc_methods.keys():
-                    rpc_methods[protobuf_service] = {}
-                rpc_methods[protobuf_service][m.name] = rpc_info
-                # for legacy purposes, keep a dict keyed only by method name when service is None.
-                # for methods of the same name but in different services, we can only keep the last method
-                # processed.
-                # this is to ease migration to passing in the service name, which we haven't done historically
-                rpc_methods[None][m.name] = rpc_info
+
+                if protobuf_id not in rpc_methods.keys():
+                    rpc_methods[protobuf_id] = {}
+                rpc_methods[protobuf_id][m.name] = rpc_info
+
                 rpc_fullname_methods[m.full_name] = rpc_info
 
 
-def get_request_class(service, rpc_name):
+def get_request_class(service_id, rpc_name):
+    if not isinstance(service_id, str):
+        service_id = str(service_id)
     global rpc_methods
-    return rpc_methods[service][rpc_name]["request"]
+    return rpc_methods[service_id][rpc_name]["request"]
 
 
-def get_topics_by_proto_service_name(service_name):
+def get_topics_by_proto_service_id(service_id):
     global topic_messages
     topics = []
-    if service_name is None:
-        return topics
     for pair in topic_messages:
-        topic = pair[0]
-        if "/" + service_name + "/" in topic:
-            topics.append(topic)
+        if len(pair) < 3:
+            continue
+        topic = pair[2]
+        if "/" + service_id + "/" in topic:
+            topics.append(pair[0])
 
     return topics
 
 
 def get_services():
     global service_id
-    return service_id.keys()
+    return service_id.values()
 
 
 # returns a class object for the response message for a given rpc method name
-def get_response_class(service, rpc_name):
+def get_response_class(service_id, rpc_name):
+    if not isinstance(service_id, str):
+        service_id = str(service_id)
     global rpc_methods
-    return rpc_methods[service][rpc_name]["response"]
+    return rpc_methods[service_id][rpc_name]["response"]
 
 
-def parse_method(service, rpc_method, containing_module):
+def parse_method(service_name, rpc_method, containing_module):
     input_class = find_message_class(containing_module, rpc_method.input_type.full_name)
     output_class = find_message_class(containing_module, rpc_method.output_type.full_name)
     try:
-        (versions, uri) = get_rpc_method_uri(service, rpc_method)
+        (versions, uri, uri_id) = get_rpc_method_uri(service_name, rpc_method)
     except Exception:
-        print(f"ERROR: URI not found for RPC method {rpc_method.name} in service {service}.")
+        print(f"ERROR: URI not found for RPC method {rpc_method.name} in service {service_name}.")
         return None
     if uri is not None:
         uri = uri
@@ -249,9 +278,10 @@ def parse_method(service, rpc_method, containing_module):
         "response": output_class,
         "full_name": rpc_method.full_name,
         "module": containing_module,
-        "service": service,
+        "service": service_name,
         "uri": uri,
         "versions": versions,
+        "id": uri_id,
     }
 
 
@@ -297,11 +327,15 @@ def find_message_class(containing_module, class_full_name):
 # the uri based on just the method name
 def get_rpc_method_uri(service, method):
     global rpc_topics
+    for field, value in method.GetOptions().ListFields():
+        if field.name == "method_id":
+            method_id = str(value)
+
     method_name = method.name
     if service in rpc_topics.keys():
         for method in rpc_topics[service].keys():
             if method_name == method:
-                return rpc_topics[service][method]["versions"], str(rpc_topics[service][method]["uri"])
+                return rpc_topics[service][method]["versions"], str(rpc_topics[service][method]["uri"]), method_id
 
     return None
 
@@ -313,6 +347,7 @@ def get_message_fields(message_class):
 
 # recursively populate protobufs using a nested dictionary
 def _populate_message(service_name, message_class, data_dict):
+    service_id = get_entity_id_from_entity_name(service_name)
     fields = get_message_fields(message_class)
 
     _next_args = {}
@@ -370,7 +405,7 @@ def _populate_message(service_name, message_class, data_dict):
                     list_type = str(arg.message_type.name)
 
                     # get the class for the repeated message type
-                    list_class = find_request_by_type(service_name, list_type)
+                    list_class = find_request_by_type(service_id, list_type)
 
                     for subfields in data_dict[field]:
                         nested_message = _populate_message(service_name, list_class, subfields)
@@ -402,6 +437,8 @@ def _populate_message(service_name, message_class, data_dict):
 
 # returns the message class for a given message name
 def find_message(message_full_name):
+    message_class = None
+    module = None
     try:
         module = message_to_module[message_full_name]
         message_class = find_message_class(module, message_full_name)
@@ -431,6 +468,9 @@ def find_message(message_full_name):
                         return message_class
                     except Exception:
                         continue
+        if message_class is None:
+            print(f'Message class not available in proto for {message_full_name}')
+            return None
         return getattr(message_class, basename)
 
     return message_class
@@ -514,61 +554,57 @@ def unpack_data_dict(data_dict):
     return new_dict
 
 
-def find_request_by_type(service, message_type):
+def find_request_by_type(service_id, message_type):
     global rpc_methods
-    for method in rpc_methods[service].keys():
-        if message_type == rpc_methods[service][method]["request"].DESCRIPTOR.full_name.split(".")[-1]:
-            return rpc_methods[service][method]["request"]
+    for method in rpc_methods[service_id].keys():
+        if message_type == rpc_methods[service_id][method]["request"].DESCRIPTOR.full_name.split(".")[-1]:
+            return rpc_methods[service_id][method]["request"]
 
-    # massage service name to something in the python namespace.
-    # i dont like this but it'll do for now as it isn't (yet) common
-    # to need to search message_to_module
-    if service == "app.iv_bev":
-        service = "app.bev"
-    # hacky way to look for messages which are not apart of an rpc method (ie subpub)
+    service = get_entity_name_from_entity_id(service_id)
     for message, module in message_to_module.items():
         if service in message and message_type == message.split(".")[-1]:
             return find_message(message)
 
 
-def get_rpc_uri_by_name(service, rpc_method_name, uri_version=None):
+def get_rpc_uri_by_name(service_id, rpc_method_name, uri_version=None):
+    service_name = get_entity_name_from_entity_id(service_id)
     global rpc_topics
     # dont try/except since not finding the URI is a major issue
     if uri_version is not None:
-        for uri in rpc_topics[service][rpc_method_name]["uri"]:
+        for uri in rpc_topics[service_name][rpc_method_name]["uri"]:
             if int(re.search(r"/([\w\.]+)/([0-9\.]+)/rpc.(\w+)", uri).group(2)) == uri_version:
                 return uri
     else:
         uri_version = 0
-    return str(rpc_topics[service][rpc_method_name]["uri"][uri_version])
+    return str(rpc_topics[service_name][rpc_method_name]["uri"][uri_version])
 
 
 # returns a dict of all {rpc_method: request_class_path}
-def get_request_map(service=None):
+def get_request_map(service_id):
     global rpc_methods
     request_map = {}
-    for i in rpc_methods[service].keys():
-        if rpc_methods[service][i]["service"] == service or service is None:
-            request_map[i] = (
-                str(rpc_methods[service][i]["request"].__module__)
-                + "."
-                + str(rpc_methods[service][i]["request"].__qualname__)
-            )
+    for i in rpc_methods[service_id].keys():
+        # if rpc_methods[service_id][i]["service"] == service or service is None:
+        request_map[i] = (
+            str(rpc_methods[service_id][i]["request"].__module__)
+            + "."
+            + str(rpc_methods[service_id][i]["request"].__qualname__)
+        )
 
     return request_map
 
 
 # returns a dict of all {rpc_method: request_class_path}
-def get_response_map(service=None):
+def get_response_map(service_id=None):
     global rpc_methods
     response_map = {}
-    for i in rpc_methods[service].keys():
-        if rpc_methods[service][i]["service"] == service or service is None:
-            response_map[i] = (
-                str(rpc_methods[service][i]["response"].__module__)
-                + "."
-                + str(rpc_methods[service][i]["response"].__qualname__)
-            )
+    for i in rpc_methods[service_id].keys():
+        # if rpc_methods[service_id][i]["service"] == service or service is None:
+        response_map[i] = (
+            str(rpc_methods[service_id][i]["response"].__module__)
+            + "."
+            + str(rpc_methods[service_id][i]["response"].__qualname__)
+        )
 
     return response_map
 
@@ -576,13 +612,20 @@ def get_response_map(service=None):
 def get_topic_map():
     global topic_messages
     topic_map = {}
-    for url, msg_type, id in topic_messages:
+    for topic in topic_messages:
+        if len(topic) == 2:
+            continue
+        if len(topic) == 3:
+            url, msg_type, uri_id = topic
+        else:
+            print(topic)
+            url, msg_type, uri_id, extra_param = topic
         msg_base_name = msg_type.rsplit(".")[-1]
         try:
             containing_module = message_to_module[msg_type]
         except KeyError:
             continue
-        topic_map[url] = f"{containing_module}.{msg_base_name}"
+        topic_map[uri_id] = f"{containing_module}.{msg_base_name}"
     return topic_map
 
 
@@ -601,14 +644,16 @@ def get_topics_by_service(service_name):
 
 
 # returns a list of rpc method names based on service name
-def get_methods_by_service(service_name):
+def get_methods_by_service(service_id):
     global rpc_methods
     ret = {}
-    if service_name in rpc_methods:
-        for method in rpc_methods[service_name].keys():
-            ret[method] = rpc_methods[service_name][method]
+    if service_id in rpc_methods:
+        for method in rpc_methods[service_id].keys():
+            ret[method] = rpc_methods[service_id][method]
     return ret
 
 
 # populate on import
 populate_protobuf_classes()
+
+uri_id_to_message_module_map = get_topic_map()

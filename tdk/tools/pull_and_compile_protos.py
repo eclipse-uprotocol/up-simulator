@@ -1,5 +1,5 @@
 """
-SPDX-FileCopyrightText: 2024 Contributors to the Eclipse Foundation
+SPDX-FileCopyrightText: Copyright (c) 2024 Contributors to the Eclipse Foundation
 
 See the NOTICE file(s) distributed with this work for additional
 information regarding copyright ownership.
@@ -115,11 +115,6 @@ def process_python_protofiles(directory):
                     file_path,
                     r"import units_pb2",
                     "import tdk.target.protofiles.units_pb2",
-                )
-                replace_in_file(
-                    file_path,
-                    r"import uprotocol_options_pb2",
-                    "import uprotocol.proto.uprotocol_options_pb2",
                 )
 
 

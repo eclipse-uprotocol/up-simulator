@@ -23,16 +23,14 @@ import logging
 import time
 from datetime import datetime
 
-from google.protobuf import any_pb2
 from google.protobuf.json_format import MessageToDict
-from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.rpc.rpcmapper import RpcMapper
+from uprotocol.communication.upayload import UPayload
 
+import tdk.utils.constant as tdk_constants
 from simulator.ui.utils.file_utils import save_pub_sub_data, save_rpc_data
 from simulator.utils import common_util, constant
 from simulator.utils.common_util import flatten_dict
 from tdk.core import protobuf_autoloader
-from tdk.utils.constant import KEY_URI_PREFIX
 
 total_rpc = 0
 success_rpc = 0
@@ -153,27 +151,28 @@ def publish_status_handler(socketio, lock_pubsub, utransport, topic, status_code
 
 def on_receive_event_handler(socketio, lock_pubsub, utransport, topic, payload: UPayload):
     try:
-        topic = KEY_URI_PREFIX + topic
-        topic_class = protobuf_autoloader.get_topic_map()[topic]
+        topic = tdk_constants.KEY_URI_PREFIX + topic
+
+        topic_class = protobuf_autoloader.uri_id_to_message_module_map[topic]
         res = common_util.get_class(topic_class)
-        any_message = any_pb2.Any()
-        any_message.ParseFromString(payload.value)
-        res = RpcMapper.unpack_payload(any_message, res)
+
+        res = UPayload.unpack(payload, res)
         original_members = MessageToDict(res, preserving_proto_field_name=True, including_default_value_fields=True)
         members = flatten_dict(original_members)
+        topic_str = protobuf_autoloader.get_uri_str_from_uuri(topic)
         json_res = {
             "type": "OnTopicUpdate",
             "transport": utransport,
-            "topic": topic,
+            "topic": topic_str,
             "status": "Success",
             "message": original_members,
         }
-        save_pub_sub_data(socketio, lock_pubsub, json_res)
 
+        save_pub_sub_data(socketio, lock_pubsub, json_res)
         time.sleep(0.5)
         socketio.emit(
             constant.CALLBACK_ONEVENT_RECEIVE,
-            {"json_data": members, "original_json_data": original_members, "topic": topic},
+            {"json_data": members, "original_json_data": original_members, "topic": topic_str},
             namespace=constant.NAMESPACE,
         )
     except Exception as ex:

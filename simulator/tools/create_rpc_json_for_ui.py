@@ -40,10 +40,10 @@ additional_data = {}
 services = list(autoloader.get_services())
 
 
-def get_resources(service_name):
+def get_resources(service_id):
     resources = []
     try:
-        rpcs = autoloader.get_methods_by_service(service_name).keys()
+        rpcs = autoloader.get_methods_by_service(service_id).keys()
         for rpc in rpcs:
             resources.append(rpc)
         return resources
@@ -114,10 +114,10 @@ def find_enum_fields_recursive(message_class):
         return enum_fields
 
 
-def get_ui_details(resource_name, service_name):
+def get_ui_details(resource_name, service_id):
     all_field_info = {}
     try:
-        message_class = autoloader.get_request_class(service_name, resource_name)
+        message_class = autoloader.get_request_class(service_id, resource_name)
         field_names = message_class.DESCRIPTOR.fields_by_name.keys()
         field_info = {}
         for field_name in field_names:
@@ -135,7 +135,7 @@ def get_ui_details(resource_name, service_name):
         all_field_info[message_name] = field_info
         return all_field_info
     except Exception:
-        print(service_name)
+        print(service_id, autoloader.get_entity_name_from_entity_id(service_id))
         return {}
 
 
@@ -308,7 +308,8 @@ def extract_fields(data):
     return unique_ui
 
 
-def get_res_name(entity_name, config_name):
+def get_res_name(service_id, config_name):
+    entity_name = autoloader.get_entity_name_from_entity_id(service_id)
     for item in autoloader.topic_messages:
         if entity_name in item[0] and config_name + "#" in item[0]:
             new_config_name = get_config_name(item[0])
@@ -317,32 +318,26 @@ def get_res_name(entity_name, config_name):
     return config_name, ""
 
 
-def get_ui(resources, service_name):
+def get_ui(resources, service_id):
     ui_item = []
     for resource_name in resources:
         name = "N"
         display_name = resource_name
         rpc_method = resource_name
-        message_class = autoloader.get_request_class(service_name, resource_name)
+        message_class = autoloader.get_request_class(service_id, resource_name)
+        if message_class is None:
+            continue
         configuration = []
         enum_fields = find_enum_fields_recursive(message_class)
         if enum_fields == [] or enum_fields is None:
             enums = get_resources_from_message_class(message_class)
             if enums == [] or enums is None:
-                configuration_dict = {
-                    "name": name,
-                    "display_name": display_name,
-                    "rpcmethod": rpc_method,
-                }
+                configuration_dict = {"name": name, "display_name": display_name, "rpcmethod": rpc_method}
                 configuration.append((configuration_dict))
             else:
                 for enum in enums:
-                    res_name, res_key = get_res_name(service_name, enum)
-                    config = {
-                        "name": res_name,
-                        "display_name": enum,
-                        "rpcmethod": rpc_method,
-                    }
+                    res_name, res_key = get_res_name(service_id, enum)
+                    config = {"name": res_name, "display_name": enum, "rpcmethod": rpc_method}
 
                     if res_key != "":
                         config["name_key"] = res_key + ".name"
@@ -354,15 +349,9 @@ def get_ui(resources, service_name):
                 enum_values = enum_field["enum_values"]
                 for value in enum_values:
                     configuration.append(
-                        (
-                            {
-                                "name": get_res_name(service_name, value)[0],
-                                "name_key": field_name,
-                                "rpcmethod": rpc_method,
-                            }
-                        )
+                        ({"name": get_res_name(service_id, value)[0], "name_key": field_name, "rpcmethod": rpc_method})
                     )
-        ui_det = get_ui_details(resource_name, service_name)
+        ui_det = get_ui_details(resource_name, service_id)
         if ui_det == {rpc_method: {}}:
             ui_details = [
                 {
@@ -397,11 +386,12 @@ def get_ui(resources, service_name):
 
 
 def execute():
-    for service in services:
-        if service not in ["core.utelemetry", "core.usubscription"]:
-            data = get_ui(get_resources(service), service)
+    for service_id in services:
+        service_name = autoloader.get_entity_name_from_entity_id(service_id)
+        if service_name not in ["core.utelemetry", "core.usubscription"]:
+            data = get_ui(get_resources(service_id), service_id)
             if len(data) > 0:
-                result_data[service] = data
+                result_data[service_name] = data
 
         # Create the directory if it doesn't exist
     if not os.path.exists(constant.UI_JSON_DIR):

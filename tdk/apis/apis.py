@@ -12,42 +12,127 @@ terms of the Apache License Version 2.0 which is available at
 SPDX-License-Identifier: Apache-2.0
 """
 
-from concurrent.futures import Future
+from typing import Optional
 
-from uprotocol.proto.uattributes_pb2 import CallOptions
-from uprotocol.proto.umessage_pb2 import UMessage
-from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.proto.uri_pb2 import UUri
-from uprotocol.proto.ustatus_pb2 import UStatus
+from up_transport_zenoh.uptransportzenoh import UPTransportZenoh
+from uprotocol.client.usubscription.v3.inmemoryusubcriptionclient import InMemoryUSubscriptionClient
+from uprotocol.client.usubscription.v3.subscriptionchangehandler import SubscriptionChangeHandler
+from uprotocol.communication.calloptions import CallOptions
+from uprotocol.communication.inmemoryrpcclient import InMemoryRpcClient
+from uprotocol.communication.inmemoryrpcserver import InMemoryRpcServer
+from uprotocol.communication.simplepublisher import SimplePublisher
+from uprotocol.communication.upayload import UPayload
+from uprotocol.core.usubscription.v3.usubscription_pb2 import (
+    FetchSubscribersResponse,
+    FetchSubscriptionsRequest,
+    FetchSubscriptionsResponse,
+    SubscriptionResponse,
+)
 from uprotocol.transport.ulistener import UListener
+from uprotocol.uri.factory.uri_factory import UriFactory
+from uprotocol.v1.uri_pb2 import UUri
+from uprotocol.v1.ustatus_pb2 import UStatus
 
 from tdk.helper.transport_configuration import TransportConfiguration
 
+try:
+    from uprotocol_vsomeip.vsomeip_utransport import (
+        VsomeipTransport,
+    )
 
+except ImportError:
+    pass
+
+
+def singleton(cls):
+    instances = {}
+
+    def get_instance(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+
+    return get_instance
+
+
+@singleton
 class TdkApis:
-    def __init__(self, tc: TransportConfiguration):
-        self._tc = tc
+    _instance = None
 
-    def invoke_method(self, topic: UUri, payload: UPayload, calloptions: CallOptions) -> Future:
-        return self._tc.ut_instance.invoke_method(topic, payload, calloptions)
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.__initialized = False
+        return cls._instance
 
-    def send(self, umessage: UMessage) -> UStatus:
-        return self._tc.ut_instance.send(umessage)
+    def __init__(self, transport_config: TransportConfiguration):
+        if not self.__initialized or self.__transport != transport_config.get_transport():
+            self.initialize(transport_config.get_transport())
+            self.__initialized = True
 
-    def register_listener(self, topic: UUri, listener: UListener) -> UStatus:
-        return self._tc.ut_instance.register_listener(topic, listener)
+    def refresh_transport(self, transport_config: TransportConfiguration):
+        if self.get_transport_env() != transport_config.get_transport_env():
+            self.initialize(transport_config.get_transport())
 
-    def unregister_listener(self, topic: UUri, listener: UListener) -> UStatus:
-        return self._tc.ut_instance.unregister_listener(topic, listener)
+    def get_transport_env(self) -> str:
+        if isinstance(self.__transport, UPTransportZenoh):
+            return "ZENOH"
+        try:
+            if isinstance(self.__transport, VsomeipTransport):
+                return "SOME/IP"
+        except Exception:
+            pass
 
-    def start_service(self, entity) -> bool:
-        if self._tc.utransport == "BINDER":
-            return self._tc.ut_instance.start_service(entity)
-        else:
-            return True
+        return "BINDER"
 
-    def create_topic(self, entity, topics, listener):
-        if self._tc.utransport == "BINDER":
-            return self._tc.ut_instance.create_topic(entity, topics, listener)
-        else:
-            return True
+    def initialize(self, transport):
+        self.__transport = transport
+        self.__subscription_client = InMemoryUSubscriptionClient(self.__transport)
+        self.__rpc_server = InMemoryRpcServer(self.__transport)
+        self.__publisher = SimplePublisher(self.__transport)
+        self.__rpc_client = InMemoryRpcClient(self.__transport)
+
+    async def subscribe(
+        self,
+        topic: UUri,
+        listener: UListener,
+        options: CallOptions = CallOptions.DEFAULT,
+        handler: Optional[SubscriptionChangeHandler] = None,
+    ) -> SubscriptionResponse:
+        await self.__subscription_client.subscribe(topic, listener, options, handler)
+
+    async def unsubscribe(
+        self, topic: UUri, listener: UListener, options: CallOptions = CallOptions.DEFAULT
+    ) -> UStatus:
+        await self.__subscription_client.unsubscribe(topic, listener, options)
+
+    async def fetch_subscribers(
+        self, topic: UUri, options: Optional[CallOptions] = CallOptions.DEFAULT
+    ) -> FetchSubscribersResponse:
+        await self.__subscription_client.fetch_subscribers(topic, options)
+
+    async def fetch_subscriptions(
+        self, request: FetchSubscriptionsRequest, options: Optional[CallOptions] = CallOptions.DEFAULT
+    ) -> FetchSubscriptionsResponse:
+        await self.__subscription_client.fetch_subscriptions(request, options)
+
+    async def publish(
+        self, topic: UUri, options: Optional[CallOptions] = None, payload: Optional[UPayload] = None
+    ) -> UStatus:
+        return await self.__publisher.publish(topic, options, payload)
+
+    async def register_request_handler(self, method_uri: UUri, handler):
+        return await self.__rpc_server.register_request_handler(method_uri, handler)
+
+    async def unregister_request_handler(self, method_uri: UUri, handler):
+        return await self.__rpc_server.unregister_request_handler(method_uri, handler)
+
+    async def invoke_method(
+        self, method_uri: UUri, request_payload: UPayload, options: Optional[CallOptions] = None
+    ) -> UPayload:
+        return await self.__rpc_client.invoke_method(method_uri, request_payload, options)
+
+    async def register_listener(
+        self, source_filter: UUri, listener: UListener, sink_filter: UUri = UriFactory.ANY
+    ) -> UStatus:
+        return await self.__transport.register_listener(source_filter, listener, sink_filter)

@@ -19,13 +19,16 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
+import asyncio
 import re
 
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
 from simulator.utils.exceptions import ValidationError
+from tdk.apis.apis import TdkApis
 from tdk.core.abstract_service import BaseService
+from tdk.helper.transport_configuration import TransportConfiguration
 from tdk.target.protofiles.vehicle.chassis.v1.chassis_service_pb2 import (
     UpdateTireRequest,
 )
@@ -46,12 +49,12 @@ class ChassisService(BaseService):
 
     state = {}
 
-    def __init__(self, portal_callback=None):
-        super().__init__("chassis", portal_callback)
+    def __init__(self, portal_callback=None, transport_config: TransportConfiguration = None, tdk_apis: TdkApis = None):
+        super().__init__("chassis", portal_callback, transport_config, tdk_apis)
         self.init_state()
 
-    def subscribe(self):
-        super().subscribe(
+    async def subscribe(self):
+        await super().subscribe(
             [
                 KEY_URI_PREFIX + "/chassis/1/tire.front_left#Tire",
                 KEY_URI_PREFIX + "/chassis/1/tire.front_right#Tire",
@@ -112,7 +115,7 @@ class ChassisService(BaseService):
         # validation passed
         response.code = 0
         response.message = "OK"
-        self.publish_tire(request)
+        asyncio.create_task(self.publish_tire(request))
         return response
 
     def validate_tire(self, request):
@@ -157,20 +160,20 @@ class ChassisService(BaseService):
 
         return True
 
-    def publish_tire(self, request):
+    async def publish_tire(self, request):
         """
         Publishes a message based on the current tire
         """
         for tire in self.tire_names:
             topic = KEY_URI_PREFIX + "/chassis/1/" + tire + "#Tire"
-            self.publish(topic, self.state[tire], True)
+            await self.publish(topic, self.state[tire], True)
 
 
 class ChassisPreconditions(UListener):
     def __init__(self, chassis_service):
         self.chassis_service = chassis_service
 
-    def on_receive(self, umsg: UMessage):
+    async def on_receive(self, umsg: UMessage):
         print("on recieve called")
         print(umsg.payload)
         print(umsg.attributes.source)

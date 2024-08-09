@@ -22,14 +22,12 @@ SPDX-License-Identifier: Apache-2.0
 from importlib import import_module
 
 from simulator.ui.utils import adb_utils
-from tdk.helper.transport_configuration import TransportConfiguration
 
 reg_id = []
 
 
-def verify_all_checks():
+def verify_all_checks(env):
     is_by_pass = False
-    env = TransportConfiguration().get_transport()
 
     if env != "BINDER":
         is_by_pass = True

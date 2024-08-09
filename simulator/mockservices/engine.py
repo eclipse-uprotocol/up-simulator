@@ -19,18 +19,20 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
+from tdk.apis.apis import TdkApis
 from tdk.core.abstract_service import BaseService
+from tdk.helper.transport_configuration import TransportConfiguration
 from tdk.target.protofiles.vehicle.propulsion.engine.v1.engine_service_pb2 import (
     ResetHealthRequest,
 )
 
 
 class EngineService(BaseService):
-    def __init__(self, portal_callback=None):
+    def __init__(self, portal_callback=None, transport_config: TransportConfiguration = None, tdk_apis: TdkApis = None):
         """
         EngineService constructor
         """
-        super().__init__("propulsion.engine", portal_callback)
+        super().__init__("propulsion.engine", portal_callback, transport_config, tdk_apis)
         self.init_state()
 
     def init_state(self):

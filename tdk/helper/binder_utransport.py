@@ -12,6 +12,7 @@ terms of the Apache License Version 2.0 which is available at
 SPDX-License-Identifier: Apache-2.0
 """
 
+import base64
 import json
 import socket
 import threading
@@ -21,23 +22,21 @@ from builtins import str
 from concurrent.futures import Future, ThreadPoolExecutor
 from sys import platform
 
-from uprotocol.cloudevent.serialize.base64protobufserializer import (
-    Base64ProtobufSerializer,
-)
-from uprotocol.proto.uattributes_pb2 import CallOptions, UMessageType, UPriority
-from uprotocol.proto.umessage_pb2 import UMessage
-from uprotocol.proto.upayload_pb2 import UPayload
-from uprotocol.proto.uri_pb2 import UEntity, UUri
-from uprotocol.proto.ustatus_pb2 import UCode, UStatus
-from uprotocol.rpc.rpcclient import RpcClient
-from uprotocol.transport.builder.uattributesbuilder import UAttributesBuilder
+from uprotocol.communication.calloptions import CallOptions
+from uprotocol.communication.rpcclient import RpcClient
+from uprotocol.communication.upayload import UPayload
+from uprotocol.transport.builder.umessagebuilder import UMessageBuilder
 from uprotocol.transport.ulistener import UListener
 from uprotocol.transport.utransport import UTransport
-from uprotocol.uri.factory.uresource_builder import UResourceBuilder
-from uprotocol.uri.serializer.longuriserializer import LongUriSerializer
+from uprotocol.uri.serializer.uriserializer import UriSerializer
 from uprotocol.uri.validator.urivalidator import UriValidator
 from uprotocol.uuid.factory.uuidfactory import Factories
-from uprotocol.uuid.serializer.longuuidserializer import LongUuidSerializer
+from uprotocol.uuid.serializer.uuidserializer import UuidSerializer
+from uprotocol.v1.uattributes_pb2 import UMessageType
+from uprotocol.v1.ucode_pb2 import UCode
+from uprotocol.v1.umessage_pb2 import UMessage
+from uprotocol.v1.uri_pb2 import UUri
+from uprotocol.v1.ustatus_pb2 import UStatus
 
 from tdk.utils.constant import REPO_URL
 
@@ -47,10 +46,6 @@ subscribers = {}  # remove element when ue unregister it
 r_services = {}  # running services
 u_status = {}  # status update mapping with status id
 MAX_MESSAGE_SIZE = 32767
-RESPONSE_URI = UUri(
-    entity=UEntity(name="simulator.proxy", version_major=1),
-    resource=UResourceBuilder.for_rpc_response(),
-)
 
 
 # Function to add a request
@@ -135,13 +130,13 @@ class SocketClient:
     def __process_data(self, json_data):
         if "action" in json_data:
             action = json_data["action"]
-            serialized_data = Base64ProtobufSerializer().serialize(json_data["data"])
+            serialized_data = SocketTransport.serialize(json_data["data"])
 
             if action in ["topic_update", "rpc_request"]:
                 parsed_message = UMessage()
                 parsed_message.ParseFromString(serialized_data)
                 if action == "topic_update":
-                    uri_str = LongUriSerializer().serialize(parsed_message.attributes.source)
+                    uri_str = UriSerializer.serialize(parsed_message.attributes.source)
 
                     if uri_str in self.subscribe_callbacks:
                         callbacks = self.subscribe_callbacks[uri_str]
@@ -150,7 +145,7 @@ class SocketClient:
                     else:
                         print(f"No callback registered for uri: {uri_str}. Discarding!")
                 else:
-                    uri_str = LongUriSerializer().serialize(parsed_message.attributes.sink)
+                    uri_str = UriSerializer.serialize(parsed_message.attributes.sink)
                     if uri_str in self.rpc_request_callbacks:
                         callback = self.rpc_request_callbacks[uri_str]
                         callback.on_receive(parsed_message)
@@ -174,7 +169,7 @@ class SocketClient:
             elif action == "rpc_response":
                 parsed_message = UMessage()
                 parsed_message.ParseFromString(serialized_data)
-                req_id = LongUuidSerializer.instance().serialize(parsed_message.attributes.reqid)
+                req_id = UuidSerializer.serialize(parsed_message.attributes.reqid)
                 future_result = m_requests[req_id]
                 if not future_result.done():
                     future_result.set_result(parsed_message)
@@ -268,8 +263,15 @@ class SocketClient:
 
 
 class SocketTransport(UTransport, RpcClient):
-    def __init__(self):
+    async def close(self) -> None:
+        pass
+
+    def get_source(self) -> UUri:
+        return self.source
+
+    def __init__(self, source: UUri):
         self.client = SocketClient()
+        self.source = source
         # Start a separate thread for receiving
 
     def start_service(self, entity) -> bool:
@@ -317,7 +319,7 @@ class SocketTransport(UTransport, RpcClient):
             umsg.attributes.sink.entity.ClearField("version_minor")
             if not UriValidator.is_rpc_response(umsg.attributes.sink):
                 umsg.attributes.sink.resource.ClearField("id")
-        message_str = Base64ProtobufSerializer().deserialize(umsg.SerializeToString())
+        message_str = SocketTransport.deserialize(umsg.SerializeToString())
         attributes = umsg.attributes
         topic = attributes.source
         # validate attributes
@@ -358,11 +360,11 @@ class SocketTransport(UTransport, RpcClient):
         uri.entity.ClearField("version_minor")
         uri.resource.ClearField("id")
 
-        uri_str = Base64ProtobufSerializer().deserialize(uri.SerializeToString())
+        uri_str = SocketTransport.deserialize(uri.SerializeToString())
 
         try:
             status_id = str(Factories.UPROTOCOL.create())
-            uri_key = LongUriSerializer().serialize(uri)
+            uri_key = UriSerializer.serialize(uri)
             if UriValidator.is_rpc_method(uri):
                 self.__add_rpc_request_callback(uri_key, listener)
                 # write data to socket
@@ -388,18 +390,17 @@ class SocketTransport(UTransport, RpcClient):
             raise Exception("Payload is None")
         if calloptions is None:
             raise Exception("CallOptions cannot be None")
-        timeout = calloptions.ttl
+        timeout = calloptions.timeout
         if timeout <= 0:
             raise Exception("TTl is invalid or missing")
-
-        attributes = UAttributesBuilder.request(RESPONSE_URI, method_uri, UPriority.UPRIORITY_CS4, timeout).build()
+        umsg = UMessageBuilder.request(self.get_source(), method_uri, timeout).build_from_upayload(payload)
         if "COVESA" not in REPO_URL:
-            attributes.id.MergeFrom(Factories.UUIDV6.create())
+            umsg.attributes.id.MergeFrom(Factories.UUIDV6.create())
         # check message type,id and ttl
-        req_id = LongUuidSerializer.instance().serialize(attributes.id)
+        req_id = UuidSerializer.serialize(umsg.attributes.id)
         response_future = add_request(req_id)
 
-        self.send(UMessage(payload=payload, attributes=attributes))
+        self.send(umsg)
         return response_future  # future result to be set by the service.
 
     def __add_subscribe_callback(self, topic: str, callback: UListener):
@@ -421,3 +422,26 @@ class SocketTransport(UTransport, RpcClient):
 
     def __add_rpc_request_callback(self, method_uri: str, callback: UListener):
         self.client.rpc_request_callbacks[method_uri] = callback
+
+    @staticmethod
+    def serialize(string_to_serialize: str) -> bytes:
+        """
+        Serialize a String into Base64 format.<br><br>
+        @param string_to_serialize:String to serialize.
+        @return: Returns the Base64 formatted String as a byte[].
+        """
+        if string_to_serialize is None:
+            return bytearray()
+        return base64.b64decode(string_to_serialize.encode('utf-8'))
+
+    @staticmethod
+    def deserialize(proto_bytes: bytes) -> str:
+        """
+        Deserialize a base64 protobuf payload into a Base64 String.<br><br>
+
+        @param proto_bytes: byte[] data
+        @return: Returns a String from the base64 protobuf payload.
+        """
+        if proto_bytes is None:
+            return ""
+        return base64.b64encode(proto_bytes).decode('utf-8')

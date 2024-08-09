@@ -19,13 +19,16 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
+import asyncio
 import re
 
 from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
 
 from simulator.utils.exceptions import ValidationError
+from tdk.apis.apis import TdkApis
 from tdk.core.abstract_service import BaseService
+from tdk.helper.transport_configuration import TransportConfiguration
 from tdk.target.protofiles.vehicle.chassis.suspension.v1.suspension_service_pb2 import SetRideHeightRequest
 from tdk.target.protofiles.vehicle.chassis.suspension.v1.suspension_topics_pb2 import (
     RideHeight,
@@ -41,17 +44,17 @@ class SuspensionService(BaseService):
 
     state = {}
 
-    def __init__(self, portal_callback=None):
+    def __init__(self, portal_callback=None, transport_config: TransportConfiguration = None, tdk_apis: TdkApis = None):
         """
         SuspensionService constructor:
         """
         # todo: move uninstall to BaseService class
 
-        super().__init__("chassis.suspension", portal_callback)
+        super().__init__("chassis.suspension", portal_callback, transport_config, tdk_apis)
         self.init_state()
 
-    def subscribe(self):
-        super().subscribe(
+    async def subscribe(self):
+        await super().subscribe(
             [
                 KEY_URI_PREFIX + "/chassis.suspension/1/ride_height_system_status#RideHeightSystemStatus",
             ],
@@ -129,7 +132,7 @@ class SuspensionService(BaseService):
         response.status.code = 0
         response.status.message = "OK"
 
-        self.publish_suspension()
+        asyncio.create_task(self.publish_suspension())
         return response
 
     def validate_suspension_req(self, request):
@@ -190,7 +193,7 @@ class SuspensionService(BaseService):
 
         return True
 
-    def publish_suspension(self):
+    async def publish_suspension(self):
         """
         Publishes a suspension message based on the current state.
 
@@ -199,14 +202,14 @@ class SuspensionService(BaseService):
         """
         topic = KEY_URI_PREFIX + "/chassis.suspension/1/ride_height#RideHeight"
 
-        self.publish(topic, self.state["ride_height"], True)
+        await self.publish(topic, self.state["ride_height"], True)
 
 
 class SuspensionPreconditions(UListener):
     def __init__(self, suspension_service):
         self.suspension_service = suspension_service
 
-    def on_receive(self, umsg: UMessage):
+    async def on_receive(self, umsg: UMessage):
         print("on receive suspension called")
         print(umsg.payload)
         print(umsg.attributes.source)

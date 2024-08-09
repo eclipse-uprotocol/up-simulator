@@ -189,7 +189,10 @@ input[type="checkbox"].toggle:checked+label::before {
   background: var(--backgroundColor) !important;
   box-shadow: none !important;
   border: 1px solid var(--boxBorderColor) !important;
+  border-radius: 22.5021px;
+
 }
+
 
 .table-light {
   color: var(--fontColor) !important;

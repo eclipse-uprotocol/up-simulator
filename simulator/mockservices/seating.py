@@ -28,11 +28,11 @@ from tdk.target.protofiles.vehicle.body.seating.v1.seating_service_pb2 import (
 
 
 class SeatingService(BaseService):
-    def __init__(self, portal_callback=None):
+    def __init__(self, portal_callback=None, transport_config=None, tdk_apis=None):
         """
         EngineService constructor
         """
-        super().__init__("body.seating", portal_callback)
+        super().__init__("body.seating", portal_callback, transport_config, tdk_apis)
         self.init_state()
 
     def init_state(self):

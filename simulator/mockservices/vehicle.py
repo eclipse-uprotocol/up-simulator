@@ -19,13 +19,16 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
+import asyncio
 import re
 
-from uprotocol.proto.umessage_pb2 import UMessage
 from uprotocol.transport.ulistener import UListener
+from uprotocol.v1.umessage_pb2 import UMessage
 
 from simulator.utils.exceptions import ValidationError
+from tdk.apis.apis import TdkApis
 from tdk.core.abstract_service import BaseService
+from tdk.helper.transport_configuration import TransportConfiguration
 from tdk.target.protofiles.vehicle.v1.vehicle_service_pb2 import ResetTripMeterRequest, SetTransportModeRequest
 from tdk.target.protofiles.vehicle.v1.vehicle_topics_pb2 import TripMeter, VehicleUsage
 from tdk.utils.constant import KEY_URI_PREFIX
@@ -38,19 +41,16 @@ class VehicleService(BaseService):
 
     state = {}
 
-    def __init__(self, portal_callback=None):
+    def __init__(self, portal_callback=None, transport_config: TransportConfiguration = None, tdk_apis: TdkApis = None):
         """
         VehicleService constructor:
         """
 
-        super().__init__(
-            "vehicle",
-            portal_callback,
-        )
+        super().__init__("vehicle", portal_callback, transport_config, tdk_apis)
         self.init_state()
 
-    def subscribe(self):
-        super().subscribe(
+    async def subscribe(self):
+        await super().subscribe(
             [
                 KEY_URI_PREFIX + "/vehicle/1/trip_meter.trip_1#TripMeter",
                 KEY_URI_PREFIX + "/vehicle/1/trip_meter.trip_2#TripMeter",
@@ -70,7 +70,7 @@ class VehicleService(BaseService):
             self.state[trip] = self.init_message_state(TripMeter)
             self.state[trip]["name"] = trip
 
-        # add transport mode state
+        # add helper mode state
         for mode in VehicleUsage.Resources.keys():
             self.state[mode] = self.init_message_state(VehicleUsage)
 
@@ -126,7 +126,7 @@ class VehicleService(BaseService):
         response.code = 0
         response.message = "OK"
 
-        self.publish_vehicle(request)
+        asyncio.create_task(self.publish_vehicle(request))
         return response
 
     def validate_vehicle_req(self, request):
@@ -159,7 +159,7 @@ class VehicleService(BaseService):
 
         return True
 
-    def publish_vehicle(self, request):
+    async def publish_vehicle(self, request):
         """
         Publishes a vehicle message based on the current state.
 
@@ -170,11 +170,11 @@ class VehicleService(BaseService):
             # get trip_meter key from value, expecting 0 - trip_1 or 1 - trip_2
             trip_val = list(TripMeter.Resources.keys())[list(TripMeter.Resources.values()).index(request.trip_meter)]
             topic = KEY_URI_PREFIX + "/vehicle/1/trip_meter." + trip_val + "#TripMeter"
-            self.publish(topic, self.state[trip_val], True)
+            await self.publish(topic, self.state[trip_val], True)
 
         if isinstance(request, SetTransportModeRequest):
             topic = KEY_URI_PREFIX + "/vehicle/1/vehicle_usage.transport_mode#VehicleUsage"
-            self.publish(topic, self.state, True)
+            await self.publish(topic, self.state, True)
 
         return True
 
@@ -183,7 +183,7 @@ class VehiclePreconditions(UListener):
     def __init__(self, vehicle_service):
         self.vehicle_service = vehicle_service
 
-    def on_receive(self, umsg: UMessage):
+    async def on_receive(self, umsg: UMessage):
         print("on receive vehicle service called")
         print(umsg.payload)
         print(umsg.attributes.source)

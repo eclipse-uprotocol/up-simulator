@@ -19,6 +19,7 @@ SPDX-FileType: SOURCE
 SPDX-License-Identifier: Apache-2.0
 """
 
+import asyncio
 from datetime import datetime
 from threading import Thread
 
@@ -26,7 +27,9 @@ from google.protobuf.json_format import MessageToDict
 from google.protobuf.text_format import MessageToString
 from google.type.timeofday_pb2 import TimeOfDay
 
+from tdk.apis.apis import TdkApis
 from tdk.core.abstract_service import BaseService
+from tdk.helper.transport_configuration import TransportConfiguration
 from tdk.target.protofiles.example.hello_world.v1.hello_world_topics_pb2 import Timer
 from tdk.utils.constant import KEY_URI_PREFIX
 
@@ -51,14 +54,14 @@ class HelloWorldService(BaseService):
     message HelloResponse { string message = 1; }
     """
 
-    def __init__(self, portal_callback=None):
+    def __init__(self, portal_callback=None, transport_config: TransportConfiguration = None, tdk_apis: TdkApis = None):
         """
         Mock service constructor. Specify the service name to the parent constructor.
         """
-        super().__init__("example.hello_world", portal_callback)
+        super().__init__("example.hello_world", portal_callback, transport_config, tdk_apis)
 
     def start_publishing(self):
-        timer_pub_thread = Thread(target=self.PublishTimerMessage(), daemon=True)
+        timer_pub_thread = Thread(target=asyncio.run(self.PublishTimerMessage()), daemon=True)
         timer_pub_thread.start()
 
     # The UltifiLink.request_listener decorator is used to define an RPC
@@ -91,7 +94,7 @@ class HelloWorldService(BaseService):
         print(MessageToString(response))
         return response
 
-    def PublishTimerMessage(self):
+    async def PublishTimerMessage(self):
         """
         Publishes a Timer message based on the current timestamp after every second and every minute
         """
@@ -112,6 +115,6 @@ class HelloWorldService(BaseService):
                 if time_of_day.minutes != current_time.minute:
                     time_of_day.minutes = current_time.minute
                     # publish one minute topic with payload every minute
-                    self.publish(one_min_topic, MessageToDict(Timer(time=time_of_day)))
+                    await self.publish(one_min_topic, MessageToDict(Timer(time=time_of_day)))
                 # publish one second topic with payload every second
-                self.publish(one_sec_topic, MessageToDict(Timer(time=time_of_day)))
+                await self.publish(one_sec_topic, MessageToDict(Timer(time=time_of_day)))
