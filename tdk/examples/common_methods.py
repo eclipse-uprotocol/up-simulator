@@ -25,7 +25,9 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 def get_transport_config():
     """Set the helper config, one time configuration."""
     config = TransportConfiguration()
-    config.set_zenoh_config("10.0.0.33", 9090)  # this will set the zenoh helper
+    config.set_zenoh_config(None,None)  # this will set the zenoh helper
+
+    # config.set_zenoh_config("10.0.0.33", 9090)  # this will set the zenoh helper
     return config
 
 

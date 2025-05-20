@@ -29,6 +29,8 @@ from uprotocol.v1.umessage_pb2 import UMessage
 
 from tdk.apis.apis import TdkApis
 from tdk.core import protobuf_autoloader
+from tdk.helper import someip_helper
+from tdk.helper.someip_helper import SomeipHelper, ensure_defaults
 from tdk.helper.transport_configuration import TransportConfiguration
 from tdk.utils import service_util
 from tdk.utils.constant import REPO_URL
@@ -95,8 +97,10 @@ class BaseService(object):
                 res = protobuf_autoloader.get_response_class(service_id, method_name)()
                 req = UPayload.unpack_data_format(payload, attributes.payload_format, req)
                 response = self(get_instance(service_id), req, res)
-
-                payload_res: UPayload = UPayload.pack_to_any(response)
+                if someip_helper.is_serializer_enabled:
+                    payload_res: UPayload = UPayload.pack_to_someip_serialization(response)
+                else:
+                    payload_res: UPayload = UPayload.pack_to_any(response)
 
                 if get_instance(service_id).portal_callback is not None:
                     get_instance(service_id).portal_callback(
@@ -136,10 +140,17 @@ class BaseService(object):
     async def publish(self, uri, params={}, is_from_rpc=False):
         message_class = protobuf_autoloader.get_request_class_from_topic_uri(uri)
         message = protobuf_autoloader.populate_message(self.service, message_class, params)
-        any_obj = any_pb2.Any()
-        any_obj.Pack(message)
-        payload_data = any_obj.SerializeToString()
-        payload = UPayload(format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY, data=payload_data)
+        if someip_helper.is_serializer_enabled:
+            message = ensure_defaults(message)
+            print(f"abstract_service: message after ensure defaults(SOMEIP) {message}")
+            payload_data = UPayload.serialize_someip(message)  # Use SOME/IP serialization
+            payload_format= UPayloadFormat.UPAYLOAD_FORMAT_SOMEIP
+        else:
+            any_obj = any_pb2.Any()
+            any_obj.Pack(message)
+            payload_data = any_obj.SerializeToString()
+            payload_format = UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY
+        payload = UPayload(format=payload_format, data=payload_data)
         source_uri = protobuf_autoloader.get_uuri_from_name(uri)
 
         if "COVESA" not in REPO_URL:

@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import os
 import sys
-
+from uprotocol_vsomeip import helper
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import asyncio
@@ -62,10 +62,12 @@ def set_transport(selected_utransport):
 
 
 @socketio.on(constant.API_SET_SOMEIP_CONFIG, namespace=constant.NAMESPACE)
-def set_someip_config(localip, multicastip):
+def set_someip_config(localip, multicastip,is_someip_serializer_enabled=False):
     print(f"set set_someip_config called {localip}, {multicastip}")
     someip_helper.someip_entity = someip_helper.temp_someip_entity
     someip_helper.temp_someip_entity = []
+    someip_helper.is_serializer_enabled=is_someip_serializer_enabled
+    helper.is_serializer_enabled =is_someip_serializer_enabled
     transport_config.set_someip_config(localip, multicastip)
     tdk_apis.refresh_transport(transport_config)
     time.sleep(0.5)
@@ -152,4 +154,4 @@ def set_reset_flag():
 
 if __name__ == "__main__":
     # Run the server
-    socketio.run(app, allow_unsafe_werkzeug=True, debug=debug)
+    socketio.run(app, allow_unsafe_werkzeug=True,port=5000, debug=debug)

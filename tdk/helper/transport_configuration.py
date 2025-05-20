@@ -32,12 +32,12 @@ except ImportError:
 
 class TransportConfiguration:
     def __init__(self):
-        self.__SOURCE = UUri(authority_name="tdk", ue_id=99999, ue_version_major=1)
+        self.__SOURCE = UUri(authority_name="tdk", ue_id=99998, ue_version_major=1)
         self.__ZENOH_IP = "10.0.0.33"
         self.__ZENOH_PORT = 9090
         self.__SOMEIP_UNICAST_IP = "127.0.0.1"
         self.__SOMEIP_MULTICAST_IP = "224.224.224.245"
-        self.__transport = self._update_instance("BINDER")
+        self.__transport = self._update_instance("SOME/IP")
 
     def _update_instance(self, transport_name="BINDER") -> UTransport:
         if transport_name == "BINDER":
@@ -55,7 +55,7 @@ class TransportConfiguration:
             return UPTransportZenoh.new(conf, self.__SOURCE)
         elif transport_name == "SOME/IP":
             return VsomeipTransport(
-                source=self.__SOURCE, multicast=(self.__SOMEIP_MULTICAST_IP, 30490), helper=SomeipHelper()
+                source=self.__SOURCE,unicast=self.__SOMEIP_UNICAST_IP, multicast=(self.__SOMEIP_MULTICAST_IP, 30490), helper=SomeipHelper()
             )
 
     def get_transport(self) -> UTransport:

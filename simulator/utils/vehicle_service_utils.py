@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 """
 
 try:
-    from tdk.helper.someip_helper import someip_entity, temp_someip_entity
+    from tdk.helper import someip_helper
 except Exception:
     pass
 
@@ -36,9 +36,9 @@ def stop_service(name):
 
 
 def remove_service_from_someip(name):
-    for index, entity_name in enumerate(temp_someip_entity):
+    for index, entity_name in enumerate(someip_helper.temp_someip_entity):
         if entity_name == name:
-            temp_someip_entity.pop(index)
+            someip_helper.temp_someip_entity.pop(index)
             stop_service(name)
             break
 
@@ -59,7 +59,7 @@ def get_all_running_service():
 
 def get_all_configured_someip_service():
     configured_service = []
-    for entity_name in someip_entity:
+    for entity_name in someip_helper.someip_entity:
         configured_service.append(entity_name)
     return configured_service
 

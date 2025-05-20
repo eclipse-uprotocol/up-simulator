@@ -16,9 +16,10 @@ import json
 import os
 import pathlib
 from typing import List
+from google.protobuf.descriptor import FieldDescriptor
 
 from tdk.utils.constant import RESOURCE_CATALOG_JSON_NAME
-
+from google.protobuf.message import Message
 try:
     from uprotocol_vsomeip.vsomeip_utransport import (
         VsomeipHelper,
@@ -28,7 +29,42 @@ except ImportError:
 
 someip_entity = []
 temp_someip_entity = []
+is_serializer_enabled=False
 
+def ensure_defaults(message: Message) -> Message:
+    """
+    Ensures that all fields in a Protobuf message are explicitly set.
+    This is required for SOME/IP serialization where no fields should be omitted.
+
+    :param message: Protobuf message object
+    :return: Modified message with default values explicitly set
+    """
+    print("Ensuring defaults for:", message)
+    default_message = message.__class__()  # Create a new instance with default values
+
+    for field in message.DESCRIPTOR.fields:
+        field_name = field.name
+        field_value = getattr(message, field_name, None)
+
+        # ✅ Handle nested Protobuf messages (recursively process)
+        if field.type == FieldDescriptor.TYPE_MESSAGE and field_value is not None:
+            ensure_defaults(field_value)
+
+        # ✅ Handle fields that do not support HasField() (primitive types like int, string, bool)
+        elif field.label != FieldDescriptor.LABEL_REPEATED:  # Not a repeated field
+            try:
+                if not message.HasField(field_name):  # Only call HasField() if field supports it
+                    setattr(message, field_name, getattr(default_message, field_name))  # Assign default
+            except ValueError:  # Primitive types (int, float, string) don’t support HasField()
+                if field_value in [None, "", 0, False]:  # If unset, assign default
+                    setattr(message, field_name, getattr(default_message, field_name))
+
+        # ✅ Handle repeated fields (lists)
+        elif field.label == FieldDescriptor.LABEL_REPEATED:
+            if not field_value:  # If list is empty, set to default
+                setattr(message, field_name, getattr(default_message, field_name))
+     #   print(f"Message with all value set: {message}")
+    return message  #
 
 def configure_someip_service(entity_name):
     global temp_someip_entity
@@ -65,17 +101,16 @@ try:
                             if "type" in node and node["type"] == "topic":
                                 topic_ids.append(int(node["id"]) + 32768)
                         for property in data["node"]["properties"]:
-                            if property["name"] == "version_major":
+                             if property["name"] == "service_version_major":
                                 major_version = property["value"]
                                 break
                         if service_name in someip_entity:
                             entity_info.append(
                                 VsomeipHelper.UEntityInfo(
-                                    Name=service_name,
-                                    Id=int(service_id),
-                                    Events=topic_ids,
-                                    Port=port,
-                                    MajorVersion=major_version,
+                                    service_id=int(service_id),
+                                    events=topic_ids,
+                                    port=port,
+                                    major_version=major_version,
                                 )
                             )
                         port = port + 1

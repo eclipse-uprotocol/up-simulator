@@ -44,7 +44,8 @@ from simulator.utils.vehicle_service_utils import (
 )
 from tdk.apis.apis import TdkApis
 from tdk.core import protobuf_autoloader
-from tdk.helper.someip_helper import configure_someip_service
+from tdk.helper import someip_helper
+from tdk.helper.someip_helper import configure_someip_service, ensure_defaults
 from tdk.helper.transport_configuration import TransportConfiguration
 
 logger = logging.getLogger("Simulator")
@@ -82,12 +83,19 @@ class SocketUtility:
                 version = 1
 
                 method_uri = protobuf_autoloader.get_rpc_uri_by_name(service_id, methodname, version)
-                any_obj = any_pb2.Any()
-                any_obj.Pack(message)
-                payload_data = any_obj.SerializeToString()
+                if someip_helper.is_serializer_enabled:
+                    message = ensure_defaults(message)
+                    payload_data = UPayload.serialize_someip(message)  # Use SOME/IP serialization
+                    print(f"message after ensure defaults(SOMEIP) {message}")
+                    payload_format = UPayloadFormat.UPAYLOAD_FORMAT_SOMEIP
+                else:
+                    any_obj = any_pb2.Any()
+                    any_obj.Pack(message)
+                    payload_data = any_obj.SerializeToString()
+                    payload_format = UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY
                 payload = UPayload(
                     data=payload_data,
-                    format=UPayloadFormat.UPAYLOAD_FORMAT_PROTOBUF_WRAPPED_IN_ANY,
+                    format=payload_format,
                 )
                 method_uri = protobuf_autoloader.get_uuri_from_name(method_uri)
 
